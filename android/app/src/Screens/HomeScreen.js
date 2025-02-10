@@ -13,6 +13,7 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { imageUrl, homeApi, referralAmountApi } from '../services/apiServices';
 import { SvgUri } from 'react-native-svg';
+import Layout from '../Components/Common/Layout';
 
 
 const HomeScreen = ({ navigation }) => {
@@ -50,103 +51,85 @@ const HomeScreen = ({ navigation }) => {
 
   const goToHome = () => navigation.navigate('Home');
   const goToProfile = () => setModalVisible(true);
-  
-  
-//   const offerdeals = (offer) => {
-//     console.log('Selected offer:', offer);
-//   };
+
+
+  //   const offerdeals = (offer) => {
+  //     console.log('Selected offer:', offer);
+  //   };
 
   return (
-    <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.navigate('SignUpScreen')}> 
-          <Icon name="bars" size={30} color="black" />
-        </TouchableOpacity>
-        <Image
-          source={require('../assets/logo-horizontal.png')}
-          style={styles.logoHorizontal}
-        />
-        <TouchableOpacity onPress={() => navigation.navigate('LoginScreen')}>
-          <Icon name="user-circle-o" size={30} color="black" />
-        </TouchableOpacity>
-      </View>
-
+    <Layout>
+    <View>
       {/* Content */}
-      <ScrollView style={styles.content}>
+      <ScrollView
+      style={styles.scrollContainer}
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}>
         {/* Banner Image */}
         <Image
           source={require('../assets/DxxfKrd9IwwMnBrA.jpg')}
           style={styles.backgroundImage}
         />
-        {/* Referral Bonus */}
-        <View style={styles.referralCard}>
-          <Text style={styles.bonusTitle}>Referral Bonus</Text>
-          <Text style={styles.amount}>{referralAmount} INR</Text>
-        </View>
-
-        {/* Exciting Deals */}
-        <Text style={styles.sectionTitle}>Exciting Deals</Text>
-        <FlatList
-          data={offers}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              style={styles.offerCard}
-             // onPress={() => offerdeals(item)}
-            >
-              <Image
-                source={{ uri: imageUrl +'/'+ item.image }}
-                style={styles.offerImage}
-              />
-              <Text style={styles.offerTitle}>{item.name}</Text>
-              <Text style={styles.offerSubtitle}>{item.off}</Text>
-            </TouchableOpacity>
-          )}
-        />
-
-        {/* Services */}
-        <Text style={styles.sectionTitle}>Services</Text>
-        {services.map((service, index) => (
-          <View key={index} style={styles.serviceCard}>
-            <Image
-              source={{ uri: imageUrl +'/'+ service.image }}
-              style={styles.serviceImage}
-            />
-            <Text style={styles.serviceTitle}>{service.name}</Text>
-            <Text style={styles.serviceDescription}>{service.title}</Text>
+        <View style={styles.content}>
+          {/* Referral Bonus */}
+          <View style={styles.referralCard}>
+            <Text style={styles.bonusTitle}>Referral Bonus</Text>
+            <Text style={styles.amount}>{referralAmount} INR</Text>
           </View>
-        ))}
 
-        {/* How It Works */}
-        <Text style={styles.sectionTitle}>How It Works</Text>
-        <View style={styles.howGrid}>
-          {['how1.svg', 'how2.svg', 'how3.svg', 'how4.svg', 'how5.svg'].map(
-            (image, index) => (
-              <View key={index} style={styles.howCard}>
-                <SvgUri width="100" height="100" uri={imageUrl +'/frontend/images/'+ image} />
-                <Text style={styles.howTitle}>
-                  {['Sign Up', 'Shop', 'Ship', 'Save', 'Receive'][index]}
-                </Text>
-              </View>
-            )
-          )}
+          {/* Exciting Deals */}
+          <Text style={styles.sectionTitle}>Exciting Deals</Text>
+          <FlatList
+            data={offers}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                style={styles.offerCard}
+             
+              >
+                <Image
+                  source={{ uri: imageUrl + '/' + item.image }}
+                  style={styles.offerImage}
+                />
+                <Text style={styles.offerTitle}>{item.name}</Text>
+                <Text style={styles.offerSubtitle}>{item.off}</Text>
+              </TouchableOpacity>
+            )}
+          />
+
+          {/* Services */}
+          <Text style={styles.sectionTitle}>Services</Text>
+          {services.map((service, index) => (
+            <View key={index} style={styles.serviceCard}>
+              <Image
+                source={{ uri: imageUrl + '/' + service.image }}
+                style={styles.serviceImage}
+              />
+              <Text style={styles.serviceTitle}>{service.name}</Text>
+              <Text style={styles.serviceDescription}>{service.title}</Text>
+            </View>
+          ))}
+
+          {/* How It Works */}
+          <Text style={styles.sectionTitle}>How It Works</Text>
+          <View style={styles.howGrid}>
+            {['how1.svg', 'how2.svg', 'how3.svg', 'how4.svg', 'how5.svg'].map(
+              (image, index) => (
+                <View key={index} style={styles.howCard}>
+                  <SvgUri width="100" height="100" uri={imageUrl + '/frontend/images/' + image} />
+                  <Text style={styles.howTitle}>
+                    {['Sign Up', 'Shop', 'Ship', 'Save', 'Receive'][index]}
+                  </Text>
+                </View>
+              )
+            )}
+          </View>
         </View>
       </ScrollView>
 
-      {/* Footer */}
-      <View style={styles.footer}>
-        <TouchableOpacity style={styles.tab}>
-          <Icon name="home" size={25} color="black" />
-          <Text>Home</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.tab}>
-          <Icon name="user-circle" size={25} color="black" />
-          <Text>Profile</Text>
-        </TouchableOpacity>
-      </View>
+
       <Modal
         animationType="slide"
         transparent={true}
@@ -156,9 +139,9 @@ const HomeScreen = ({ navigation }) => {
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <Text style={styles.title}>Sign In / Sign Up</Text>
-            
+
             {/* Add Sign-In / Sign-Up Form Here */}
-            
+
             <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.closeButton}>
               <Text style={styles.closeText}>Close</Text>
             </TouchableOpacity>
@@ -166,33 +149,36 @@ const HomeScreen = ({ navigation }) => {
         </View>
       </Modal>
     </View>
+    </Layout>
   );
 };
 
 const { width } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 10,
-    backgroundColor: 'white',
-    shadowColor: '#0000000',
-    shadowOffset: { width: 0, height: 2 },
+  container: {
+    flex: 1,
   },
-  logoHorizontal: { width: 150, height: 50, resizeMode: 'contain' },
-  backgroundImage: { width: '100%', height: 200, resizeMode: 'cover' },
-  content: { padding: 10 },
+  scrollContainer: {
+    flexGrow: 1,
+    //backgroundColor: 'white',
+  },
+ 
+  backgroundImage: {
+    width: '100%', height: 200, resizeMode: 'cover'
+  },
+  content: {
+    padding: 10,
+
+  },
   referralCard: {
     justifyContent: 'center',
     alignItems: 'center',
     margin: 10,
     padding: 15,
     backgroundColor: 'white',
-//    backgroundColor: 'linear-gradient(to right, #7e2080, #e12d82)',
-    borderRadius: 8,
+    //    backgroundColor: 'linear-gradient(to right, #1e7fca #e12d82)',
+    borderRadius: 5,
     elevation: 3
   },
   bonusTitle: {
@@ -208,14 +194,14 @@ const styles = StyleSheet.create({
   sectionTitle: { fontSize: 20, fontWeight: 'bold', marginVertical: 10 },
   serviceCard: {
     backgroundColor: 'white',
-    borderRadius: 10,
+    borderRadius: 5,
     padding: 10,
     marginBottom: 10,
     elevation: 3,
   },
   serviceImage: {
     width: '100%',
-    height: 150, // Adjust based on your layout
+    height: 210, // Adjust based on your layout
     borderRadius: 10,
     resizeMode: 'cover', // Ensures image fits well
   },
@@ -226,32 +212,37 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'space-around',
   },
-  howCard: { width: width / 3.5, alignItems: 'center', marginBottom: 10 },
-  howImage: { width: 50, height: 50, marginBottom: 5 },
-  howTitle: { fontSize: 14, textAlign: 'center' },
-  footer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
+  howCard: {
+    width: width / 3.5,
     alignItems: 'center',
-    height: 60,
-    backgroundColor: 'white',
-    borderTopWidth: 1,
-    borderColor: 'gray',
+    marginBottom: 10,
+    justifyContent: 'center',
+    boxShadow: '0px 0px 2px #ff0080',
+    borderRadius: 3
   },
-  tab: { alignItems: 'center' },
+  howImage: {
+    width: 50, height: 50, marginBottom: 5
+  },
+  howTitle: {
+    fontSize: 14,
+    textAlign: 'center',
+    color: '#ff0080',
+    paddingBottom: 10
+  },
+ 
   offerCard: {
     backgroundColor: 'white',
-    borderRadius: 10,
+    borderRadius: 5,
     margin: 5,
     padding: 5,
     elevation: 2,
-    width: width * 0.6,
+    width: width * 0.7,
   },
   offerImage: {
-    width: '100%',
+    width: '80%',
     height: 120, // Set appropriate height
-    borderRadius: 10,
-    resizeMode: 'cover', // Ensures the image covers the container
+    borderRadius: 5,
+    resizeMode: 'contain', // Ensures the image covers the container
   },
   offerTitle: { fontSize: 16, fontWeight: 'bold', marginTop: 5 },
   offerSubtitle: { fontSize: 14, color: 'gray' },
@@ -266,7 +257,7 @@ const styles = StyleSheet.create({
     width: 200,
     padding: 20,
     backgroundColor: "white",
-    borderRadius: 10,
+    borderRadius: 5,
     alignItems: "center",
   },
   title: {
