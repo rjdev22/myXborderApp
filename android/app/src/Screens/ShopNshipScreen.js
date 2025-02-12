@@ -25,6 +25,7 @@ const ShopNshipScreen = ({ navigation }) => {
         PhoneNumber: "721170063",
     };
 
+    
     const [query, setQuery] = useState('');
 
     const copy = (text) => {

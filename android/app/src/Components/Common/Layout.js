@@ -11,8 +11,9 @@ const Layout = ({ children }) => {
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={ ()=> navigation.dispatch(DrawerActions.openDrawer())}>
+        <TouchableOpacity onPress={() => navigation.dispatch(DrawerActions.openDrawer())}>
           <Icon name="bars" size={24} color="black" />
+
         </TouchableOpacity>
 
         <Image
@@ -24,13 +25,14 @@ const Layout = ({ children }) => {
         </TouchableOpacity>
       </View>
 
+
       {/* Main Content */}
       <View style={styles.content}>{children}</View>
 
 
       {/* Footer */}
       <View style={styles.footer}>
-        <TouchableOpacity style={styles.tab} onPress={() => navigation.navigate( 'HomeScreen' )}>
+        <TouchableOpacity style={styles.tab} onPress={() => navigation.navigate('HomeScreen')}>
 
           <Icon name="home" size={25} color="black" />
           <Text>Home</Text>

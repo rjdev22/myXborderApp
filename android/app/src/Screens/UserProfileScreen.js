@@ -15,6 +15,7 @@ import Layout from '../Components/Common/Layout';
 
 
 
+
 const UserProfileScreen = () => {
     const [OpenEditModal, setOpenEditModal] = useState(false);
 
@@ -26,6 +27,7 @@ const UserProfileScreen = () => {
 
     const handleCloseEditModal = () => {
         setOpenEditModal(false);
+        
     };
 
     const handleNotificationOff = () => {
@@ -36,76 +38,80 @@ const UserProfileScreen = () => {
 
     return (
         <Layout>
-        <ScrollView style={styles.content}
-            showsVerticalScrollIndicator={false}
-            showsHorizontalScrollIndicator={false}>
+            <ScrollView style={styles.content}
+                showsVerticalScrollIndicator={false}
+                showsHorizontalScrollIndicator={false}>
 
-            <View style={styles.card}>
-                <Text style={styles.name}>test test2</Text>
+                <View style={styles.card}>
+                    <Text style={styles.name}>test test2</Text>
 
-                <View style={styles.row}>
-                    <Text style={styles.label}>Unique Id:</Text>
-                    <Text style={styles.value}>USR1267</Text>
-                </View>
+                    <View style={styles.row}>
+                        <Text style={styles.label}>Unique Id:</Text>
+                        <Text style={styles.value}>USR1267</Text>
+                    </View>
 
-                <View style={styles.row}>
-                    <Text style={styles.label}>Referral Code:</Text>
-                    <Text style={styles.value}>USR1267</Text>
-                </View>
+                    <View style={styles.row}>
+                        <Text style={styles.label}>Referral Code:</Text>
+                        <Text style={styles.value}>USR1267</Text>
+                    </View>
 
-                <View style={styles.row}>
-                    <Text style={styles.label}>Primary mobile number:</Text>
-                    <View style={styles.phoneContainer}>
-                        <Icon name="phone" size={16} color="black" />
-                        <Text style={styles.value}> 916396740386,</Text>
-                        <Icon name="whatsapp" size={16} color="green" />
-                        <Text style={styles.value}> 916396740386</Text>
+                    <View style={styles.row}>
+                        <Text style={styles.label}>Primary mobile number:</Text>
+                        <View style={styles.phoneContainer}>
+                            <View style={{ flexDirection: 'row' }}>
+                                <Icon name="phone" size={16} color="black" />
+                                <Text style={styles.value}> 916396740386,</Text>
+                            </View>
+                            <View style={{ flexDirection: 'row' }}>
+                                <Icon name="whatsapp" size={16} color="green" />
+                                <Text style={styles.value}> 916396740386</Text>
+                            </View>
+                        </View>
+                    </View>
+
+                    <View style={styles.row}>
+                        <Text style={styles.label}>Primary Email:</Text>
+                        <View style={styles.emailContainer}>
+                            <Icon name="envelope" size={16} color="black" />
+                            <Text style={styles.value}> test@yopmail.com</Text>
+                        </View>
+                    </View>
+
+                    <View style={styles.row}>
+                        <Text style={styles.label}>Total Order:</Text>
+                        <Text style={styles.value}>2</Text>
+                    </View>
+
+                    <View style={styles.buttonContainer}>
+                        <TouchableOpacity style={styles.button} onPress={() => handleOpenEditModal()}>
+                            <LinearGradient
+                                start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
+                                colors={['#ff0080', '#1e7fca']}
+                                style={styles.gradientButton}>
+                                <Text style={styles.buttonText}>Edit Profile</Text>
+                            </LinearGradient>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity style={styles.button} onPress={() => handleNotificationOff()}>
+                            <LinearGradient
+                                start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
+                                colors={['#ff0080', '#1e7fca']}
+                                style={styles.gradientButton}>
+                                <Text style={styles.buttonText}>Notification off</Text>
+                            </LinearGradient>
+                        </TouchableOpacity>
                     </View>
                 </View>
+                <Modal
+                    animationType="slide"
+                    transparent={true}
+                    visible={OpenEditModal}
+                    onRequestClose={handleCloseEditModal}>
+                    <EditProfileModal onClose={handleCloseEditModal} />
+                </Modal>
 
-                <View style={styles.row}>
-                    <Text style={styles.label}>Primary Email:</Text>
-                    <View style={styles.emailContainer}>
-                        <Icon name="envelope" size={16} color="black" />
-                        <Text style={styles.value}> test@yopmail.com</Text>
-                    </View>
-                </View>
-
-                <View style={styles.row}>
-                    <Text style={styles.label}>Total Order:</Text>
-                    <Text style={styles.value}>2</Text>
-                </View>
-
-                <View style={styles.buttonContainer}>
-                    <TouchableOpacity style={styles.button} onPress={() => handleOpenEditModal()}>
-                        <LinearGradient
-                            start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
-                            colors={['#ff0080', '#1e7fca']}
-                            style={styles.gradientButton}>
-                            <Text style={styles.buttonText}>Edit Profile</Text>
-                        </LinearGradient>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity style={styles.button} onPress={() => handleNotificationOff()}>
-                        <LinearGradient
-                            start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
-                            colors={['#ff0080', '#1e7fca']}
-                            style={styles.gradientButton}>
-                            <Text style={styles.buttonText}>Notification off</Text>
-                        </LinearGradient>
-                    </TouchableOpacity>
-                </View>
-            </View>
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={OpenEditModal}
-                onRequestClose={handleCloseEditModal}>
-                <EditProfileModal onClose={handleCloseEditModal} />
-            </Modal>
-
-        </ScrollView>
-        </Layout>   
+            </ScrollView>
+        </Layout>
     );
 };
 
@@ -146,8 +152,8 @@ const styles = StyleSheet.create({
         color: '#555'
     },
     phoneContainer: {
-        flexDirection: 'row',
-        alignItems: 'center'
+        flexDirection: 'column',
+        alignItems: 'center',
     },
     emailContainer: {
         flexDirection: 'row',

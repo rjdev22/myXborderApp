@@ -6,11 +6,12 @@ import {
     StyleSheet,
     ScrollView,
     TouchableOpacity,
-    copyToClipboard
+   Clipboard
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import LinearGradient from 'react-native-linear-gradient';
 import Layout from '../Components/Common/Layout';
+import Toast from 'react-native-simple-toast';
 
 const DashBoardScreen = ({ navigation }) => {
     const addressData = {
@@ -24,8 +25,9 @@ const DashBoardScreen = ({ navigation }) => {
     };
 
     const copy = (text) => {
-        copyToClipboard(text);
-        alert("Copied to clipboard!");
+        Clipboard.setString(text);
+        Toast.show("Copied to clipboard", Toast.SHORT);
+        //alert("Copied to clipboard!");
     };
 
     return (

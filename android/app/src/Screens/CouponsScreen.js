@@ -9,18 +9,19 @@ const CouponsScreen = () => {
             <View style={styles.container}>
 
                 <Text style={styles.Headtitle}>My Xborder offers</Text>
+
                 <View style={styles.card}>
-                    <View>
+                    <View style={{ flexDirection: 'row', justifyContent: 'center', width: '100%' }}>
                         <Text style={styles.title}>Referral Bonus</Text>
-                        <Icon name="clone" size={24} color="white" />
+                        <Icon style={{ position: 'absolute', right: 20 }} name="clone" size={24} color="white" />
                     </View>
                     <Text style={styles.amount}>250</Text>
                     <Text style={styles.description}>Get Discount of INR 250 by referring to your Friends and family</Text>
                 </View>
                 <View style={styles.card}>
-                    <View>
+                <View style={{ flexDirection: 'row', justifyContent: 'center', width: '100%' }}>
                         <Text style={styles.title}>Sign Up Bonus</Text>
-                        <Icon name="clone" size={24} color="white" />
+                        <Icon style={{ position: 'absolute', right: 20 }} name="clone" size={24} color="white" />
                     </View>
                     <Text style={styles.amount}>150</Text>
                     <Text style={styles.description}>150 In your wallet after successful OTP verification</Text>
@@ -35,19 +36,20 @@ const styles = StyleSheet.create({
         padding: 16,
     },
     Headtitle: {
-        fontSize: 16,
+        fontSize: 15,
         fontWeight: 'bold',
         color: '#000000',
         borderBottomWidth: 1,
-        borderBottomColor: '#000000',
+        borderBottomColor: '#dedede',
+        marginBottom: 10,
+        paddingBottom: 5
     },
     card: {
         backgroundColor: '#ff1493',
-        padding: 16,
-        paddingHorizontal: 20,
-        paddingTop: 20,
+        paddingVertical: 20,
         borderRadius: 5,
         marginBottom: 10,
+        position: 'relative'
     },
     title: {
         fontSize: 18,
@@ -55,15 +57,20 @@ const styles = StyleSheet.create({
         color: 'white',
     },
     amount: {
-        fontSize: 24,
+        fontSize: 40,
         fontWeight: 'bold',
-       // fontFamily: 'Montserrat',
+        // fontFamily: 'poppins',
         color: 'gold',
         marginVertical: 8,
+        textAlign: 'center',
+       
     },
     description: {
         fontSize: 14,
         color: 'white',
+        textAlign: 'center',
+        lineHeight: 20,
+        paddingHorizontal: 100
     },
 });
 
