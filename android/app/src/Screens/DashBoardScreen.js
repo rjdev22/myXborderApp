@@ -31,7 +31,7 @@ const DashBoardScreen = ({ navigation }) => {
     };
 
     return (
-        <Layout>
+      
             <ScrollView style={styles.content}
                 showsVerticalScrollIndicator={false}
                 showsHorizontalScrollIndicator={false}>
@@ -110,8 +110,6 @@ const DashBoardScreen = ({ navigation }) => {
                 </View>
 
             </ScrollView  >
-            </Layout>
-
     );
 };
 

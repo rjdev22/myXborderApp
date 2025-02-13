@@ -58,7 +58,7 @@ const HomeScreen = ({ navigation }) => {
   //   };
 
   return (
-    <Layout>
+
     <View>
       {/* Content */}
       <ScrollView
@@ -149,7 +149,7 @@ const HomeScreen = ({ navigation }) => {
         </View>
       </Modal>
     </View>
-    </Layout>
+  
   );
 };
 

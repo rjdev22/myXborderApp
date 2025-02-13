@@ -31,7 +31,7 @@ const InternationalShipmentScreen = ({ navigation }) => {
 
     return (
      
-        <Layout>
+        
 
             <ScrollView
                 showsVerticalScrollIndicator={false}
@@ -74,7 +74,7 @@ const InternationalShipmentScreen = ({ navigation }) => {
                     </View>
                 </View>
             </ScrollView>
-            </Layout>
+          
     );
 };
 

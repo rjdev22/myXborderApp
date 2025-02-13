@@ -32,24 +32,101 @@ export const navigationRef = createNavigationContainerRef();
 // Stack Navigator for Screens
 function StackNavigator() {
   return (
-
     <Stack.Navigator
       initialRouteName="HomeScreen"
       screenOptions={{ headerShown: false }}
     >
-      <Stack.Screen name="HomeScreen" component={HomeScreen} />
-      <Stack.Screen name="LoginScreen" component={LoginScreen} />
-      <Stack.Screen name="UserProfileScreen" component={UserProfileScreen} />
-      <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
-      {/* <Stack.Screen name="DashBoardScreen" component={DashBoardScreen} /> */}
-      <Stack.Screen name="ShopNshipScreen" component={ShopNshipScreen} />
-      <Stack.Screen name="AddShopNShipScreen" component={AddShopNShipScreen} />
-      <Stack.Screen name="AssistedShopNShipScreen" component={AssistedShopNShipScreen} />
-      <Stack.Screen name="AddAssistedShopNShipScreen" component={AddAssistedShopNShipScreen} />
-      <Stack.Screen name="InternationalShipmentScreen" component={InternationalShipmentScreen} />
-      <Stack.Screen name="AddInternationalShipmentScreen" component={AddInternationalShipmentScreen} />
-      <Stack.Screen name="CouponsScreen" component={CouponsScreen} />
-      <Stack.Screen name="HelpAndSupportScreen" component={HelpAndSupportScreen} />
+      <Stack.Screen name="HomeScreen">
+        {() => (
+          <Layout>
+            <HomeScreen />
+          </Layout>
+        )}
+      </Stack.Screen>
+      <Stack.Screen name="DashBoardScreen">
+        {() => (
+          <Layout>
+            <DashBoardScreen />
+          </Layout>
+        )}
+      </Stack.Screen>
+      <Stack.Screen name="LoginScreen">
+        {() => (
+          <Layout>
+            <LoginScreen />
+          </Layout>
+        )}
+      </Stack.Screen>
+      <Stack.Screen name="UserProfileScreen">
+        {() => (
+          <Layout>
+            <UserProfileScreen />
+          </Layout>
+        )}
+      </Stack.Screen>
+      <Stack.Screen name="SignUpScreen">
+        {() => (
+          <Layout>
+            <SignUpScreen />
+          </Layout>
+        )}
+      </Stack.Screen>
+      <Stack.Screen name="ShopNshipScreen">
+        {() => (
+          <Layout>
+            <ShopNshipScreen />
+          </Layout>
+        )}
+      </Stack.Screen>
+      <Stack.Screen name="AddShopNShipScreen">
+        {() => (
+          <Layout>
+            <AddShopNShipScreen />
+          </Layout>
+        )}
+      </Stack.Screen>
+      <Stack.Screen name="AssistedShopNShipScreen">
+        {() => (
+          <Layout>
+            <AssistedShopNShipScreen />
+          </Layout>
+        )}
+      </Stack.Screen>
+      <Stack.Screen name="AddAssistedShopNShipScreen">
+        {() => (
+          <Layout>
+            <AddAssistedShopNShipScreen />
+          </Layout>
+        )}
+      </Stack.Screen>
+      <Stack.Screen name="InternationalShipmentScreen">
+        {() => (
+          <Layout>
+            <InternationalShipmentScreen />
+          </Layout>
+        )}
+      </Stack.Screen>
+      <Stack.Screen name="AddInternationalShipmentScreen">
+        {() => (
+          <Layout>
+            <AddInternationalShipmentScreen />
+          </Layout>
+        )}
+      </Stack.Screen>
+      <Stack.Screen name="CouponsScreen">
+        {() => (
+          <Layout>
+            <CouponsScreen />
+          </Layout>
+        )}
+      </Stack.Screen>
+      <Stack.Screen name="HelpAndSupportScreen">
+        {() => (
+          <Layout>
+            <HelpAndSupportScreen />
+          </Layout>
+        )}
+      </Stack.Screen>
     </Stack.Navigator>
   );
 }
@@ -71,7 +148,7 @@ function CustomDrawerContent(props) {
       />
       <DrawerItem
         label="About"
-        onPress={() => Linking.openURL('https://mywebsite.com/help')}
+        onPress={() => Linking.openURL('https://myxborder.com/about-us')}
       />
       <DrawerItem
         label="Services"
@@ -79,10 +156,10 @@ function CustomDrawerContent(props) {
       />
       <DrawerItem
         label="Offers"
-        onPress={() => Linking.openURL('https://mywebsite.com/help')}
+        onPress={() => Linking.openURL('https://myxborder.com/offer/list')}
       />   <DrawerItem
         label="Shipping Rates"
-        onPress={() => Linking.openURL('https://mywebsite.com/help')}
+        onPress={() => Linking.openURL('https://myxborder.com/shipping-rates')}
       />   <DrawerItem
         label="How it Works"
         onPress={() => Linking.openURL('https://mywebsite.com/help')}
@@ -93,11 +170,11 @@ function CustomDrawerContent(props) {
       />
       <DrawerItem
         label="Faq"
-        onPress={() => Linking.openURL('https://mywebsite.com/help')}
+        onPress={() => Linking.openURL('https://myxborder.com/faqs')}
       />
       <DrawerItem
         label="Duty & Taxes"
-        onPress={() => Linking.openURL('https://mywebsite.com/help')}
+        onPress={() => Linking.openURL('https://myxborder.com/duty-taxes')}
       />
       {/* <DrawerItem
         label="Settings"
@@ -128,16 +205,55 @@ function DrawerNavigator() {
       <Drawer.Screen name="Dashboard"
         options={{
           drawerLabel: 'Dashboard',
+
           drawerIcon: ({ color, size }) => (
             <Icon name="dashboard" color={'#000'} size={14} />
           ),
         }}
-        component={DashBoardScreen} />
-      <Drawer.Screen name="Shop N Ship" component={ShopNshipScreen} />
-      <Drawer.Screen name="Assisted Shop N Ship" component={AssistedShopNShipScreen} />
-      <Drawer.Screen name="International Shipment" component={InternationalShipmentScreen} />
-      <Drawer.Screen name="Coupons" component={CouponsScreen} />
-      <Drawer.Screen name="Help & Support" component={HelpAndSupportScreen} />
+      >
+        {() => (
+          <Layout>
+            <DashBoardScreen />
+          </Layout>
+        )}
+      </Drawer.Screen>
+      <Drawer.Screen name="Shop N Ship" >
+        {() => (
+          <Layout>
+            <ShopNshipScreen />
+          </Layout>
+        )}
+      </Drawer.Screen>
+      <Drawer.Screen name="Assisted Shop N Ship" >
+        {() => (
+          <Layout>
+            <AssistedShopNShipScreen />
+          </Layout>
+        )}
+
+      </Drawer.Screen>
+      <Drawer.Screen name="International Shipment">
+        {() => (
+          <Layout>
+            <InternationalShipmentScreen />
+          </Layout>
+        )}
+      </Drawer.Screen>
+
+      <Drawer.Screen name="Coupons" >
+        {() => (
+          <Layout>
+            <CouponsScreen />
+          </Layout>
+        )}
+      </Drawer.Screen>
+      <Drawer.Screen name="Help & Support" >
+        {() => (
+          <Layout>
+            <HelpAndSupportScreen />
+          </Layout>
+        )}
+      </Drawer.Screen>
       {/* <Drawer.Item name="Logout" onPress={() => navigationRef.navigate('LoginScreen')} /> */}
 
     </Drawer.Navigator>
@@ -151,9 +267,10 @@ export default function AppNavigation() {
     <PaperProvider>
       <NavigationContainer ref={navigationRef}>
 
-        <DrawerNavigator/>
-
-    </NavigationContainer>
+        {/* <Layout> */}
+        <DrawerNavigator />
+        {/* </Layout> */}
+      </NavigationContainer>
     </PaperProvider >
   );
 }

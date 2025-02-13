@@ -6,11 +6,11 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 const HelpAndSupportScreen = () => {
   return (
-    <Layout>
+  
       <View style={{ alignItems: 'center', padding: 20}}>
         <Image 
-          source={{ uri: 'https://your-image-url.com/help-icon.png' }} 
-          style={{ width: 80, height: 80, marginBottom: 20 }} 
+        source={require('../assets/customer_support.png')}
+          style={{ width: 140, height: 140, marginBottom: 20 }} 
         />
         <Text style={{ fontSize: 20, fontWeight: 'bold', textAlign: 'center' }}>
           How we can help you?
@@ -27,7 +27,7 @@ const HelpAndSupportScreen = () => {
          <Text style={{color:'#000000',fontSize:16,fontWeight:'bold'}}>Chat on Whatsapp</Text>
         </TouchableOpacity>
       </View>
-    </Layout>
+  
   );
 };
 

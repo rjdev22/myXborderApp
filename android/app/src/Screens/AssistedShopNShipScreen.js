@@ -31,7 +31,7 @@ const AssistedShopNShipScreen = ({ navigation }) => {
 
     return (
       
-        <Layout>
+        
             <ScrollView
                 showsVerticalScrollIndicator={false}
                 showsHorizontalScrollIndicator={false}
@@ -73,7 +73,7 @@ const AssistedShopNShipScreen = ({ navigation }) => {
                     </View>
                 </View>
             </ScrollView>
-            </Layout>
+           
           
     );
 };

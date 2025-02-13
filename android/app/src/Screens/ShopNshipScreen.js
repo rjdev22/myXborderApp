@@ -35,7 +35,7 @@ const ShopNshipScreen = ({ navigation }) => {
 
 
     return (
-        <Layout>
+   
             <ScrollView
                 showsVerticalScrollIndicator={false}
                 showsHorizontalScrollIndicator={false}
@@ -82,7 +82,7 @@ const ShopNshipScreen = ({ navigation }) => {
                     </View>
                 </View>
             </ScrollView>
-        </Layout>
+       
     );
 };
 
