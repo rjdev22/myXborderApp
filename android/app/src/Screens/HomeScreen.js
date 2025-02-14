@@ -72,8 +72,9 @@ const HomeScreen = ({ navigation }) => {
         />
         <View style={styles.content}>
           {/* Referral Bonus */}
+
           <View style={styles.referralCard}>
-            <Text style={styles.bonusTitle}>Referral Bonus</Text>
+            <Text style={styles.bonusTitle} onPress={()=>navigation.navigate('DashBoardScreen')}>Referral Bonus</Text>
             <Text style={styles.amount}>{referralAmount} INR</Text>
           </View>
 

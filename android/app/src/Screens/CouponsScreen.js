@@ -3,11 +3,11 @@ import { View, Text, StyleSheet } from 'react-native';
 import Layout from '../Components/Common/Layout';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
+
 const CouponsScreen = () => {
     return (
             <View style={styles.container}>
                 <Text style={styles.Headtitle}>My Xborder offers</Text>
-
                 <View style={styles.card}>
                     <View style={{ flexDirection: 'row', justifyContent: 'center', width: '100%' }}>
                         <Text style={styles.title}>Referral Bonus</Text>

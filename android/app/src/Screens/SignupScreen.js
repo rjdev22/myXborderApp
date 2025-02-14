@@ -30,7 +30,7 @@ const SignupScreen = ({navigation}) => {
                 placeholder="dev@dev.com"
                 keyboardType="email-address"
                 value={email}
-                onChangeText={setEmail}s
+                onChangeText={setEmail}
             />
 
             {/* reCAPTCHA Checkbox */}
@@ -52,12 +52,12 @@ const SignupScreen = ({navigation}) => {
             {/* Sign Up Link */}
             <Text style={styles.signUpText}>
                 Already have an account? <Text style={styles.signUpLink}  onPress={() => navigation.navigate("LoginScreen")}>Sign In</Text>
-            </Text>
+            </Text>               
 
             {/* Social Login Buttons */}
             <TouchableOpacity style={styles.socialButton}>
                 {/* <Icon name="google" size={20} color="black" /> */}
-                <Image source={require("../assets/google.png")} style={{ width: 30, height: 30 }}    />
+                <Image source={require("../assets/google.png")} style={{ width: 30, height: 30 }} />
                 <Text style={styles.socialText}> Sign Up With Google</Text>
             </TouchableOpacity>
 

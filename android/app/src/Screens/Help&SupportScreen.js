@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { View, Text, TouchableOpacity, Image,StyleSheet } from 'react-native';
 import Layout from '../Components/Common/Layout';
@@ -22,11 +21,11 @@ const HelpAndSupportScreen = () => {
         <TouchableOpacity 
           style={styles.whatsappCard}
         >
-          
          <Icon name="whatsapp" size={35} color="green" />
          <Text style={{color:'#000000',fontSize:16,fontWeight:'bold'}}>Chat on Whatsapp</Text>
         </TouchableOpacity>
       </View>
+      
   
   );
 };
