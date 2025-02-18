@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 const HelpAndSupportScreen = () => {
   return (
-  
+    <Layout>
       <View style={{ alignItems: 'center', padding: 20}}>
         <Image 
         source={require('../assets/customer_support.png')}
@@ -25,7 +25,7 @@ const HelpAndSupportScreen = () => {
          <Text style={{color:'#000000',fontSize:16,fontWeight:'bold'}}>Chat on Whatsapp</Text>
         </TouchableOpacity>
       </View>
-      
+      </Layout>
   
   );
 };

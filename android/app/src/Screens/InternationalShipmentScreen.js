@@ -6,6 +6,7 @@ import {
     StyleSheet,
     ScrollView,
     TouchableOpacity,
+    TextInput,
     copyToClipboard
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -30,27 +31,33 @@ const InternationalShipmentScreen = ({ navigation }) => {
     };
 
     return (
-     
-        
+
+        <Layout>
 
             <ScrollView
                 showsVerticalScrollIndicator={false}
                 showsHorizontalScrollIndicator={false}
                 style={styles.content}>
                 <View style={styles.orderContainer}>
-
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Search"
+                    // keyboardType=""
+                    //value={query}
+                    // onChangeText={setQuery}
+                    />
                 </View>
                 <View style={styles.orderContainer}>
                     <View style={styles.orderHeader}>
                         <Text style={styles.orderCount}>No. of Orders: <Text style={{ color: 'red' }}>(1)</Text></Text>
                         <TouchableOpacity onPress={() => navigation.navigate('AddInternationalShipmentScreen')}>
-                        <LinearGradient
-                            start={{ x: 0, y: 0 }}
-                            end={{ x: 1, y: 0 }}
-                            colors={['#FF0080', '#1e7fca']}
-                            style={styles.createOrderButton}>
-                            <Text style={styles.createOrderText}>+ Create Order</Text>
-                        </LinearGradient>
+                            <LinearGradient
+                                start={{ x: 0, y: 0 }}
+                                end={{ x: 1, y: 0 }}
+                                colors={['#FF0080', '#1e7fca']}
+                                style={styles.createOrderButton}>
+                                <Text style={styles.createOrderText}>+ Create Order</Text>
+                            </LinearGradient>
                         </TouchableOpacity>
                     </View>
 
@@ -74,12 +81,12 @@ const InternationalShipmentScreen = ({ navigation }) => {
                     </View>
                 </View>
             </ScrollView>
-          
+        </Layout>
     );
 };
 
 const styles = StyleSheet.create({
- 
+
     content: { padding: 10 },
     profileCard: {
         flexDirection: 'row',
@@ -127,7 +134,7 @@ const styles = StyleSheet.create({
     sectionTitle: { fontSize: 18, fontWeight: 'bold', marginBottom: 5 },
     addressText: { fontSize: 14, color: 'gray' },
     addressValue: { fontSize: 16, color: 'black' },
-  
+
     headerText: {
         fontSize: 16,
         //fontWeight: "bold",
@@ -207,6 +214,16 @@ const styles = StyleSheet.create({
         color: 'white',
         fontWeight: 'bold',
     },
+    input: {
+        width: "100%",
+        padding: 10,
+        borderWidth: 1,
+        borderColor: "#ccc",
+        borderRadius: 8,
+        marginBottom: 10,
+        fontSize: 16,
+    },
+
 
 });
 

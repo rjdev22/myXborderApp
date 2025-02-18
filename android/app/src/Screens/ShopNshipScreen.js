@@ -35,7 +35,7 @@ const ShopNshipScreen = ({ navigation }) => {
 
 
     return (
-   
+        <Layout>
             <ScrollView
                 showsVerticalScrollIndicator={false}
                 showsHorizontalScrollIndicator={false}
@@ -52,7 +52,9 @@ const ShopNshipScreen = ({ navigation }) => {
              
                 <View style={styles.orderContainer}>
                     <View style={styles.orderHeader}>
+                       
                         <Text style={styles.orderCount}>No. of Orders: <Text style={{ color: 'red' }}>(1)</Text></Text>
+                        <TouchableOpacity onPress={() => navigation.navigate('AddAssistedShopNShipScreen')}>
                         <LinearGradient
                             start={{ x: 0, y: 0 }}
                             end={{ x: 1, y: 0 }}
@@ -60,6 +62,7 @@ const ShopNshipScreen = ({ navigation }) => {
                             style={styles.createOrderButton}>
                             <Text style={styles.createOrderText}>+ Create Order</Text>
                         </LinearGradient>
+                      </TouchableOpacity>
                     </View>
 
 
@@ -82,7 +85,7 @@ const ShopNshipScreen = ({ navigation }) => {
                     </View>
                 </View>
             </ScrollView>
-       
+        </Layout>
     );
 };
 

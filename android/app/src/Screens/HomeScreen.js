@@ -14,23 +14,29 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { imageUrl, homeApi, referralAmountApi } from '../services/apiServices';
 import { SvgUri } from 'react-native-svg';
 import Layout from '../Components/Common/Layout';
+import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
+import LinearGradient from 'react-native-linear-gradient';
 
-
+const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);  
 const HomeScreen = ({ navigation }) => {
   const [referralAmount, setReferralAmount] = useState(0);
   const [services, setServices] = useState([]);
   const [offers, setOffers] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
 
   const getHomeContent = async () => {
     try {
+      setIsLoading(true)
       const response = await fetch(homeApi);
       const data = await response.json();
       setServices(data.data.services?.data || []);
       setOffers(data.data.offers?.data || []);
+      setIsLoading(false)
     } catch (error) {
       console.error('Error fetching home content:', error);
+      setIsLoading(false)
     }
   };
 
@@ -53,16 +59,12 @@ const HomeScreen = ({ navigation }) => {
   const goToProfile = () => setModalVisible(true);
 
 
-  //   const offerdeals = (offer) => {
-  //     console.log('Selected offer:', offer);
-  //   };
-
   return (
-
+<Layout>
     <View>
       {/* Content */}
       <ScrollView
-      style={styles.scrollContainer}
+        style={styles.scrollContainer}
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}>
         {/* Banner Image */}
@@ -74,31 +76,38 @@ const HomeScreen = ({ navigation }) => {
           {/* Referral Bonus */}
 
           <View style={styles.referralCard}>
-            <Text style={styles.bonusTitle} onPress={()=>navigation.navigate('DashBoardScreen')}>Referral Bonus</Text>
+            <Text style={styles.bonusTitle} onPress={() => navigation.navigate('DashBoardScreen')}>Referral Bonus</Text>
             <Text style={styles.amount}>{referralAmount} INR</Text>
           </View>
 
           {/* Exciting Deals */}
-          <Text style={styles.sectionTitle}>Exciting Deals</Text>
-          <FlatList
-            data={offers}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({ item }) => (
-              <TouchableOpacity
-                style={styles.offerCard}
-             
-              >
-                <Image
-                  source={{ uri: imageUrl + '/' + item.image }}
-                  style={styles.offerImage}
-                />
-                <Text style={styles.offerTitle}>{item.name}</Text>
-                <Text style={styles.offerSubtitle}>{item.off}</Text>
-              </TouchableOpacity>
-            )}
-          />
+          <Text style={styles.sectionTitle}onPress={() => navigation.navigate('SplashScreen')}>Exciting Deals</Text>
+
+        
+            <FlatList
+              data={offers}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={({ item }) => (
+                <TouchableOpacity style={styles.offerCard}>
+
+                  {/* <ShimmerPlaceholder visible={!isLoading} style={styles.offerCardplaceholder}> */}
+                  <Image
+                    source={{ uri: imageUrl + '/' + item.image }}
+                    style={styles.offerImage}
+                  />
+
+                  <Text style={styles.offerTitle}>{item.name}</Text>
+                  <Text style={styles.offerSubtitle}>{item.off}</Text>
+                {/* </ShimmerPlaceholder> */}
+                </TouchableOpacity>
+              )}
+            />
+          
+
+
+
 
           {/* Services */}
           <Text style={styles.sectionTitle}>Services</Text>
@@ -150,7 +159,7 @@ const HomeScreen = ({ navigation }) => {
         </View>
       </Modal>
     </View>
-  
+    </Layout>
   );
 };
 
@@ -164,7 +173,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     //backgroundColor: 'white',
   },
- 
+
   backgroundImage: {
     width: '100%', height: 200, resizeMode: 'cover'
   },
@@ -230,7 +239,7 @@ const styles = StyleSheet.create({
     color: '#ff0080',
     paddingBottom: 10
   },
- 
+
   offerCard: {
     backgroundColor: 'white',
     borderRadius: 5,
@@ -238,6 +247,13 @@ const styles = StyleSheet.create({
     padding: 5,
     elevation: 2,
     width: width * 0.7,
+  },
+  offerCardplaceholder:{
+    backgroundColor: 'white',
+    borderRadius: 5,
+    margin: 5,
+    width: width * 0.7,
+    height: 200
   },
   offerImage: {
     width: '80%',

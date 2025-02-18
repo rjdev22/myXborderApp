@@ -12,6 +12,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import LinearGradient from 'react-native-linear-gradient';
 import Toast from 'react-native-simple-toast';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
+import Layout from '../Components/Common/Layout';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -40,6 +41,7 @@ const DashBoardScreen = ({ navigation }) => {
     };
 
     return (
+        <Layout>
         <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
             {/* Profile Card */}
             <View style={styles.profileCard}>
@@ -88,6 +90,7 @@ const DashBoardScreen = ({ navigation }) => {
                 ))}
             </View>
         </ScrollView>
+        </Layout>
     );
 };
 

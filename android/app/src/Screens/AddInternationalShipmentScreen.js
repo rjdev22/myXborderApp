@@ -20,7 +20,7 @@ import Layout from '../Components/Common/Layout';
 const AddInternationalShipmentScreen = ({ navigation }) => {
     return (                             
 
-        
+        <Layout>
         <ScrollView style={styles.content}
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}>
@@ -45,7 +45,7 @@ const AddInternationalShipmentScreen = ({ navigation }) => {
                 </LinearGradient>
             </View>
         </ScrollView>
-      
+        </Layout>
     );
 };
 

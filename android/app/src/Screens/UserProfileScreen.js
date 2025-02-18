@@ -13,6 +13,9 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import EditProfileModal from '../Components/Modals/EditProfileModal';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
+import Layout from '../Components/Common/Layout';
+
+
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -39,6 +42,7 @@ const UserProfileScreen = () => {
     };
 
     return (
+        <Layout>
         <ScrollView
             style={styles.content}
             showsVerticalScrollIndicator={false}
@@ -199,6 +203,7 @@ const UserProfileScreen = () => {
                 <EditProfileModal onClose={handleCloseEditModal} />
             </Modal>
         </ScrollView>
+         </Layout>
     );
 };
 

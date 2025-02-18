@@ -17,7 +17,7 @@ import Layout from '../Components/Common/Layout';
 const AddShopNShipScreen = ({ navigation }) => {
 
     return (
-     
+     <Layout>
         <View style={styles.container}>
             <ScrollView style={styles.content}
                 showsVerticalScrollIndicator={false}
@@ -87,7 +87,7 @@ const AddShopNShipScreen = ({ navigation }) => {
             </ScrollView>
      
         </View>
-       
+        </Layout>
     );
 };
 

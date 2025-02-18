@@ -11,10 +11,7 @@ const LoginScreen = ({navigation}) => {
 
         
         <View style={styles.container}>
-            {/* Logo */}
-        
-
-            {/* Sign In Title */}
+         
             <Text style={styles.title}>Sign In</Text>
 
             {/* Email Input */}
@@ -50,13 +47,11 @@ const LoginScreen = ({navigation}) => {
 
             {/* Social Login Buttons */}
             <TouchableOpacity style={styles.socialButton}>
-                {/* <Icon name="google" size={20} color="black" /> */}
                 <Image source={require("../assets/google.png")} style={{ width: 30, height: 30 }} />
                 <Text style={styles.socialText}> Sign Up With Google</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.socialButton}>
-                {/* <Icon name="facebook" size={20} color="black" /> */}
                 <Image source={require("../assets/facebook.webp")} style={{ width: 30, height: 30 }} />
                 <Text style={styles.socialText}> Sign Up With Facebook</Text>
             </TouchableOpacity>

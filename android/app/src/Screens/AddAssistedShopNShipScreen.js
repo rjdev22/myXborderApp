@@ -14,11 +14,11 @@ import LinearGradient from 'react-native-linear-gradient';
 import Layout from '../Components/Common/Layout';
 
 
+
 const AddAssistedShopNShipScreen = ({ navigation }) => {
 
-
     return (
-    
+        <Layout>
         <ScrollView style={styles.content}
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}>
@@ -82,7 +82,7 @@ const AddAssistedShopNShipScreen = ({ navigation }) => {
                 </LinearGradient>
             </View>
         </ScrollView>
-    
+    </Layout>
 
     );
 };

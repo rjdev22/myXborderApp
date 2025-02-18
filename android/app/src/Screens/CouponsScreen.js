@@ -6,6 +6,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 const CouponsScreen = () => {
     return (
+        <Layout>
             <View style={styles.container}>
                 <Text style={styles.Headtitle}>My Xborder offers</Text>
                 <View style={styles.card}>
@@ -25,7 +26,7 @@ const CouponsScreen = () => {
                     <Text style={styles.description}>150 In your wallet after successful OTP verification</Text>
                 </View>
             </View>
-       
+       </Layout>
     );
 };
 

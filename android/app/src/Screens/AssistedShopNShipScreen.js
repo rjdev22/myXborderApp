@@ -6,7 +6,8 @@ import {
     StyleSheet,
     ScrollView,
     TouchableOpacity,
-    copyToClipboard
+    copyToClipboard,
+    TextInput
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import LinearGradient from 'react-native-linear-gradient';
@@ -31,14 +32,20 @@ const AssistedShopNShipScreen = ({ navigation }) => {
 
     return (
       
-        
+        <Layout>
             <ScrollView
                 showsVerticalScrollIndicator={false}
                 showsHorizontalScrollIndicator={false}
                 style={styles.content}>
-                <View style={styles.orderContainer}>
-
-                </View>
+              <View style={styles.orderContainer}>
+                                <TextInput
+                                    style={styles.input}
+                                    placeholder="Search"
+                                    // keyboardType=""
+                                    //value={query}
+                                   // onChangeText={setQuery}
+                                />
+                            </View>
                 <View style={styles.orderContainer}>
                     <View style={styles.orderHeader}>
                         <Text style={styles.orderCount}>No. of Orders: <Text style={{ color: 'red' }}>(1)</Text></Text>
@@ -73,7 +80,7 @@ const AssistedShopNShipScreen = ({ navigation }) => {
                     </View>
                 </View>
             </ScrollView>
-           
+           </Layout>
           
     );
 };
@@ -202,6 +209,16 @@ const styles = StyleSheet.create({
         color: 'white',
         fontWeight: 'bold',
     },
+    input: {
+        width: "100%",
+        padding: 10,
+        borderWidth: 1,
+        borderColor: "#ccc",
+        borderRadius: 8,
+        marginBottom: 10,
+        fontSize: 16,
+    },
+
 
 });
 
