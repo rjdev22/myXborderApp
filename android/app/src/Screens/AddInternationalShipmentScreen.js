@@ -15,16 +15,19 @@ import Layout from '../Components/Common/Layout';
 
 
 
-
-
 const AddInternationalShipmentScreen = ({ navigation }) => {
+    
     return (                             
 
         <Layout>
         <ScrollView style={styles.content}
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}>
-             
+             <View style={{marginBottom: 30,marginTop: 20}}>
+                <Text style={{fontSize: 16,fontWeight: 'bold'}}>Add Order Details</Text>
+             </View>
+
+
             <View style={styles.inputGroup}>
                 <Text style={styles.label}>Order Type*</Text>
                 <TextInput style={styles.input} placeholder="Enter item URL" />
@@ -51,10 +54,8 @@ const AddInternationalShipmentScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
 
-    content: { paddingHorizontal: 15 },
-    ordersSection: { backgroundColor: 'white', padding: 10, borderRadius: 10, elevation: 3 },
-    addItemButton: { alignSelf: "flex-end", marginTop: 5 },
-    addItemText: { color: "#ff0080", fontSize: 16, fontWeight: "bold" },
+    content: { paddingHorizontal: 15 ,backgroundColor: '#fff' },
+   
     headerText: {
         fontSize: 16,
         //fontWeight: "bold",
@@ -64,8 +65,13 @@ const styles = StyleSheet.create({
     grandTotal: { fontSize: 16 },
     nextButton: {
         paddingVertical: 5,
-        borderRadius: 8,
-        padding: 10
+        borderRadius: 5,
+        padding: 10,
+        width: 130,
+        flex:1,
+        alignContent:'right',
+        justifyContent:'flex-end',
+        alignItems:'right'
     },
     nextButtonText: { color: "#fff", fontSize: 16, fontWeight: "bold", textAlign: "center" },
     inputGroup: { marginBottom: 15 },

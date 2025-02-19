@@ -2,18 +2,17 @@ import React, { useEffect, useState } from 'react';
 import {
     View,
     Text,
-    Image,
     StyleSheet,
     ScrollView,
     TouchableOpacity,
-    TextInput,
-    copyToClipboard
+    TextInput
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import LinearGradient from 'react-native-linear-gradient';
 import Layout from '../Components/Common/Layout';
+import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 
-
+const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const InternationalShipmentScreen = ({ navigation }) => {
     const addressData = {
         Name: "test test2",
@@ -25,32 +24,45 @@ const InternationalShipmentScreen = ({ navigation }) => {
         PhoneNumber: "721170063",
     };
 
-    const copy = (text) => {
-        copyToClipboard(text);
-        alert("Copied to clipboard!");
-    };
+
+    const [query, setQuery] = useState('');
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        setTimeout(() => {
+            setIsLoading(false);
+        }, 5000);
+    }, []);
+
 
     return (
-
         <Layout>
-
             <ScrollView
                 showsVerticalScrollIndicator={false}
                 showsHorizontalScrollIndicator={false}
                 style={styles.content}>
-                <View style={styles.orderContainer}>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Search"
-                    // keyboardType=""
-                    //value={query}
-                    // onChangeText={setQuery}
-                    />
+                <View style={styles.searchContainer}>
+                    <View style={styles.dropdown}>
+                        <Text>All orders </Text>  <Icon name="angle-down" size={20} color="gray" style={styles.searchIcon} />
+                    </View>
+                    <View style={styles.inputContainer}>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Search"
+                            value={query}
+                            onChangeText={setQuery}
+                        />
+                        <Icon name="search" size={20} color="gray" style={styles.searchIcon} />
+                    </View>
                 </View>
+
+
                 <View style={styles.orderContainer}>
                     <View style={styles.orderHeader}>
-                        <Text style={styles.orderCount}>No. of Orders: <Text style={{ color: 'red' }}>(1)</Text></Text>
-                        <TouchableOpacity onPress={() => navigation.navigate('AddInternationalShipmentScreen')}>
+                        <ShimmerPlaceholder visible={!isLoading} style={{ height: 20 }}  >
+                            <Text style={styles.orderCount}>No. of Orders: <Text style={{ color: 'red' }}>(1)</Text></Text>
+                        </ShimmerPlaceholder>
+                        <TouchableOpacity onPress={() => navigation.navigate('AddAssistedShopNShipScreen')}>
                             <LinearGradient
                                 start={{ x: 0, y: 0 }}
                                 end={{ x: 1, y: 0 }}
@@ -64,20 +76,31 @@ const InternationalShipmentScreen = ({ navigation }) => {
 
                 </View>
                 <View>
-                    <View style={styles.orderContainer}>
+                    <View style={styles.orderdetailsContainer}>
                         <View >
-                            <Text style={styles.detailText}><Text style={styles.boldText}>Date:</Text> Jan 28, 2025</Text>
-                            <Text style={styles.detailText}><Text style={styles.boldText}>MXB-Order Id:</Text> SNS3315</Text>
-                            <Text style={styles.detailText}><Text style={styles.boldText}>Order Type:</Text> <Text style={{ fontWeight: 'bold' }}>Personal \ Gift</Text></Text>
-                            <Text style={styles.detailText}><Text style={styles.boldText}>Payment Status:</Text> <Text style={{ fontWeight: 'bold' }}>NotCreated</Text></Text>
+                            <ShimmerPlaceholder visible={!isLoading} style={styles.detailPlaceholder}>
+                                <Text style={styles.detailText}><Text style={styles.boldText}>Date:</Text> Jan 28, 2025</Text>
+                            </ShimmerPlaceholder>
+                            <ShimmerPlaceholder visible={!isLoading} style={styles.detailPlaceholder}>
+                                <Text style={styles.detailText}><Text style={styles.boldText}>MXB-Order Id:</Text> SNS3315</Text>
+                            </ShimmerPlaceholder>
+                            <ShimmerPlaceholder visible={!isLoading} style={styles.detailPlaceholder}>
+                                <Text style={styles.detailText}><Text style={styles.boldText}>Order Type:</Text> <Text style={{ fontWeight: 'bold' }}>Personal \ Gift</Text></Text>
+                            </ShimmerPlaceholder>
+                            <ShimmerPlaceholder visible={!isLoading} style={styles.detailPlaceholder}>
+                                <Text style={styles.detailText}><Text style={styles.boldText}>Payment Status:</Text> <Text style={{ fontWeight: 'bold' }}>NotCreated</Text></Text>
+
+                            </ShimmerPlaceholder>
                         </View>
-                        <LinearGradient
-                            start={{ x: 0, y: 0 }}
-                            end={{ x: 1, y: 0 }}
-                            colors={['#FF0080', '#1e7fca']}
-                            style={styles.detailsButton}>
-                            <Text style={styles.detailsButtonText}>Details</Text>
-                        </LinearGradient>
+                        <ShimmerPlaceholder visible={!isLoading} style={styles.buttonPlaceholder}>
+                            <LinearGradient
+                                start={{ x: 0, y: 0 }}
+                                end={{ x: 1, y: 0 }}
+                                colors={['#FF0080', '#1e7fca']}
+                                style={styles.detailsButton}>
+                                <Text style={styles.detailsButtonText}>Details</Text>
+                            </LinearGradient>
+                        </ShimmerPlaceholder>
                     </View>
                 </View>
             </ScrollView>
@@ -86,27 +109,64 @@ const InternationalShipmentScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-
     content: { padding: 10 },
     profileCard: {
         flexDirection: 'row',
         alignItems: 'center',
         backgroundColor: 'white',
         padding: 15,
-        borderRadius: 10,
+        borderRadius: 5,
         elevation: 3,
         marginBottom: 10,
     },
-    profileImage: {
-        width: 50,
-        height: 50,
-        borderRadius: 25,
-        backgroundColor: '#ddd',
-        marginRight: 10,
+    searchContainer: {
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        columnGap: 10,
+        borderWidth: 1,
+        borderColor: "#ccc",
+        borderRadius: 5,
+        padding: 10,
+        alignItems: "center",
+        backgroundColor: "white",
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 5,
+        elevation: 2,
+        marginBottom: 10,
     },
-    profileName: { fontSize: 18, fontWeight: 'bold' },
-    profileDetails: { fontSize: 14, color: 'black', fontWeight: 'bold' },
-    ordersSection: { backgroundColor: 'white', padding: 10, borderRadius: 10, elevation: 3 },
+    dropdown: {
+        flex: 1,
+        padding: 10,
+        borderWidth: 1,
+        borderColor: "#ccc",
+        width: "50%",
+        height: 50,
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+    },
+    inputContainer: {
+        flex: 1,
+        flexDirection: "row",
+        alignItems: "center",
+        borderWidth: 1,
+        borderColor: "#ccc",
+        paddingHorizontal: 10,
+        width: "50%",
+        height: 50,
+    },
+    input: {
+        flex: 1,
+        fontSize: 16,
+    },
+    searchIcon: {
+        marginLeft: 5,
+    },
+    ordersSection: { backgroundColor: 'white', padding: 10, borderRadius: 5, elevation: 3 },
     orderRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -134,6 +194,7 @@ const styles = StyleSheet.create({
     sectionTitle: { fontSize: 18, fontWeight: 'bold', marginBottom: 5 },
     addressText: { fontSize: 14, color: 'gray' },
     addressValue: { fontSize: 16, color: 'black' },
+
 
     headerText: {
         fontSize: 16,
@@ -167,8 +228,22 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         padding: 15,
         borderRadius: 5,
+        // shadowColor: "#000",
+        // shadowOffset: { width: 0, height: 2 },
+        // shadowOpacity: 0.1,
+        // shadowRadius: 5,
         elevation: 3,
         marginBottom: 10,
+    },
+    orderdetailsContainer: {
+        backgroundColor: 'white',
+        padding: 15,
+        borderRadius: 5,
+        elevation: 3,
+        marginBottom: 10,
+        height: 175,
+        marginBottom: 5
+
     },
     orderHeader: {
         flexDirection: 'row',
@@ -214,16 +289,23 @@ const styles = StyleSheet.create({
         color: 'white',
         fontWeight: 'bold',
     },
-    input: {
-        width: "100%",
-        padding: 10,
-        borderWidth: 1,
-        borderColor: "#ccc",
-        borderRadius: 8,
-        marginBottom: 10,
-        fontSize: 16,
+    // input: {
+    //     width: "50%",
+    //     padding: 10,
+    //     borderWidth: 1,
+    //     borderColor: "#ccc",
+    //     // marginBottom: 10,
+    //     fontSize: 16,
+    // },
+    detailPlaceholder: {
+        marginTop: 3,
+        height: 20
     },
-
+    buttonPlaceholder: {
+        marginTop: 7,
+        height: 50,
+        width: '100%'
+    }
 
 });
 

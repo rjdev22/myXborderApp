@@ -89,6 +89,7 @@ function CustomDrawerContent(props) {
 function StackNavigator() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="SplashScreen" component={SplashScreen} />
 
       <Stack.Screen name="HomeScreen" component={HomeScreen} />
       <Stack.Screen name="DashBoardScreen" component={DashBoardScreen} />
@@ -142,28 +143,31 @@ function DrawerNavigator() {
       <Drawer.Screen name="Shop N Ship" component={ShopNshipScreen}
 
        options={{
-       // drawerLabel: 'Dashboard',
+     
         drawerIcon: ({ color, size }) => <Icon name="ship" color={'#000'} size={14} />,
       }} />
       <Drawer.Screen name="Assisted Shop N Ship" component={AssistedShopNShipScreen}
         options={{
-          // drawerLabel: 'Dashboard',
+        
            drawerIcon: ({ color, size }) => <Icon name="handshake-o" color={'#000'} size={14} />,
          }} />
       <Drawer.Screen name="International Shipment" component={InternationalShipmentScreen}
        options={{
-        // drawerLabel: 'Dashboard',
+       
          drawerIcon: ({ color, size }) => <Icon name="globe" color={'#000'} size={14} />,
        }} />
 
-      <Drawer.Screen name="Coupons" component={CouponsScreen} />
+      <Drawer.Screen name="Coupons" component={CouponsScreen}
+         options={{
+           drawerIcon: ({ color, size }) => <Icon name="ticket-alt" color={'#000'} size={14} />,
+         }} />
 
       <Drawer.Screen name="Help & Support" component={HelpAndSupportScreen}
        options={{
 
          drawerIcon: ({ color, size }) => <Icon name="phone" color={'#000'} size={14} />,
        }} />
-        <Drawer.Screen name="Add Shop N Ship" component={AddShopNShipScreen} />
+        {/* <Drawer.Screen name="Add Shop N Ship" component={AddShopNShipScreen} /> */}
     </Drawer.Navigator>
 
   );

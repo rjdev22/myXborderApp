@@ -27,8 +27,8 @@ const HomeScreen = ({ navigation }) => {
 
 
   const getHomeContent = async () => {
+    setIsLoading(true)
     try {
-      setIsLoading(true)
       const response = await fetch(homeApi);
       const data = await response.json();
       setServices(data.data.services?.data || []);
@@ -36,6 +36,7 @@ const HomeScreen = ({ navigation }) => {
       setIsLoading(false)
     } catch (error) {
       console.error('Error fetching home content:', error);
+      
       setIsLoading(false)
     }
   };
@@ -83,13 +84,13 @@ const HomeScreen = ({ navigation }) => {
           {/* Exciting Deals */}
           <Text style={styles.sectionTitle}onPress={() => navigation.navigate('SplashScreen')}>Exciting Deals</Text>
 
-        
             <FlatList
               data={offers}
               horizontal
               showsHorizontalScrollIndicator={false}
               keyExtractor={(item, index) => index.toString()}
               renderItem={({ item }) => (
+                <ShimmerPlaceholder visible={!isLoading}>
                 <TouchableOpacity style={styles.offerCard}>
 
                   {/* <ShimmerPlaceholder visible={!isLoading} style={styles.offerCardplaceholder}> */}
@@ -102,9 +103,9 @@ const HomeScreen = ({ navigation }) => {
                   <Text style={styles.offerSubtitle}>{item.off}</Text>
                 {/* </ShimmerPlaceholder> */}
                 </TouchableOpacity>
+          </ShimmerPlaceholder>
               )}
             />
-          
 
 
 
@@ -247,6 +248,7 @@ const styles = StyleSheet.create({
     padding: 5,
     elevation: 2,
     width: width * 0.7,
+    height:150
   },
   offerCardplaceholder:{
     backgroundColor: 'white',
@@ -257,12 +259,13 @@ const styles = StyleSheet.create({
   },
   offerImage: {
     width: '80%',
-    height: 120, // Set appropriate height
+    height: 70, // Set appropriate height
     borderRadius: 5,
-    resizeMode: 'contain', // Ensures the image covers the container
+    resizeMode: 'contain',
+    marginTop: 10 // Ensures the image covers the container
   },
-  offerTitle: { fontSize: 16, fontWeight: 'bold', marginTop: 5 },
-  offerSubtitle: { fontSize: 14, color: 'gray' },
+  offerTitle: { fontSize: 16, fontWeight: 'bold', marginTop: 0 },
+  //offerSubtitle: { fontSize: 14, color: 'gray' },
 
   modalContainer: {
     flex: 1,

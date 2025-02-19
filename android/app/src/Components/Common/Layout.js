@@ -25,19 +25,18 @@ const Layout = ({ children }) => {
         </TouchableOpacity>
       </View>
 
-
       {/* Main Content */}
       <View style={styles.content}>{children}</View>
 
 
       {/* Footer */}
       <View style={styles.footer}>
-        <TouchableOpacity style={styles.tab} onPress={() => navigation.navigate('HomeScreen')}>
+        <TouchableOpacity style={styles.tab} onPress={() => navigation.navigate('Home',{Screen: 'HomeScreen'})}>
 
           <Icon name="home" size={25} color="black" />
           <Text>Home</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.tab} onPress={() => navigation.navigate('UserProfileScreen')}>
+        <TouchableOpacity style={styles.tab} onPress={() => navigation.navigate('Home',{Screen: 'UserProfileScreen'})}>
           <Icon name="user-circle-o" size={25} color="black" />
           <Text>Profile</Text>
         </TouchableOpacity>
@@ -60,7 +59,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     height: 60,
     elevation: 3,
-    boxShadow: '0px -2px 5px rgba(0, 0, 0, 0.2)'
+    shadowOpacity: 0.5,
+    shadowRadius: 5,
+    zIndex: 1
 
   },
   logoHorizontal: {
@@ -74,7 +75,8 @@ const styles = StyleSheet.create({
     height: 60,
     backgroundColor: 'white',
     elevation: 3,
-    boxShadow: '0px -2px 5px rgba(0, 0, 0, 0.2)'
+    shadowOpacity: 0.5,
+    shadowRadius: 5,
   },
   tab: { alignItems: 'center' },
 });
