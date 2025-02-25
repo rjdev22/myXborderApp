@@ -18,13 +18,14 @@ import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);  
-const HomeScreen = ({ navigation }) => {
+const HomeScreen = ({ navigation, route }) => {
+
+  console.log('route data',route)
   const [referralAmount, setReferralAmount] = useState(0);
   const [services, setServices] = useState([]);
   const [offers, setOffers] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
 
   const getHomeContent = async () => {
     setIsLoading(true)
@@ -36,7 +37,7 @@ const HomeScreen = ({ navigation }) => {
       setIsLoading(false)
     } catch (error) {
       console.error('Error fetching home content:', error);
-      
+
       setIsLoading(false)
     }
   };
@@ -58,7 +59,6 @@ const HomeScreen = ({ navigation }) => {
 
   const goToHome = () => navigation.navigate('Home');
   const goToProfile = () => setModalVisible(true);
-
 
   return (
 <Layout>
@@ -83,6 +83,7 @@ const HomeScreen = ({ navigation }) => {
 
           {/* Exciting Deals */}
           <Text style={styles.sectionTitle}onPress={() => navigation.navigate('SplashScreen')}>Exciting Deals</Text>
+          {/* <ShimmerPlaceholder visible={!isLoading} style={styles.offerPlaceHolder}> */}
 
             <FlatList
               data={offers}
@@ -90,7 +91,6 @@ const HomeScreen = ({ navigation }) => {
               showsHorizontalScrollIndicator={false}
               keyExtractor={(item, index) => index.toString()}
               renderItem={({ item }) => (
-                <ShimmerPlaceholder visible={!isLoading}>
                 <TouchableOpacity style={styles.offerCard}>
 
                   {/* <ShimmerPlaceholder visible={!isLoading} style={styles.offerCardplaceholder}> */}
@@ -98,14 +98,13 @@ const HomeScreen = ({ navigation }) => {
                     source={{ uri: imageUrl + '/' + item.image }}
                     style={styles.offerImage}
                   />
-
                   <Text style={styles.offerTitle}>{item.name}</Text>
                   <Text style={styles.offerSubtitle}>{item.off}</Text>
                 {/* </ShimmerPlaceholder> */}
                 </TouchableOpacity>
-          </ShimmerPlaceholder>
               )}
-            />
+              />
+              {/* </ShimmerPlaceholder> */}
 
 
 
@@ -188,7 +187,7 @@ const styles = StyleSheet.create({
     margin: 10,
     padding: 15,
     backgroundColor: 'white',
-    //    backgroundColor: 'linear-gradient(to right, #1e7fca #e12d82)',
+    //    backgroundColor: 'linear-gradient(to right, #0d5cc2 #e12d82)',
     borderRadius: 5,
     elevation: 3
   },
@@ -228,7 +227,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 10,
     justifyContent: 'center',
-    boxShadow: '0px 0px 2px #ff0080',
+    boxShadow: '0px 0px 2px #d81397',
     borderRadius: 3
   },
   howImage: {
@@ -237,7 +236,7 @@ const styles = StyleSheet.create({
   howTitle: {
     fontSize: 14,
     textAlign: 'center',
-    color: '#ff0080',
+    color: '#d81397',
     paddingBottom: 10
   },
 
@@ -295,6 +294,16 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "bold",
   },
+  // offerPlaceHolder:{
+  //   backgroundColor: 'white',
+  //   borderRadius: 5,
+  //   margin: 5,
+  //   padding: 5,
+  //   elevation: 2,
+  //   width: width *0.7,
+  //   height:150
+
+  // }
 });
 
 export default HomeScreen;

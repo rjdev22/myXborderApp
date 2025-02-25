@@ -8,8 +8,6 @@ import Layout from './android/app/src/Components/Common/Layout';
 export default function App() {
 
   return (
-
       <AppNavigtion />
-  
   );
 }

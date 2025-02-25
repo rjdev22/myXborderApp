@@ -78,7 +78,7 @@
 
 //                 <View style={{ alignItems: "center", flexDirection: "row", justifyContent: "space-between", marginBottom: 20 }}>
 //                     <Text style={styles.grandTotal}>Grand Total: 0</Text>
-//                     <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} colors={['#ff0080', '#1e7fca']} style={styles.nextButton}>
+//                     <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} colors={['#d81397', '#0d5cc2']} style={styles.nextButton}>
 //                         <Text style={styles.nextButtonText}>
 //                             Next
 //                         </Text>
@@ -98,7 +98,7 @@
 //     content: { paddingHorizontal: 15 },
 //     ordersSection: { backgroundColor: 'white', padding: 10, borderRadius: 10, elevation: 3 },
 //     addItemButton: { alignSelf: "flex-end", marginTop: 5 },
-//     addItemText: { color: "#ff0080", fontSize: 14, fontWeight: "bold" },
+//     addItemText: { color: "#d81397", fontSize: 14, fontWeight: "bold" },
 //     headerText: {
 //         fontSize: 16,
 //         //fontWeight: "bold",
@@ -266,7 +266,7 @@ const AddShopNShipScreen = ({ navigation }) => {
 
                     <View style={styles.footer}>
                         <Text style={styles.grandTotal}>Grand Total: 0</Text>
-                        <LinearGradient colors={['#ff0080', '#1e7fca']} style={styles.nextButton}>
+                        <LinearGradient colors={['#d81397', '#0d5cc2']} style={styles.nextButton}>
                             <Text style={styles.nextButtonText}>Next</Text>
                         </LinearGradient>
                     </View>
@@ -297,7 +297,7 @@ const styles = StyleSheet.create({
         marginBottom: 20
     },
     addItemButton: { alignSelf: "flex-end", marginTop: 5 },
-    addItemText: { color: "#ff0080", fontSize: 14, fontWeight: "bold" },
+    addItemText: { color: "#d81397", fontSize: 14, fontWeight: "bold" },
     footer: { flexDirection: "row", justifyContent: "space-between", marginBottom: 20 },
     grandTotal: { fontSize: 16 },
     nextButton: { paddingVertical: 5, borderRadius: 8, padding: 10, width: 130 },

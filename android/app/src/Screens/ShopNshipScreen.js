@@ -19,7 +19,7 @@ import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const ShopNshipScreen = ({ navigation }) => {
-  
+
 
     const [query, setQuery] = useState('');
     const [isLoading, setIsLoading] = useState(true);
@@ -68,7 +68,7 @@ const ShopNshipScreen = ({ navigation }) => {
                             <LinearGradient
                                 start={{ x: 0, y: 0 }}
                                 end={{ x: 1, y: 0 }}
-                                colors={['#FF0080', '#1e7fca']}
+                                colors={['#d81397', '#0d5cc2']}
                                 style={styles.createOrderButton}>
                                 <Text style={styles.createOrderText}>+ Create Order</Text>
                             </LinearGradient>
@@ -96,7 +96,7 @@ const ShopNshipScreen = ({ navigation }) => {
                             <LinearGradient
                                 start={{ x: 0, y: 0 }}
                                 end={{ x: 1, y: 0 }}
-                                colors={['#FF0080', '#1e7fca']}
+                                colors={['#d81397', '#0d5cc2']}
                                 style={styles.detailsButton}>
                                 <Text style={styles.detailsButtonText}>Details</Text>
                             </LinearGradient>

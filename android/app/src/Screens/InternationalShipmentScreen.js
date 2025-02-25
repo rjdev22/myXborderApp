@@ -14,16 +14,6 @@ import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const InternationalShipmentScreen = ({ navigation }) => {
-    const addressData = {
-        Name: "test test2",
-        AddressLine1: "66 /16, The Mall Road USR1267",
-        Landmark: "Near Police Station",
-        Zipcode: "208001",
-        State: "Uttar Pradesh",
-        City: "Kanpur",
-        PhoneNumber: "721170063",
-    };
-
 
     const [query, setQuery] = useState('');
     const [isLoading, setIsLoading] = useState(true);
@@ -66,7 +56,7 @@ const InternationalShipmentScreen = ({ navigation }) => {
                             <LinearGradient
                                 start={{ x: 0, y: 0 }}
                                 end={{ x: 1, y: 0 }}
-                                colors={['#FF0080', '#1e7fca']}
+                                colors={['#d81397', '#0d5cc2']}
                                 style={styles.createOrderButton}>
                                 <Text style={styles.createOrderText}>+ Create Order</Text>
                             </LinearGradient>
@@ -96,7 +86,7 @@ const InternationalShipmentScreen = ({ navigation }) => {
                             <LinearGradient
                                 start={{ x: 0, y: 0 }}
                                 end={{ x: 1, y: 0 }}
-                                colors={['#FF0080', '#1e7fca']}
+                                colors={['#d81397', '#0d5cc2']}
                                 style={styles.detailsButton}>
                                 <Text style={styles.detailsButtonText}>Details</Text>
                             </LinearGradient>

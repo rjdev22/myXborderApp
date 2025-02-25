@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
         margin: 10,
         padding: 15,
         backgroundColor: 'white',
-        //    backgroundColor: 'linear-gradient(to right, #1e7fca #e12d82)',
+        //    backgroundColor: 'linear-gradient(to right, #0d5cc2 #e12d82)',
         borderRadius: 5,
         elevation: 3,
         width:'100%',

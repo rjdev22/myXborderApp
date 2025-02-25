@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { StyleSheet, View, Text, TextInput, TouchableOpacity } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient';
 
+
 const EditProfileModal = ({ onClose }) => {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -28,7 +29,7 @@ const EditProfileModal = ({ onClose }) => {
                     <TouchableOpacity style={styles.button} >
                         <LinearGradient
                             start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
-                            colors={['#ff0080', '#1e7fca']}
+                            colors={['#d81397', '#0d5cc2']}
                             style={styles.gradientButton}>
                             <Text style={styles.buttonText}>Save Change</Text>
                         </LinearGradient>
@@ -37,7 +38,7 @@ const EditProfileModal = ({ onClose }) => {
                     <TouchableOpacity style={styles.button} onPress={onClose}>
                         <LinearGradient
                             start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
-                            colors={['#ff0080', '#1e7fca']}
+                            colors={['#d81397', '#0d5cc2']}
                             style={styles.gradientButton}>
                             <Text style={styles.buttonText}>Cancel</Text>
                         </LinearGradient>

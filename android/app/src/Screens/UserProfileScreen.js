@@ -43,167 +43,167 @@ const UserProfileScreen = () => {
 
     return (
         <Layout>
-        <ScrollView
-            style={styles.content}
-            showsVerticalScrollIndicator={false}
-            showsHorizontalScrollIndicator={false}
-        >
-            <View style={styles.card}>
-                <ShimmerPlaceholder
-                    LinearGradient={LinearGradient}
-                    visible={!isLoading}
-                    style={styles.namePlaceholder}
-                >
-                    <Text style={styles.name}>test test2</Text>
-                </ShimmerPlaceholder>
+            <ScrollView
+                style={styles.content}
+                showsVerticalScrollIndicator={false}
+                showsHorizontalScrollIndicator={false}
+            >
+                <View style={styles.card}>
+                    <ShimmerPlaceholder
+                        LinearGradient={LinearGradient}
+                        visible={!isLoading}
+                        style={styles.namePlaceholder}
+                    >
+                        <Text style={styles.name}>test test2</Text>
+                    </ShimmerPlaceholder>
 
-                <View style={styles.row}>
-                    <ShimmerPlaceholder
-                        LinearGradient={LinearGradient}
-                        visible={!isLoading}
-                        style={styles.labelPlaceholder}
-                    >
-                        <Text style={styles.label}>Unique Id:</Text>
-                    </ShimmerPlaceholder>
-                    <ShimmerPlaceholder
-                        LinearGradient={LinearGradient}
-                        visible={!isLoading}
-                        style={styles.valuePlaceholder}
-                    >
-                        <Text style={styles.value}>USR1267</Text>
-                    </ShimmerPlaceholder>
-                </View>
-
-                <View style={styles.row}>
-                    <ShimmerPlaceholder
-                        LinearGradient={LinearGradient}
-                        visible={!isLoading}
-                        style={styles.labelPlaceholder}
-                    >
-                        <Text style={styles.label}>Referral Code:</Text>
-                    </ShimmerPlaceholder>
-                    <ShimmerPlaceholder
-                        LinearGradient={LinearGradient}
-                        visible={!isLoading}
-                        style={styles.valuePlaceholder}
-                    >
-                        <Text style={styles.value}>USR1267</Text>
-                    </ShimmerPlaceholder>
-                </View>
-
-                <View style={styles.row}>
-                    <ShimmerPlaceholder
-                        LinearGradient={LinearGradient}
-                        visible={!isLoading}
-                        style={styles.labelPlaceholder}
-                    >
-                        <Text style={styles.label}>Primary mobile number:</Text>
-                    </ShimmerPlaceholder>
-                    <View style={styles.phoneContainer}>
+                    <View style={styles.row}>
                         <ShimmerPlaceholder
                             LinearGradient={LinearGradient}
                             visible={!isLoading}
-                            style={styles.iconPlaceholder}
+                            style={styles.labelPlaceholder}
                         >
-                            <View style={{ flexDirection: 'row' }}>
-                                <Icon name="phone" size={16} color="black" />
-                                <Text style={styles.value}> 916396740386,</Text>
-                            </View>
+                            <Text style={styles.label}>Unique Id:</Text>
                         </ShimmerPlaceholder>
                         <ShimmerPlaceholder
                             LinearGradient={LinearGradient}
                             visible={!isLoading}
-                            style={styles.iconPlaceholder}
+                            style={styles.valuePlaceholder}
                         >
-                            <View style={{ flexDirection: 'row' }}>
-                                <Icon name="whatsapp" size={16} color="green" />
-                                <Text style={styles.value}> 916396740386</Text>
+                            <Text style={styles.value}>USR1267</Text>
+                        </ShimmerPlaceholder>
+                    </View>
+
+                    <View style={styles.row}>
+                        <ShimmerPlaceholder
+                            LinearGradient={LinearGradient}
+                            visible={!isLoading}
+                            style={styles.labelPlaceholder}
+                        >
+                            <Text style={styles.label}>Referral Code:</Text>
+                        </ShimmerPlaceholder>
+                        <ShimmerPlaceholder
+                            LinearGradient={LinearGradient}
+                            visible={!isLoading}
+                            style={styles.valuePlaceholder}
+                        >
+                            <Text style={styles.value}>USR1267</Text>
+                        </ShimmerPlaceholder>
+                    </View>
+
+                    <View style={styles.row}>
+                        <ShimmerPlaceholder
+                            LinearGradient={LinearGradient}
+                            visible={!isLoading}
+                            style={styles.labelPlaceholder}
+                        >
+                            <Text style={styles.label}>Primary mobile number:</Text>
+                        </ShimmerPlaceholder>
+                        <View style={styles.phoneContainer}>
+                            <ShimmerPlaceholder
+                                LinearGradient={LinearGradient}
+                                visible={!isLoading}
+                                style={styles.iconPlaceholder}
+                            >
+                                <View style={{ flexDirection: 'row' }}>
+                                    <Icon name="phone" size={16} color="black" />
+                                    <Text style={styles.value}> 916396740386,</Text>
+                                </View>
+                            </ShimmerPlaceholder>
+                            <ShimmerPlaceholder
+                                LinearGradient={LinearGradient}
+                                visible={!isLoading}
+                                style={styles.iconPlaceholder}
+                            >
+                                <View style={{ flexDirection: 'row' }}>
+                                    <Icon name="whatsapp" size={16} color="green" />
+                                    <Text style={styles.value}> 916396740386</Text>
+                                </View>
+                            </ShimmerPlaceholder>
+                        </View>
+                    </View>
+
+                    <View style={styles.row}>
+                        <ShimmerPlaceholder
+                            LinearGradient={LinearGradient}
+                            visible={!isLoading}
+                            style={styles.labelPlaceholder}
+                        >
+                            <Text style={styles.label}>Primary Email:</Text>
+                        </ShimmerPlaceholder>
+                        <ShimmerPlaceholder
+                            LinearGradient={LinearGradient}
+                            visible={!isLoading}
+                            style={styles.emailPlaceholder}
+                        >
+                            <View style={styles.emailContainer}>
+                                <Icon name="envelope" size={16} color="black" />
+                                <Text style={styles.value}> test@yopmail.com</Text>
                             </View>
                         </ShimmerPlaceholder>
                     </View>
-                </View>
-
-                <View style={styles.row}>
-                    <ShimmerPlaceholder
-                        LinearGradient={LinearGradient}
-                        visible={!isLoading}
-                        style={styles.labelPlaceholder}
-                    >
-                        <Text style={styles.label}>Primary Email:</Text>
-                    </ShimmerPlaceholder>
-                    <ShimmerPlaceholder
-                        LinearGradient={LinearGradient}
-                        visible={!isLoading}
-                        style={styles.emailPlaceholder}
-                    >
-                        <View style={styles.emailContainer}>
-                            <Icon name="envelope" size={16} color="black" />
-                            <Text style={styles.value}> test@yopmail.com</Text>
-                        </View>
-                    </ShimmerPlaceholder>
-                </View>
-             
 
 
-                <View style={styles.row}>
-                    <ShimmerPlaceholder
-                        LinearGradient={LinearGradient}
-                        visible={!isLoading}
-                        style={styles.labelPlaceholder}
-                    >
-                        <Text style={styles.label}>Total Order:</Text>
-                    </ShimmerPlaceholder>
-                    <ShimmerPlaceholder
-                        LinearGradient={LinearGradient}
-                        visible={!isLoading}
-                        style={styles.valuePlaceholder}
-                    >
-                        <Text style={styles.value}>2</Text>
-                    </ShimmerPlaceholder>
-                </View>
 
-                <View style={styles.buttonContainer}>
-
-
-                    <TouchableOpacity
-                        style={styles.button}
-                        onPress={handleOpenEditModal}
-                    >
-                        <LinearGradient
-                            start={{ x: 0, y: 0 }}
-                            end={{ x: 1, y: 0 }}
-                            colors={['#ff0080', '#1e7fca']}
-                            style={styles.gradientButton}
+                    <View style={styles.row}>
+                        <ShimmerPlaceholder
+                            LinearGradient={LinearGradient}
+                            visible={!isLoading}
+                            style={styles.labelPlaceholder}
                         >
-                            <Text style={styles.buttonText}>Edit Profile</Text>
-                        </LinearGradient>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity
-                        style={styles.button}
-                        onPress={handleNotificationOff}
-                    >
-                        <LinearGradient
-                            start={{ x: 0, y: 0 }}
-                            end={{ x: 1, y: 0 }}
-                            colors={['#ff0080', '#1e7fca']}
-                            style={styles.gradientButton}
+                            <Text style={styles.label}>Total Order:</Text>
+                        </ShimmerPlaceholder>
+                        <ShimmerPlaceholder
+                            LinearGradient={LinearGradient}
+                            visible={!isLoading}
+                            style={styles.valuePlaceholder}
                         >
-                            <Text style={styles.buttonText}>Notification off</Text>
-                        </LinearGradient>
-                    </TouchableOpacity>
+                            <Text style={styles.value}>2</Text>
+                        </ShimmerPlaceholder>
+                    </View>
+
+                    <View style={styles.buttonContainer}>
+
+
+                        <TouchableOpacity
+                            style={styles.button}
+                            onPress={handleOpenEditModal}
+                        >
+                            <LinearGradient
+                                start={{ x: 0, y: 0 }}
+                                end={{ x: 1, y: 0 }}
+                                colors={['#d81397', '#0d5cc2']}
+                                style={styles.gradientButton}
+                            >
+                                <Text style={styles.buttonText}>Edit Profile</Text>
+                            </LinearGradient>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                            style={styles.button}
+                            onPress={handleNotificationOff}
+                        >
+                            <LinearGradient
+                                start={{ x: 0, y: 0 }}
+                                end={{ x: 1, y: 0 }}
+                                colors={['#d81397', '#0d5cc2']}
+                                style={styles.gradientButton}
+                            >
+                                <Text style={styles.buttonText}>Notification off</Text>
+                            </LinearGradient>
+                        </TouchableOpacity>
+                    </View>
                 </View>
-            </View>
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={openEditModal}
-                onRequestClose={handleCloseEditModal}
-            >
-                <EditProfileModal onClose={handleCloseEditModal} />
-            </Modal>
-        </ScrollView>
-         </Layout>
+                <Modal
+                    animationType="slide"
+                    transparent={true}
+                    visible={openEditModal}
+                    onRequestClose={handleCloseEditModal}
+                >
+                    <EditProfileModal onClose={handleCloseEditModal} />
+                </Modal>
+            </ScrollView>
+        </Layout>
     );
 };
 

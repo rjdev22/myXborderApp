@@ -1,6 +1,6 @@
-import React ,{useEffect}from 'react'
+import React, { useEffect } from 'react'
 import { View, Image, StyleSheet } from 'react-native'
-const SplashScreen = ({navigation}) => {
+const SplashScreen = ({ navigation }) => {
 
 
   useEffect(() => {
@@ -13,7 +13,7 @@ const SplashScreen = ({navigation}) => {
   return (
     <View style={styles.container}>
       <View>
-        <Image style={{ width:300, height:300}} source={require('../assets/splash.png')} />
+        <Image style={{ width: 300, height: 300 }} source={require('../assets/splash.png')} />
       </View>
     </View>
   )
@@ -22,11 +22,11 @@ const SplashScreen = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-justifyContent: "center",
-  alignItems: "center",
+    justifyContent: "center",
+    alignItems: "center",
     backgroundColor: "#fff",
     padding: 20,
-},
+  },
 })
 
 export default SplashScreen

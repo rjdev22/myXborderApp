@@ -26,6 +26,7 @@ const CouponsScreen = () => {
                     <Text style={styles.description}>150 In your wallet after successful OTP verification</Text>
                 </View>
             </View>
+
        </Layout>
     );
 };

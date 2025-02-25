@@ -41,7 +41,7 @@ const AddInternationalShipmentScreen = ({ navigation }) => {
                 <TextInput style={styles.input} placeholder="Enter item name" />
             </View>
             <View >
-                <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} colors={['#ff0080', '#1e7fca']} style={styles.nextButton}>
+                <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} colors={['#d81397', '#0d5cc2']} style={styles.nextButton}>
                     <Text style={styles.nextButtonText}>
                         Next
                     </Text>
