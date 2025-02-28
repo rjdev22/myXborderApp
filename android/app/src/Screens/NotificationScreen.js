@@ -66,8 +66,7 @@ export const NotificationScreen = () => {
     return (
         <Layout>
             <View style={styles.container}>
-                {/* <ScrollView showsVerticalScrollIndicator={false}> */}
-
+               
                     <FlatList
                         data={notifications}
                         keyExtractor={(item) => item.id}
@@ -93,8 +92,6 @@ export const NotificationScreen = () => {
                             </TouchableOpacity>
                         )}
                     />
-{/* 
-                </ScrollView> */}
             </View>
         </Layout>
     );

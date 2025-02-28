@@ -10,13 +10,35 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Layout from '../Components/Common/Layout';
+import DropDown from '../Components/Common/DropDown';
 
 const AddAssistedShopNShipScreen = ({ navigation }) => {
-    const [items, setItems] = useState([{ id: 1 }]); // State for order items
+    const [items, setItems] = useState([{ id: 1 }]);
+    const [selectedItem, setSelectedItem] = useState(null)// State for order items
+
+    const itemNames = [
+        "Liquid",
+        "Cosmetic",
+        "Toys",
+        "Shoes",
+        "Men Clothing",
+        "Women Clothing",
+        "Men Shoe",
+        "Women Dress",
+        "Electromices",
+        "Artificilly Jewlery",
+        "Women Saree",
+        "Women gowen",
+        "Men Shirts",
+        "Men t shirt",
+        "sandel"
+    ]
 
     const addNewItem = () => {
         setItems([...items, { id: items.length + 1 }]); // Add new item
     };
+
+    
 
     return (
         <Layout>
@@ -29,21 +51,22 @@ const AddAssistedShopNShipScreen = ({ navigation }) => {
                     {items.map((item, index) => (
                         <View key={item.id} style={styles.itemContainer}>
                             <View style={styles.inputGroup}>
+                                <Text style={styles.label}>Item URL*/Local Store Name*</Text>
+                                <TextInput style={styles.input} placeholder="Enter item URL" />
+                            </View>
+                            <View style={styles.inputGroup}>
                                 <Text style={styles.label}>Item Type*</Text>
-                                <TextInput style={styles.input} placeholder="Enter item type" />
+                                <DropDown
+                                    items={itemNames}
+                                    initialValue={selectedItem}
+                                    onChange={(value) => setSelectedItem(value)}
+                                />
                             </View>
                             <View style={styles.inputGroup}>
                                 <Text style={styles.label}>Item Name*</Text>
                                 <TextInput style={styles.input} placeholder="Enter item name" />
                             </View>
-                            <View style={styles.inputGroup}>
-                                <Text style={styles.label}>Online Store</Text>
-                                <TextInput style={styles.input} placeholder="Amazon, Flipkart" />
-                            </View>
-                            <View style={styles.inputGroup}>
-                                <Text style={styles.label}>Online Store Id</Text>
-                                <TextInput style={styles.input} placeholder="Store Id" />
-                            </View>
+
                             <View style={styles.inputGroup}>
                                 <Text style={styles.label}>Color</Text>
                                 <TextInput style={styles.input} placeholder="Color" />
@@ -57,7 +80,11 @@ const AddAssistedShopNShipScreen = ({ navigation }) => {
                                 <TextInput style={styles.input} keyboardType="numeric" placeholder="1" />
                             </View>
                             <View style={styles.inputGroup}>
-                                <Text style={styles.label}>Price* (INR)</Text>
+                                <Text style={styles.label}>Single Item Price* (INR)</Text>
+                                <TextInput style={styles.input} keyboardType="numeric" placeholder="0" />
+                            </View>
+                            <View style={styles.inputGroup}>
+                                <Text style={styles.label}>Total Price* (INR)</Text>
                                 <TextInput style={styles.input} keyboardType="numeric" placeholder="0" />
                             </View>
                         </View>
@@ -74,9 +101,11 @@ const AddAssistedShopNShipScreen = ({ navigation }) => {
 
                     <View style={styles.footer}>
                         <Text style={styles.grandTotal}>Grand Total: 0</Text>
-                        <LinearGradient colors={['#d81397', '#0d5cc2']} style={styles.nextButton}>
-                            <Text style={styles.nextButtonText}>Next</Text>
-                        </LinearGradient>
+                        <TouchableOpacity onPress={()=>navigation.navigate('ShopNShipShippingAddress')}>
+                            <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} colors={['#d81397', '#0d5cc2']} style={styles.nextButton}>
+                                <Text style={styles.nextButtonText}>Next</Text>
+                            </LinearGradient>
+                        </TouchableOpacity>
                     </View>
                 </ScrollView>
             </View>

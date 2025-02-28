@@ -17,10 +17,11 @@ import Layout from '../Components/Common/Layout';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
 
-const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);  
+
+const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const HomeScreen = ({ navigation, route }) => {
 
-  console.log('route data',route)
+  console.log('route data', route)
   const [referralAmount, setReferralAmount] = useState(0);
   const [services, setServices] = useState([]);
   const [offers, setOffers] = useState([]);
@@ -61,29 +62,29 @@ const HomeScreen = ({ navigation, route }) => {
   const goToProfile = () => setModalVisible(true);
 
   return (
-<Layout>
-    <View>
-      {/* Content */}
-      <ScrollView
-        style={styles.scrollContainer}
-        showsVerticalScrollIndicator={false}
-        showsHorizontalScrollIndicator={false}>
-        {/* Banner Image */}
-        <Image
-          source={require('../assets/DxxfKrd9IwwMnBrA.jpg')}
-          style={styles.backgroundImage}
-        />
-        <View style={styles.content}>
-          {/* Referral Bonus */}
+    <Layout>
+      <View>
+        {/* Content */}
+        <ScrollView
+          style={styles.scrollContainer}
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}>
+          {/* Banner Image */}
+          <Image
+            source={require('../assets/DxxfKrd9IwwMnBrA.jpg')}
+            style={styles.backgroundImage}
+          />
+          <View style={styles.content}>
+            {/* Referral Bonus */}
 
-          <View style={styles.referralCard}>
-            <Text style={styles.bonusTitle} onPress={() => navigation.navigate('DashBoardScreen')}>Referral Bonus</Text>
-            <Text style={styles.amount}>{referralAmount} INR</Text>
-          </View>
+            <View style={styles.referralCard}>
+              <Text style={styles.bonusTitle} onPress={() => navigation.navigate('DashBoardScreen')}>Referral Bonus</Text>
+              <Text style={styles.amount}>{referralAmount} INR</Text>
+            </View>
 
-          {/* Exciting Deals */}
-          <Text style={styles.sectionTitle}onPress={() => navigation.navigate('SplashScreen')}>Exciting Deals</Text>
-          {/* <ShimmerPlaceholder visible={!isLoading} style={styles.offerPlaceHolder}> */}
+            {/* Exciting Deals */}
+            <Text style={styles.sectionTitle} onPress={() => navigation.navigate('SplashScreen')}>Exciting Deals</Text>
+            {/* <ShimmerPlaceholder visible={!isLoading} style={styles.offerPlaceHolder}> */}
 
             <FlatList
               data={offers}
@@ -100,65 +101,65 @@ const HomeScreen = ({ navigation, route }) => {
                   />
                   <Text style={styles.offerTitle}>{item.name}</Text>
                   <Text style={styles.offerSubtitle}>{item.off}</Text>
-                {/* </ShimmerPlaceholder> */}
+                  {/* </ShimmerPlaceholder> */}
                 </TouchableOpacity>
               )}
-              />
-              {/* </ShimmerPlaceholder> */}
+            />
+            {/* </ShimmerPlaceholder> */}
 
 
 
 
-          {/* Services */}
-          <Text style={styles.sectionTitle}>Services</Text>
-          {services.map((service, index) => (
-            <View key={index} style={styles.serviceCard}>
-              <Image
-                source={{ uri: imageUrl + '/' + service.image }}
-                style={styles.serviceImage}
-              />
-              <Text style={styles.serviceTitle}>{service.name}</Text>
-              <Text style={styles.serviceDescription}>{service.title}</Text>
+            {/* Services */}
+            <Text style={styles.sectionTitle}>Services</Text>
+            {services.map((service, index) => (
+              <View key={index} style={styles.serviceCard}>
+                <Image
+                  source={{ uri: imageUrl + '/' + service.image }}
+                  style={styles.serviceImage}
+                />
+                <Text style={styles.serviceTitle}>{service.name}</Text>
+                <Text style={styles.serviceDescription}>{service.title}</Text>
+              </View>
+            ))}
+
+            {/* How It Works */}
+            <Text style={styles.sectionTitle}>How It Works</Text>
+            <View style={styles.howGrid}>
+              {['how1.svg', 'how2.svg', 'how3.svg', 'how4.svg', 'how5.svg'].map(
+                (image, index) => (
+                  <View key={index} style={styles.howCard}>
+                    <SvgUri width="100" height="100" uri={imageUrl + '/frontend/images/' + image} />
+                    <Text style={styles.howTitle}>
+                      {['Sign Up', 'Shop', 'Ship', 'Save', 'Receive'][index]}
+                    </Text>
+                  </View>
+                )
+              )}
             </View>
-          ))}
-
-          {/* How It Works */}
-          <Text style={styles.sectionTitle}>How It Works</Text>
-          <View style={styles.howGrid}>
-            {['how1.svg', 'how2.svg', 'how3.svg', 'how4.svg', 'how5.svg'].map(
-              (image, index) => (
-                <View key={index} style={styles.howCard}>
-                  <SvgUri width="100" height="100" uri={imageUrl + '/frontend/images/' + image} />
-                  <Text style={styles.howTitle}>
-                    {['Sign Up', 'Shop', 'Ship', 'Save', 'Receive'][index]}
-                  </Text>
-                </View>
-              )
-            )}
           </View>
-        </View>
-      </ScrollView>
+        </ScrollView>
 
 
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text style={styles.title}>Sign In / Sign Up</Text>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => setModalVisible(false)}
+        >
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <Text style={styles.title}>Sign In / Sign Up</Text>
 
-            {/* Add Sign-In / Sign-Up Form Here */}
+              {/* Add Sign-In / Sign-Up Form Here */}
 
-            <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.closeButton}>
-              <Text style={styles.closeText}>Close</Text>
-            </TouchableOpacity>
+              <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.closeButton}>
+                <Text style={styles.closeText}>Close</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
-      </Modal>
-    </View>
+        </Modal>
+      </View>
     </Layout>
   );
 };
@@ -247,9 +248,9 @@ const styles = StyleSheet.create({
     padding: 5,
     elevation: 2,
     width: width * 0.7,
-    height:150
+    height: 150
   },
-  offerCardplaceholder:{
+  offerCardplaceholder: {
     backgroundColor: 'white',
     borderRadius: 5,
     margin: 5,
@@ -263,7 +264,12 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
     marginTop: 10 // Ensures the image covers the container
   },
-  offerTitle: { fontSize: 16, fontWeight: 'bold', marginTop: 0 },
+  offerTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginTop: 0,
+    color:'#ff5151'
+  },
   //offerSubtitle: { fontSize: 14, color: 'gray' },
 
   modalContainer: {

@@ -12,6 +12,7 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation, DrawerActions } from '@react-navigation/native';
 import { Screen } from 'react-native-screens';
+import { SvgUri } from 'react-native-svg';
 
 const Layout = ({ children }) => {
   const navigation = useNavigation();
@@ -121,6 +122,7 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     height: '100%',
+    backgroundColor: 'white',
   },
   header: {
     flexDirection: 'row',

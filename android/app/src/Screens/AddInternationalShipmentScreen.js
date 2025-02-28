@@ -54,7 +54,7 @@ const AddInternationalShipmentScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
 
-    content: { paddingHorizontal: 15 ,backgroundColor: '#fff' },
+    content: { paddingHorizontal: 15  },
    
     headerText: {
         fontSize: 16,

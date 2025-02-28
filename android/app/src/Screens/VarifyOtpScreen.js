@@ -2,51 +2,42 @@ import React from 'react'
 import EmailVarificationLayout from '../Components/Common/EmailVarificationLayout'
 import { Text, View, StyleSheet, TextInput, TouchableOpacity } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient';
-import { emailVarificationApi } from '../services/apiServices';
+import { varifyOtpApi } from '../services/apiServices';
 import Loader from '../Components/Modals/Loader';
 import { useRoute } from '@react-navigation/native';
 import { Toast } from 'react-native-toast-notifications';
-import { CommonActions } from '@react-navigation/native';
+import { OtpInput } from "react-native-otp-entry";
+
+const VarifyOtpScreen = ({ navigation, route }) => {
 
 
-const EmailVarificationScreen = ({ navigation, route }) => {
-
-
-    console.log('email varification screen route data', route.params.data);
+   // console.log('email varification screen route data', route.params.data);
 
     const [visibleModal, setVisibleModal] = React.useState(false);
-    const [email, setEmail] = React.useState(route.params.data.email);
+    const[email,setEmail] = React.useState('');
 
     const handleEmailVarification = async () => {
         setVisibleModal(true);
         try {
-            const response = await fetch(emailVarificationApi, {
+            const response = await fetch(varifyOtpApi,{
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
                     email: email,
-
+                    otp:otp
+                   
                 }),
 
-            });
+        });
             const data = await response.json();
             console.log('email varification data', data);
-            if (data.status === true) {
-                Toast.show(data.data, Toast.SHORT);
-                navigation.dispatch(
-                    CommonActions.reset({
-                        index: 1,
-                        routes: [
-                            { name: 'emailVarificationScreen' },
-                            { name: 'VarifyOtpScreen', params: data },
-                        ],
-                    })
-                );
-            }
-            else {
-                Toast.show(data.error, Toast.SHORT);
+            if(data.status === true){
+
+               Toast.show(data.data, Toast.SHORT,{
+                placement: 'top',
+               });
             }
             setVisibleModal(false);
         } catch (error) {
@@ -59,7 +50,7 @@ const EmailVarificationScreen = ({ navigation, route }) => {
         <EmailVarificationLayout>
             <View>
                 <View>
-                    <Text style={styles.title} onPress={()=>navigation.navigate('VarifyOtpScreen')}> Email Varification</Text>
+                    <Text style={styles.title}>Varify Otp</Text>
                 </View>
                 <View style={styles.inputGroup}>
                     <TextInput
@@ -118,4 +109,4 @@ const styles = StyleSheet.create({
     },
 
 })
-export default EmailVarificationScreen
+export default VarifyOtpScreen

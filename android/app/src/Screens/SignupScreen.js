@@ -131,18 +131,15 @@ const styles = StyleSheet.create({
     },
     button: {
         width: "100%",
-        padding: 8,
+        padding: 15,
         alignItems: "center",
-        justifyContent: "center",
-        alignContent: "center",
-
-
+        borderRadius: 8,
         marginBottom: 20,
     },
     buttonText: {
         color: "#fff",
         fontSize: 18,
-        //fontWeight: "bold",
+        fontWeight: "bold",
     },
     signUpText: {
         fontSize: 16,

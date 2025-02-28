@@ -19,9 +19,9 @@ import { SvgUri } from 'react-native-svg';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const DashBoardScreen = ({ navigation, route }) => {
-    console.log('route data', route.params)
+    console.log('route data----', route.params.data.image)
 
-    const userData = route.params?.data.data
+    const userData = route.params?.data
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
@@ -31,13 +31,13 @@ const DashBoardScreen = ({ navigation, route }) => {
     }, []);
 
     const addressData = {
-        Name: "test test2",
-        AddressLine1: "66 /16, The Mall Road USR1267",
-        Landmark: "Near Police Station",
-        Zipcode: "208001",
-        State: "Uttar Pradesh",
-        City: "Kanpur",
-        PhoneNumber: "721170063",
+        Name: userData?.virtualAddress?.name ,
+        AddressLine1: userData?.virtualAddress?.address1,
+        Landmark: userData?.virtualAddress?.landmark,
+        Zipcode: userData?.virtualAddress?.pincode,
+        State: userData?.virtualAddress?.state,
+        City:userData?.virtualAddress?.city,
+        PhoneNumber:userData?.phone2,
     };
 
     const copy = (text) => {

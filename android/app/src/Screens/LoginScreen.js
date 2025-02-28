@@ -1,22 +1,32 @@
-import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from "react-native";
+import React, { useState, useCallback, useRef } from "react";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Button } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
-import Icon from "react-native-vector-icons/FontAwesome";
 import AuthLayout from "../Components/Common/AuthLayout";
 import { loginApi } from "../services/apiServices";
 import { CommonActions } from "@react-navigation/native";
 import Loader from "../Components/Modals/Loader";
-import { set } from "react-native-reanimated";
 import Toast from "react-native-simple-toast";
 import { useToast } from "react-native-toast-notifications";
-
+import Recaptcha, {RecaptchaRef} from 'react-native-recaptcha-that-works';
 
 const LoginScreen = ({ navigation }) => {
     const toast = useToast();
-
     const [email, setEmail] = useState("");
     const [isChecked, setIsChecked] = useState(false);
     const [visibleModal, setVisibleModal] = useState(false);
+    const size = 'invisible';
+    const [token, setToken] = useState('<none>');
+
+    const $recaptcha = useRef < RecaptchaRef | null > (null);
+
+    const handleOpenPress = useCallback(() => {
+
+        $recaptcha.current?.open();
+    }, []);
+
+    const handleClosePress = useCallback(() => {
+        $recaptcha.current?.close();
+    }, []);
 
 
 
@@ -45,6 +55,7 @@ const LoginScreen = ({ navigation }) => {
                 });
                 const data = await response.json();
                 console.log('login user data', data);
+
                 if (data.status === false) {
                     Toast.show(data.exception, Toast.SHORT);
                     // toast.show(data.exception,{
@@ -55,15 +66,15 @@ const LoginScreen = ({ navigation }) => {
                     //     animationType: "slide-in ",
                     // });
                     setVisibleModal(false);
-                    return
+                 return
                 }
-            
+
                 navigation.dispatch(
                     CommonActions.reset({
                         index: 1,
                         routes: [
                             { name: 'HomeScreen' },
-                            { name: 'EmailVarificationScreen',params: { data: data} },
+                            { name:'DashBoardScreen', params: data },
                         ],
                     })
                 );
@@ -88,9 +99,39 @@ const LoginScreen = ({ navigation }) => {
                     value={email}
                     onChangeText={setEmail}
                 />
-                
-                
-                <Text style={{color:'red',marginBottom:10,fontSize:12}}>Please enter email</Text>
+
+
+                <Text style={{ color: 'red', marginBottom: 10, fontSize: 12 }}>Please enter email</Text>
+                <View style={styles.container}>
+                    <Button onPress={handleOpenPress} title="Open" />
+                    {/* <Text>Token: {token}</Text>
+                    <Text>Size: {size}</Text> */}
+                </View>
+                <Recaptcha
+                    //ref={$recaptcha}
+                    lang="pt"
+                    headerComponent={
+                        <Button title="Close modal" onPress={handleClosePress} />
+                    }
+                    footerComponent={<Text>Footer here</Text>}
+                    siteKey="6Ldq6uEqAAAAABlCFfggMUqDhHYKCtV89vtv2AFz"
+                    baseUrl="https://uat.myxborder.com"
+                    size={size}
+                    theme="dark"
+                    onLoad={() => Alert.alert('onLoad event')}
+                    onClose={() => Alert.alert('onClose event')}
+                    onError={(err) => {
+                        Alert.alert('onError event');
+                        console.warn(err);
+                    }}
+                    onExpire={() => Alert.alert('onExpire event')}
+                    onVerify={(token) => {
+                        Alert.alert('onVerify event');
+                        setToken(token);
+                    }}
+                    enterprise={false}
+                    hideBadge={false}
+                />
 
                 {/* reCAPTCHA Checkbox */}
                 {/* <TouchableOpacity style={styles.checkboxContainer} onPress={() => setIsChecked(!isChecked)}>
@@ -109,7 +150,7 @@ const LoginScreen = ({ navigation }) => {
                         </Text>
                     </LinearGradient>
                 </TouchableOpacity>
-            
+
 
                 {/* Sign Up Link */}
                 <Text style={styles.signUpText}>
