@@ -33,21 +33,21 @@ const EmailVarificationScreen = ({ navigation, route }) => {
             });
             const data = await response.json();
             console.log('email varification data', data);
-            if (data.status === true) {
-                Toast.show(data.data, Toast.SHORT);
-                navigation.dispatch(
-                    CommonActions.reset({
-                        index: 1,
-                        routes: [
-                            { name: 'emailVarificationScreen' },
-                            { name: 'VarifyOtpScreen', params: data },
-                        ],
-                    })
-                );
-            }
-            else {
-                Toast.show(data.error, Toast.SHORT);
-            }
+            Toast.show(data.data, Toast.SHORT);
+            // if (data.status === true) {
+            //     navigation.dispatch(
+            //         CommonActions.reset({
+            //             index: 1,
+            //             routes: [
+            //                 { name: 'emailVarificationScreen' },
+            //                 { name: 'VarifyOtpScreen', params: data },
+            //             ],
+            //         })
+            //     );
+            // }
+            // else {
+            //     Toast.show(data.error, Toast.SHORT);
+            // }
             setVisibleModal(false);
         } catch (error) {
             console.log(error);

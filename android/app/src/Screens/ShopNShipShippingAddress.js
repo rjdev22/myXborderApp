@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import {
     View,
@@ -10,14 +9,27 @@ import {
     TouchableOpacity
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import Layout from '../Components/Common/Layout';
+import Layout from '../Components/Common/Layout'
 import DropDown from '../Components/Common/DropDown';
-import { createShopNShipOrder } from '../services/apiServices';
-const ShopNshipShipmentAddress = ({ navigation,route }) => {
-    console.log('ROUTE',route);
+import { createShopNShipOrder,createAssistedSopNShipOrder } from '../services/apiServices';
+import ExistaddressList from './Address/ExistaddressList';
+import CreateNewAddress from './Address/CreateNewAddress';
+import Loader from '../Components/Modals/Loader';
+import { Toast } from 'react-native-toast-notifications';
 
+const ShopNshipShipmentAddress = ({ navigation, route }) => {
+
+    console.log('route', route.params.additems);
+
+
+    const order_url=route?.params?.additems[0]?.trackingNumber?createShopNShipOrder:createAssistedSopNShipOrder; 
+    console.log('order_url',order_url)
+
+    const [goAddress, setGoAddress] = useState(false);
+    const [creteAddress, setCreateAddress] = useState(false);
     const [selectedOrderType, setSelectedOrderType] = useState(null);
-    const [selectedCourierType, setSelectedCourierType] = useState(null);    // State for order items
+    const [selectedCourierType, setSelectedCourierType] = useState(null);
+    const [isLoading, setIsLoading] = useState(false); // State for order items
 
     const OrderType = [
         "Commercial",
@@ -30,31 +42,43 @@ const ShopNshipShipmentAddress = ({ navigation,route }) => {
         "premium"
     ]
 
-    const handleNextButton = async () => {
+    const handleCreateOrder = async (address) => {
+        console.log('address id ', address);
+        console.log('items', route.params.additems)
+        setIsLoading(true);
         try {
-            const response = await fetch(createShopNShipOrder, {
+            const response = await fetch(order_url, {
                 method: 'POST',
                 headers: {
-                    'authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L215eGJvcmRlci9hcGkvdjEvdmVyaWZ5X2VtYWlsX290cCIsImlhdCI6MTc0MDEzMTM5NiwibmJmIjoxNzQwMTMxMzk2LCJqdGkiOiJzU2trZEJQTDJ0VDRPSXJzIiwic3ViIjoiMTc3MCIsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.4DIewxHyolVv0u1kB6yToZ0hIeINWPDWBBH_fBNdTHo'
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L215eGJvcmRlci9hcGkvdjEvdmVyaWZ5X2VtYWlsX290cCIsImlhdCI6MTc0MDEzMTM5NiwibmJmIjoxNzQwMTMxMzk2LCJqdGkiOiJzU2trZEJQTDJ0VDRPSXJzIiwic3ViIjoiMTc3MCIsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.4DIewxHyolVv0u1kB6yToZ0hIeINWPDWBBH_fBNdTHo'
                 },
                 body: JSON.stringify({
-
-                    "itemName": "T-Shirt",
-                    "itemType": 1,
-                    "store": "Flipkart",
-                    "trackingNumber": "123456789",
-                    "color": "White",
-                    "size": "M",
-                    "price": 500,
-                    "quantity": 2,
-                    "itemRemark": "Handle with care"
+                    orderSubType: 2,
+                    courierType: 2,
+                    addressId: address,
+                    remark: "Urgent delivery",
+                    chat: "Please deliver fast",
+                    assestedPrice: 3000,
+                    additems:route.params.additems
                 })
             })
-            console.log('shop n ship response', response.data.data);
-            navigation.navigate('ShopNShipShippingAddress')
+            const data = await response.json();
+            console.log('shop n ship response', data);
+            if (data.status === true) {
+                navigation.navigate('DashBoardScreen');
+                Toast.show(data.message,Toast.SHORT);
+                setIsLoading(false);
+            }
+            else {
+                Toast.show(data.error, Toast.SHORT);
+            }
+
+            setIsLoading(false);
         }
         catch {
             console.log(error);
+            setIsLoading(false);
         }
     }
 
@@ -63,63 +87,73 @@ const ShopNshipShipmentAddress = ({ navigation,route }) => {
     return (
         <Layout>
             <View style={styles.container}>
-                <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+
+                <ScrollView style={styles.content} shosVerticalScrollIndicator={false}>
                     <View style={styles.topHeader}>
-                        <Text style={{ fontSize: 16, fontWeight: 'bold',}}>Shipping Address</Text>
-                        <TouchableOpacity onPress={() => navigation.goBack()}>
+                        <Text style={{ fontSize: 16, fontWeight: 'bold', }}>Shipping Address</Text>
+                        <TouchableOpacity onPress={goAddress ? () => setGoAddress(false) : creteAddress ? () => setCreateAddress(false) : () => navigation.goBack()}>
                             <Image source={require('../assets/back.png')} style={{ width: 20, height: 20 }} />
                         </TouchableOpacity>
 
                     </View>
 
+                    {
+                        goAddress ? (
+                            <ExistaddressList navigation={navigation} handleCreateOrder={handleCreateOrder} />
+                        ) :
+                            creteAddress ? (
+                                <CreateNewAddress navigation={navigation} />
+                            )
+                                : (
+                                    <View>
+                                        <View style={styles.itemContainer}>
+                                            <View style={styles.inputGroup}>
+                                                <Text style={styles.label}>Order Type*</Text>
+                                                <DropDown
+                                                    items={OrderType}
+                                                    initialValue={selectedOrderType}
+                                                    onChange={(value) => setSelectedOrderType(value)}
+                                                />
+                                            </View>
+                                            <View style={styles.inputGroup}>
+                                                <Text style={styles.label}>Courier Type*(click here for shipping rates)</Text>
+                                                <DropDown
+                                                    items={CourierType}
+                                                    initialValue={selectedCourierType}
+                                                    onChange={(value) => setSelectedCourierType(value)}
+                                                />
+                                            </View>
+                                        </View>
 
-                    <View style={styles.itemContainer}>
-                        <View style={styles.inputGroup}>
-                            <Text style={styles.label}>Order Type*</Text>
-                            <DropDown
-                                items={OrderType}
-                                initialValue={selectedOrderType}
-                                onChange={(value) => setSelectedOrderType(value)}
-                            />
-                        </View>
-                        <View style={styles.inputGroup}>
-                            <Text style={styles.label}>Courier Type*(click here for shipping rates)</Text>
-                            <DropDown
-                                items={CourierType}
-                                initialValue={selectedCourierType}
-                                onChange={(value) => setSelectedCourierType(value)}
-                            />
-                        </View>
-                    </View>
-
-                    <View style={{display:'flex',flexDirection:'row',justifyContent:'space-between'}}>
-                        <TouchableOpacity style={{width:'48%'}}>
-                            <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} colors={['#d81397', '#0d5cc2']} style={styles.button}>
-                                <Text style={styles.buttonText}>
-                                    Use Existing Address
-                                </Text>
-                            </LinearGradient>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={{width:'48%'}}>
-                            <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} colors={['#d81397', '#0d5cc2']} style={styles.button}>
-                                <Text style={styles.buttonText}>
-                                    Create New Address
-                                </Text>
-                            </LinearGradient>
-                        </TouchableOpacity>
-
-                    </View>
-
+                                        <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                                            <TouchableOpacity style={{ width: '48%' }} onPress={() => setGoAddress(true)}>
+                                                <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} colors={['#d81397', '#0d5cc2']} style={styles.button}>
+                                                    <Text style={styles.buttonText}>
+                                                        Use Existing Address
+                                                    </Text>
+                                                </LinearGradient>
+                                            </TouchableOpacity>
+                                            <TouchableOpacity style={{ width: '48%' }} onPress={() => setCreateAddress(true)}>
+                                                <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} colors={['#d81397', '#0d5cc2']} style={styles.button}>
+                                                    <Text style={styles.buttonText}>
+                                                        Create New Address
+                                                    </Text>
+                                                </LinearGradient>
+                                            </TouchableOpacity>
+                                        </View>
+                                    </View>)
+                    }
                 </ScrollView>
+                <Loader visible={isLoading} />
             </View>
         </Layout>
     );
 };
 
 const styles = StyleSheet.create({
-    container: { 
-        flex: 1, 
-        marginTop: 20 ,
+    container: {
+        flex: 1,
+        marginTop: 20,
     },
     content: { paddingHorizontal: 15 },
     topHeader: {
@@ -158,7 +192,7 @@ const styles = StyleSheet.create({
         width: "100%",
         padding: 10,
         alignItems: "center",
-        borderRadius: 8,
+        borderRadius: 5,
         marginBottom: 20,
     },
     buttonText: {
@@ -166,9 +200,9 @@ const styles = StyleSheet.create({
         fontSize: 14,
 
     },
-  
-   
-   
+
+
+
 });
 
 export default ShopNshipShipmentAddress;

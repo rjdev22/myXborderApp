@@ -14,30 +14,120 @@ import Layout from '../Components/Common/Layout';
 import Toast from 'react-native-simple-toast';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import { SvgUri } from 'react-native-svg';
+import { AuthContext } from '../Context/authContext';
+import { getUserProfile, get_item_types,get_courier_types,get_order_types } from '../services/apiServices';
+
 
 
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const DashBoardScreen = ({ navigation, route }) => {
-    console.log('route data----', route.params.data.image)
 
-    const userData = route.params?.data
+
+    //console.log('route data----', route.params.data.image)
+
+    //const userData = route.params?.data
+    const [userData, setUserData] = useState({});
     const [isLoading, setIsLoading] = useState(true);
+    const [itemData,setItemData]=useState({});
+
+
+    const get_all_item = async () => {
+        try {
+            const response = await fetch(get_item_types, {
+
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L215eGJvcmRlci9hcGkvdjEvdmVyaWZ5X2VtYWlsX290cCIsImlhdCI6MTc0MDEzMTM5NiwibmJmIjoxNzQwMTMxMzk2LCJqdGkiOiJzU2trZEJQTDJ0VDRPSXJzIiwic3ViIjoiMTc3MCIsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.4DIewxHyolVv0u1kB6yToZ0hIeINWPDWBBH_fBNdTHo'
+                },
+
+            })
+            const data = await response.json();
+            setItemData(data.data);
+            console.log('item api response', data);
+
+        }
+        catch {
+            console.log(error);
+
+        }
+    }
+    const courier_types = async () => {
+        try {
+            const response = await fetch( get_courier_types, {
+
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L215eGJvcmRlci9hcGkvdjEvdmVyaWZ5X2VtYWlsX290cCIsImlhdCI6MTc0MDEzMTM5NiwibmJmIjoxNzQwMTMxMzk2LCJqdGkiOiJzU2trZEJQTDJ0VDRPSXJzIiwic3ViIjoiMTc3MCIsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.4DIewxHyolVv0u1kB6yToZ0hIeINWPDWBBH_fBNdTHo'
+                },
+
+            })
+            const data = await response.json();
+            console.log('Courier api response', data);
+
+        }
+        catch {
+            console.log(error);
+
+        }
+    }
+    const order_types= async () => {
+        try {
+            const response = await fetch(get_order_types, {
+
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L215eGJvcmRlci9hcGkvdjEvdmVyaWZ5X2VtYWlsX290cCIsImlhdCI6MTc0MDEzMTM5NiwibmJmIjoxNzQwMTMxMzk2LCJqdGkiOiJzU2trZEJQTDJ0VDRPSXJzIiwic3ViIjoiMTc3MCIsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.4DIewxHyolVv0u1kB6yToZ0hIeINWPDWBBH_fBNdTHo'
+                },
+
+            })
+            const data = await response.json();
+            console.log('order api response', data);
+
+        }
+        catch {
+            console.log(error);
+
+        }
+    }
+
 
     useEffect(() => {
-        setTimeout(() => {
-            setIsLoading(false);
-        }, 3000);
+        const fetchUserData = async () => {
+            try {
+                const response = await fetch(getUserProfile,
+                    {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L215eGJvcmRlci9hcGkvdjEvdmVyaWZ5X2VtYWlsX290cCIsImlhdCI6MTc0MDEzMTM5NiwibmJmIjoxNzQwMTMxMzk2LCJqdGkiOiJzU2trZEJQTDJ0VDRPSXJzIiwic3ViIjoiMTc3MCIsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.4DIewxHyolVv0u1kB6yToZ0hIeINWPDWBBH_fBNdTHo",
+                        },
+                    },
+                );
+                const data = await response.json();
+                console.log('user data', data);
+                setUserData(data.data);
+                setIsLoading(false);
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+                setIsLoading(false);
+            }
+        };
+        fetchUserData();
+        get_all_item();
+        courier_types();
+        order_types();
+
     }, []);
 
     const addressData = {
-        Name: userData?.virtualAddress?.name ,
+        Name: userData?.virtualAddress?.name,
         AddressLine1: userData?.virtualAddress?.address1,
         Landmark: userData?.virtualAddress?.landmark,
         Zipcode: userData?.virtualAddress?.pincode,
         State: userData?.virtualAddress?.state,
-        City:userData?.virtualAddress?.city,
-        PhoneNumber:userData?.phone2,
+        City: userData?.virtualAddress?.city,
+        PhoneNumber: userData?.phone2,
     };
 
     const copy = (text) => {
@@ -59,19 +149,19 @@ const DashBoardScreen = ({ navigation, route }) => {
                             source={{ uri: userData.image }}
                             style={styles.profileHorizontal}
                         /> */}
-                   
+
                         <SvgUri
                             uri={userData.image}
                             width={'100%'}
                             height={'100%'}
                             style={styles.profileHorizontal}
                         />
-                        
+
                     </ShimmerPlaceholder>
 
                     <View>
                         <ShimmerPlaceholder visible={!isLoading} style={styles.textPlaceholder}>
-                            <Text style={styles.profileDetails}>{userData.first_name!==null?userData.first_name:"test"} {userData.last_name!==null?userData.last_name:"User"}</Text>
+                            <Text style={styles.profileDetails}>{userData.first_name !== null ? userData.first_name : "test"} {userData.last_name !== null ? userData.last_name : "User"}</Text>
                         </ShimmerPlaceholder>
                         <ShimmerPlaceholder visible={!isLoading} style={styles.textPlaceholder}>
                             <Text style={styles.profileDetails}>UniqueId: {userData.user_id}</Text>
@@ -97,8 +187,8 @@ const DashBoardScreen = ({ navigation, route }) => {
                                 <Text>Total Orders: <Text style={{ color: '#d81397', }}>({userData.shopNshipOrderCount})</Text></Text>
                             </ShimmerPlaceholder>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => navigation.navigate('Home', { screen: 'AddShopNShipScreen' })}>
-                            <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} colors={['#d81397', '#0d5cc2']} style={styles.orderButton}>
+                        <TouchableOpacity onPress={() =>navigation.navigate('Home', { screen: 'AddShopNShipScreen', params: { itemData:itemData } })}>
+              <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} colors={['#d81397', '#0d5cc2']} style={styles.orderButton}>
                                 <Text style={styles.orderButtonText}>Create Order</Text>
                             </LinearGradient>
                         </TouchableOpacity>

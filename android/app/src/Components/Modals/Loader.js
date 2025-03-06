@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, ActivityIndicator, StyleSheet, Modal } from "react-native";
+import { View, Text, ActivityIndicator, StyleSheet, Modal,} from "react-native";
 
 const Loader = ({ visible }) => {
   return (

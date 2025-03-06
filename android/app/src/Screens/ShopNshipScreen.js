@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
-    View,
+    View, 
     Text,
     Image,
     StyleSheet,
@@ -81,7 +81,7 @@ const ShopNshipScreen = ({ navigation }) => {
                 <View style={styles.orderContainer}>
                     <View style={styles.orderHeader}>
                         <ShimmerPlaceholder visible={!isLoading} style={{ height: 20 }}  >
-                            <Text style={styles.orderCount}>No. of Orders: <Text style={{ color: 'red' }}>({orderData.length})</Text></Text>
+                            <Text style={styles.orderCount}>No. of Orders: <Text style={{ color: '#d81397' }}>({orderData.length})</Text></Text>
                         </ShimmerPlaceholder>
                         <TouchableOpacity onPress={() => navigation.navigate('AddShopNShipScreen')}>
                             <LinearGradient
@@ -115,7 +115,7 @@ const ShopNshipScreen = ({ navigation }) => {
                             <View  key={index} style={styles.orderdetailsContainer}>
                             <View>
                                 <Text style={styles.detailText}>    
-                                    <Text style={styles.boldText}>Date:</Text> Jan 28, 2025
+                                <Text style={styles.boldText}>Date:</Text> {order.created_at.split('T')[0]}
                                 </Text>
 
                                 <Text style={styles.detailText}>
@@ -145,7 +145,7 @@ const ShopNshipScreen = ({ navigation }) => {
                     
                     ) : (
                         <View style={styles.noDataContainer}>
-                            <Image source={require('../assets/box.png')} style={styles.noDataImage} />
+                            <Image source={require('../assets/empty_box.png')} style={styles.noDataImage} />
                             <Text style={styles.noDataText}>No Orders Available</Text>
                         </View>
                     )}

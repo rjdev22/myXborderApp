@@ -130,7 +130,7 @@ const InternationalShipmentScreen = ({ navigation }) => {
                     </View>
                 ) : (
                     <View style={styles.noDataContainer}>
-                        <Image source={require('../assets/box.png')} style={styles.noDataImage} />
+                        <Image source={require('../assets/empty_box.png')} style={styles.noDataImage} />
                         <Text style={styles.noDataText}>No Orders Available</Text>
                     </View>
                 )}
@@ -141,7 +141,7 @@ const InternationalShipmentScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-    content: { padding: 10,backgroundColor: '#f7f7f7'},
+    content: { padding: 10},
     profileCard: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -343,7 +343,7 @@ const styles = StyleSheet.create({
         height: 180,
         alignSelf: 'center',
         marginTop: 50,
-        marginBottom: 20,
+        marginBottom: 10,
     },
     noDataText: {
         fontSize: 16,

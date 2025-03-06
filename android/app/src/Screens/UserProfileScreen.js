@@ -14,6 +14,7 @@ import EditProfileModal from '../Components/Modals/EditProfileModal';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
 import Layout from '../Components/Common/Layout';
+import { getUserProfile } from '../services/apiServices';
 
 
 
@@ -22,12 +23,39 @@ const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const UserProfileScreen = () => {
     const [openEditModal, setOpenEditModal] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
+    const [userData, setUserData] = useState({});
 
+    // useEffect(() => {
+    //     setTimeout(() => {
+    //         setIsLoading(false);
+    //     }, 3000);
+    // }, []);
     useEffect(() => {
-        setTimeout(() => {
-            setIsLoading(false);
-        }, 3000);
+        const fetchUserProfile = async () => {
+            setIsLoading(true);
+
+            try {
+                const response = await fetch(getUserProfile,
+                    {
+                        method: 'GET',
+                        headers: {
+                            "Content-Type": "application/json",
+                            "authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L215eGJvcmRlci9hcGkvdjEvdmVyaWZ5X2VtYWlsX290cCIsImlhdCI6MTc0MDEzMTM5NiwibmJmIjoxNzQwMTMxMzk2LCJqdGkiOiJzU2trZEJQTDJ0VDRPSXJzIiwic3ViIjoiMTc3MCIsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.4DIewxHyolVv0u1kB6yToZ0hIeINWPDWBBH_fBNdTHo",
+                        }
+                    }
+                );
+                const data = await response.json();
+                setUserData(data.data);
+                setIsLoading(false);
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+                setIsLoading(false);
+            }
+        }
+        fetchUserProfile();
+        console.log('user data', userData);
     }, []);
+
 
     const handleOpenEditModal = () => {
         setOpenEditModal(true);
@@ -54,7 +82,7 @@ const UserProfileScreen = () => {
                         visible={!isLoading}
                         style={styles.namePlaceholder}
                     >
-                        <Text style={styles.name}>test test2</Text>
+                        <Text style={styles.name}>{userData.first_name}  {userData.last_name}</Text>
                     </ShimmerPlaceholder>
 
                     <View style={styles.row}>
@@ -70,7 +98,7 @@ const UserProfileScreen = () => {
                             visible={!isLoading}
                             style={styles.valuePlaceholder}
                         >
-                            <Text style={styles.value}>USR1267</Text>
+                            <Text style={styles.value}>{userData.user_id}</Text>
                         </ShimmerPlaceholder>
                     </View>
 
@@ -87,7 +115,7 @@ const UserProfileScreen = () => {
                             visible={!isLoading}
                             style={styles.valuePlaceholder}
                         >
-                            <Text style={styles.value}>USR1267</Text>
+                            <Text style={styles.value}>{userData.is_referral_code===null?'Np Referral Code':userData.referral_code}</Text>
                         </ShimmerPlaceholder>
                     </View>
 
@@ -107,7 +135,7 @@ const UserProfileScreen = () => {
                             >
                                 <View style={{ flexDirection: 'row' }}>
                                     <Icon name="phone" size={16} color="black" />
-                                    <Text style={styles.value}> 916396740386,</Text>
+                                    <Text style={styles.value}> {userData.phone},</Text>
                                 </View>
                             </ShimmerPlaceholder>
                             <ShimmerPlaceholder
@@ -117,7 +145,7 @@ const UserProfileScreen = () => {
                             >
                                 <View style={{ flexDirection: 'row' }}>
                                     <Icon name="whatsapp" size={16} color="green" />
-                                    <Text style={styles.value}> 916396740386</Text>
+                                    <Text style={styles.value}> {userData.phone2}</Text>
                                 </View>
                             </ShimmerPlaceholder>
                         </View>
@@ -138,7 +166,7 @@ const UserProfileScreen = () => {
                         >
                             <View style={styles.emailContainer}>
                                 <Icon name="envelope" size={16} color="black" />
-                                <Text style={styles.value}> test@yopmail.com</Text>
+                                <Text style={styles.value}> {userData.email}</Text>
                             </View>
                         </ShimmerPlaceholder>
                     </View>
@@ -158,7 +186,7 @@ const UserProfileScreen = () => {
                             visible={!isLoading}
                             style={styles.valuePlaceholder}
                         >
-                            <Text style={styles.value}>2</Text>
+                            <Text style={styles.value}>{userData.shopNshipOrderCount+userData.internationalOrderCount+userData.assistedShopNshipOrderCount}</Text>
                         </ShimmerPlaceholder>
                     </View>
 
@@ -200,7 +228,7 @@ const UserProfileScreen = () => {
                     visible={openEditModal}
                     onRequestClose={handleCloseEditModal}
                 >
-                    <EditProfileModal onClose={handleCloseEditModal} />
+                    <EditProfileModal onClose={handleCloseEditModal} userData={userData} />
                 </Modal>
             </ScrollView>
         </Layout>

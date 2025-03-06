@@ -75,7 +75,7 @@ const AssistedShopNshipScreen = ({ navigation }) => {
             <View style={styles.orderContainer}>
                 <View style={styles.orderHeader}>
                     <ShimmerPlaceholder visible={!isLoading} style={{ height: 20 }}  >
-                        <Text style={styles.orderCount}>No. of Orders: <Text style={{ color: 'red' }}>(({orderData.length}))</Text></Text>
+                        <Text style={styles.orderCount}>No. of Orders: <Text style={{ color: 'red' }}>({orderData.length})</Text></Text>
                     </ShimmerPlaceholder>
                     <TouchableOpacity onPress={() => navigation.navigate('AddAssistedShopNShipScreen')}>
                         <LinearGradient
@@ -91,7 +91,7 @@ const AssistedShopNshipScreen = ({ navigation }) => {
             <View>
                 {isLoading ? (
                     <View>
-                    {[...Array(3)].map((_, index) => (
+                    {[...Array(4)].map((_, index) => (
                       <View key={index} style={styles.orderdetailsContainer}>
                         <View>
                           {[...Array(4)].map((_, i) => (
@@ -104,24 +104,25 @@ const AssistedShopNshipScreen = ({ navigation }) => {
                   </View>
                   
                 ) : Array.isArray(orderData) && orderData.length > 0 ? (
-                    <View style={styles.orderdetailsContainer}>
+                    orderData.map((order, index) => (
+                    <View  key={index} style={styles.orderdetailsContainer}>
                         <View>
                             <Text style={styles.detailText}>
-                                <Text style={styles.boldText}>Date:</Text> Jan 28, 2025
+                                <Text style={styles.boldText}>Date:</Text> {order.created_at.split('T')[0]}
                             </Text>
 
                             <Text style={styles.detailText}>
-                                <Text style={styles.boldText}>MXB-Order Id:</Text> SNS3315
+                                <Text style={styles.boldText}>MXB-Order Id:</Text> {order.order_id}
                             </Text>
 
                             <Text style={styles.detailText}>
                                 <Text style={styles.boldText}>Order Type:</Text>
-                                <Text style={{ fontWeight: 'bold' }}> Personal \ Gift</Text>
+                                <Text style={{ fontWeight: 'bold' }}> {order.orderSubType}</Text>
                             </Text>
 
                             <Text style={styles.detailText}>
                                 <Text style={styles.boldText}>Payment Status:</Text>
-                                <Text style={{ fontWeight: 'bold' }}> NotCreated</Text>
+                                <Text style={{ fontWeight: 'bold' }}> {order.payment_status}</Text>
                             </Text>
                         </View>
                         <LinearGradient
@@ -133,9 +134,10 @@ const AssistedShopNshipScreen = ({ navigation }) => {
                             <Text style={styles.detailsButtonText}>Details</Text>
                         </LinearGradient>
                     </View>
+                    ))
                 ) : (
                     <View style={styles.noDataContainer}>
-                        <Image source={require('../assets/box.png')} style={styles.noDataImage} />
+                        <Image source={require('../assets/empty_box.png')} style={styles.noDataImage} />
                         <Text style={styles.noDataText}>No Orders Available</Text>
                     </View>
                 )}

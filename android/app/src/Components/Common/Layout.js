@@ -24,14 +24,15 @@ const Layout = ({ children }) => {
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.dispatch(DrawerActions.openDrawer())}>
-          <Icon name="bars" size={24} color="black" />
+          {/* <Icon name="bars" size={24} color="black" /> */}
+          <Image source={require('../../assets/menu.png')} style={{ width: 25, height: 25 }} />
         </TouchableOpacity>
         <Image
           source={require('../../assets/logo-horizontal.png')}
           style={styles.logoHorizontal}
         />
         <TouchableOpacity onPress={() => setModalVisible(true)}>
-          <Icon name="user-circle-o" size={24} color="black" />
+        <Image source={require('../../assets/profile.png')} style={{ width: 25, height: 25 }} />
         </TouchableOpacity>
       </View>
       <Modal
@@ -105,11 +106,11 @@ const Layout = ({ children }) => {
       <View style={styles.footer}>
         <TouchableOpacity style={styles.tab} onPress={() => navigation.navigate('HomeScreen')}>
 
-          <Icon name="home" size={25} color="black" />
+        <Image source={require('../../assets/home.png')} style={{ width: 25, height: 25 }} />
           <Text>Home</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.tab} onPress={() => navigation.navigate('UserProfileScreen')}>
-          <Icon name="user-circle-o" size={25} color="black" />
+        <Image source={require('../../assets/profile.png')} style={{ width: 25, height: 25 }} />
           <Text>Profile</Text>
         </TouchableOpacity>
       </View>

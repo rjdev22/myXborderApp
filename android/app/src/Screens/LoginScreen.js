@@ -7,9 +7,12 @@ import { CommonActions } from "@react-navigation/native";
 import Loader from "../Components/Modals/Loader";
 import Toast from "react-native-simple-toast";
 import { useToast } from "react-native-toast-notifications";
-import Recaptcha, {RecaptchaRef} from 'react-native-recaptcha-that-works';
+import Recaptcha, { RecaptchaRef } from 'react-native-recaptcha-that-works';
+import { AuthContext } from '../Context/authContext';
+
 
 const LoginScreen = ({ navigation }) => {
+
     const toast = useToast();
     const [email, setEmail] = useState("");
     const [isChecked, setIsChecked] = useState(false);
@@ -66,15 +69,15 @@ const LoginScreen = ({ navigation }) => {
                     //     animationType: "slide-in ",
                     // });
                     setVisibleModal(false);
-                 return
+                    return
                 }
-
+         
                 navigation.dispatch(
                     CommonActions.reset({
                         index: 1,
                         routes: [
                             { name: 'HomeScreen' },
-                            { name:'DashBoardScreen', params: data },
+                            { name: 'DashBoardScreen', params: data },
                         ],
                     })
                 );

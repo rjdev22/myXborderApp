@@ -28,6 +28,7 @@ import SplashScreen from '../Screens/SplashScreen';
 import NotificationScreen from '../Screens/NotificationScreen';
 import VarifyOtpScreen from '../Screens/VarifyOtpScreen';
 import ShopNshipShipmentAddress from '../Screens/ShopNShipShippingAddress';
+import ExistaddressList from '../Screens/Address/ExistaddressList';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -113,6 +114,7 @@ function StackNavigator() {
       <Stack.Screen name="EmailVarificationScreen" component={EmailVarificationScreen} />
       <Stack.Screen name="VarifyOtpScreen" component={VarifyOtpScreen} />
       <Stack.Screen name="ShopNshipShipmentAddress" component={ ShopNshipShipmentAddress}/>
+      <Stack.Screen name="ExistaddressList" component={ExistaddressList}/>
 
     </Stack.Navigator>
   );
