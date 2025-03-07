@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 
-const DropDown = ({ items, initialValue, onChange }) => {
+const DropDown = ({ items, initialValue, onChange,label }) => {
   const [selectedVal, setSelectedVal] = useState(initialValue);
 
   useEffect(() => {
@@ -24,7 +24,7 @@ const DropDown = ({ items, initialValue, onChange }) => {
         onValueChange={handleValueChange}
         style={styles.picker}
       >
-        <Picker.Item label="Select" value={null} color="#808080" />
+        <Picker.Item label={label} value={null} color="#808080" />
         {Object.entries(items).map(([value, label], index) => (
           <Picker.Item
             key={index}

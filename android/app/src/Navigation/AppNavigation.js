@@ -5,10 +5,12 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { ToastProvider } from 'react-native-toast-notifications';
 
-import { createDrawerNavigator,
- DrawerContentScrollView,
- DrawerItemList,
- DrawerItem } from '@react-navigation/drawer';
+import {
+  createDrawerNavigator,
+  DrawerContentScrollView,
+  DrawerItemList,
+  DrawerItem
+} from '@react-navigation/drawer';
 import { Linking } from 'react-native';
 import HomeScreen from '../Screens/HomeScreen';
 import LoginScreen from '../Screens/LoginScreen';
@@ -29,6 +31,9 @@ import NotificationScreen from '../Screens/NotificationScreen';
 import VarifyOtpScreen from '../Screens/VarifyOtpScreen';
 import ShopNshipShipmentAddress from '../Screens/ShopNShipShippingAddress';
 import ExistaddressList from '../Screens/Address/ExistaddressList';
+import InternationalShipmentPickupAddress from '../Screens/InternationalShipmentPickupAddress';
+import InternationalShipmentDestinationAddress from '../Screens/InternationalShipmentDestinationAddress';
+import InternationalShipmentPackageInformation from '../Screens/InternationalShipmentPackageInformation';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -113,9 +118,11 @@ function StackNavigator() {
       <Stack.Screen name="NotificationScreen" component={NotificationScreen} />
       <Stack.Screen name="EmailVarificationScreen" component={EmailVarificationScreen} />
       <Stack.Screen name="VarifyOtpScreen" component={VarifyOtpScreen} />
-      <Stack.Screen name="ShopNshipShipmentAddress" component={ ShopNshipShipmentAddress}/>
-      <Stack.Screen name="ExistaddressList" component={ExistaddressList}/>
-
+      <Stack.Screen name="ShopNshipShipmentAddress" component={ShopNshipShipmentAddress} />
+      <Stack.Screen name="ExistaddressList" component={ExistaddressList} />
+      <Stack.Screen name="InternationalShipmentPickupAddress" component={InternationalShipmentPickupAddress} />
+      <Stack.Screen name="InternationalShipmentPackageInformation" component={InternationalShipmentPackageInformation} />
+      <Stack.Screen name="InternationalShipmentDestinationAddress" component={InternationalShipmentDestinationAddress} />
     </Stack.Navigator>
   );
 }
@@ -191,13 +198,13 @@ function DrawerNavigator() {
 export default function AppNavigation() {
   return (
     <ToastProvider>
-    <PaperProvider>
-      <NavigationContainer>
-        <DrawerNavigator>
-          <StackNavigator />
-        </DrawerNavigator>
-      </NavigationContainer>
-    </PaperProvider>
+      <PaperProvider>
+        <NavigationContainer>
+          <DrawerNavigator>
+            <StackNavigator />
+          </DrawerNavigator>
+        </NavigationContainer>
+      </PaperProvider>
     </ToastProvider>
   );
 }

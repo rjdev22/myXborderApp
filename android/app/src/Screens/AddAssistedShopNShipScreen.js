@@ -16,6 +16,7 @@ const AddAssistedShopNShipScreen = ({ navigation }) => {
 
     const [selectedItem, setSelectedItem] = useState(null)// State for order items
     const [remark, setRemark] = useState('');
+    const[errors,setErrors]=useState([])
     const [items, setItems] = useState([
         {
 
@@ -54,6 +55,14 @@ const AddAssistedShopNShipScreen = ({ navigation }) => {
         const updatedItems = [...items];
         updatedItems[index][field] = value;
         setItems(updatedItems);
+
+        setErrors(prevErrors => {
+            const updatedErrors = [...prevErrors];
+            if (value) updatedErrors[index] = { ...updatedErrors[index], [field]: '' };
+            return updatedErrors;
+        });
+
+
     };
 
     // Add new item
@@ -74,6 +83,48 @@ const AddAssistedShopNShipScreen = ({ navigation }) => {
             }
         ]);
     };
+
+    const validateFields = () => {
+        let isValid = true;
+        const newErrors = items.map(item => {
+            let itemErrors = {};
+
+
+            if (!item.store) {
+                itemErrors.store= "Online Store/Item URL is required";
+                isValid = false;
+            }
+            if (!item.itemName) {
+                itemErrors.itemName = "Item name is required";
+                isValid = false;
+            }
+            if (!item.itemType) {
+                itemErrors.itemType = "Item type is required";
+                isValid = false;
+            }
+            if (!item.quantity) {
+                itemErrors.quantity = "Quantity is required";
+                isValid = false;
+            }
+            if (!item.price) {
+                itemErrors.price = "Price is required";
+                isValid = false;
+            }
+            return itemErrors;
+        });
+
+        setErrors(newErrors);
+        return isValid;
+    };
+
+
+  const handleNext = () => {
+        if (validateFields()) {
+            navigation.navigate('ShopNshipShipmentAddress', { additems: items, remark});
+        }
+    };
+
+
 
     
    
@@ -97,6 +148,8 @@ const AddAssistedShopNShipScreen = ({ navigation }) => {
                                     onChangeText={(value) => handleInputChange(index, 'store', value)}
                                 />
                             </View>
+                             {errors[index]?.store && <Text style={styles.errorText}>{errors[index].store}</Text>}
+                              {/* {errors[index]?.store && <Text style={styles.errorText}>{errors[index].store}</Text>} */}
                             {/* <View style={styles.inputGroup}>
                                 <Text style={styles.label}>Item Type*</Text>
                                 <DropDown
@@ -116,6 +169,7 @@ const AddAssistedShopNShipScreen = ({ navigation }) => {
 
                                 />
                             </View>
+                            {errors[index]?.itemName && <Text style={styles.errorText}>{errors[index].itemName}</Text>}
 
                             <View style={styles.inputGroup}>
                                 <Text style={styles.label}>Color</Text>
@@ -147,6 +201,7 @@ const AddAssistedShopNShipScreen = ({ navigation }) => {
                                     onChangeText={(value) => handleInputChange(index, 'quantity', value)}
                                 />
                             </View>
+                            {errors[index]?.quantity && <Text style={styles.errorText}>{errors[index].quantity}</Text>}
                             <View style={styles.inputGroup}>
                                 <Text style={styles.label}>Single Item Price* (INR)</Text>
                                 <TextInput
@@ -157,6 +212,7 @@ const AddAssistedShopNShipScreen = ({ navigation }) => {
                                     onChangeText={(value) => handleInputChange(index, 'price', value)}
                                 />
                             </View>
+                            {errors[index]?.price && <Text style={styles.errorText}>{errors[index].price}</Text>}
                             <View style={styles.inputGroup}>
                                 <Text style={styles.label}>Total Price* (INR)</Text>
                                 <TextInput
@@ -165,6 +221,7 @@ const AddAssistedShopNShipScreen = ({ navigation }) => {
                                 //editable={false} // Make it read-only
                                 />
                             </View>
+                           
                         </View>
                     ))}
 
@@ -179,7 +236,7 @@ const AddAssistedShopNShipScreen = ({ navigation }) => {
 
                     <View style={styles.footer}>
                         <Text style={styles.grandTotal}>Grand Total: 0</Text>
-                        <TouchableOpacity onPress={() => navigation.navigate('ShopNshipShipmentAddress', { additems: items, remark: remark })}>
+                        <TouchableOpacity onPress={handleNext}>
                             <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} colors={['#d81397', '#0d5cc2']} style={styles.nextButton}>
                                 <Text style={styles.nextButtonText}>Next</Text>
                             </LinearGradient>
@@ -217,6 +274,7 @@ const styles = StyleSheet.create({
     grandTotal: { fontSize: 16 },
     nextButton: { paddingVertical: 5, borderRadius: 5, padding: 10, width: 130 },
     nextButtonText: { color: "#fff", fontSize: 16, fontWeight: "bold", textAlign: "center" },
+    errorText:{color:'red',fontSize:12}
 });
 
 export default AddAssistedShopNShipScreen;

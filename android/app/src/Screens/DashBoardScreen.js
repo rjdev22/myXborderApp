@@ -15,7 +15,7 @@ import Toast from 'react-native-simple-toast';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import { SvgUri } from 'react-native-svg';
 import { AuthContext } from '../Context/authContext';
-import { getUserProfile, get_item_types,get_courier_types,get_order_types } from '../services/apiServices';
+import { getUserProfile, get_item_types, get_courier_types, get_order_types } from '../services/apiServices';
 
 
 
@@ -29,7 +29,9 @@ const DashBoardScreen = ({ navigation, route }) => {
     //const userData = route.params?.data
     const [userData, setUserData] = useState({});
     const [isLoading, setIsLoading] = useState(true);
-    const [itemData,setItemData]=useState({});
+    const [itemData, setItemData] = useState({});
+    const [courierData, setCourierData] = useState({});
+    const [orderData, setOrderData] = useState({});
 
 
     const get_all_item = async () => {
@@ -52,44 +54,7 @@ const DashBoardScreen = ({ navigation, route }) => {
 
         }
     }
-    const courier_types = async () => {
-        try {
-            const response = await fetch( get_courier_types, {
-
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L215eGJvcmRlci9hcGkvdjEvdmVyaWZ5X2VtYWlsX290cCIsImlhdCI6MTc0MDEzMTM5NiwibmJmIjoxNzQwMTMxMzk2LCJqdGkiOiJzU2trZEJQTDJ0VDRPSXJzIiwic3ViIjoiMTc3MCIsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.4DIewxHyolVv0u1kB6yToZ0hIeINWPDWBBH_fBNdTHo'
-                },
-
-            })
-            const data = await response.json();
-            console.log('Courier api response', data);
-
-        }
-        catch {
-            console.log(error);
-
-        }
-    }
-    const order_types= async () => {
-        try {
-            const response = await fetch(get_order_types, {
-
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L215eGJvcmRlci9hcGkvdjEvdmVyaWZ5X2VtYWlsX290cCIsImlhdCI6MTc0MDEzMTM5NiwibmJmIjoxNzQwMTMxMzk2LCJqdGkiOiJzU2trZEJQTDJ0VDRPSXJzIiwic3ViIjoiMTc3MCIsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.4DIewxHyolVv0u1kB6yToZ0hIeINWPDWBBH_fBNdTHo'
-                },
-
-            })
-            const data = await response.json();
-            console.log('order api response', data);
-
-        }
-        catch {
-            console.log(error);
-
-        }
-    }
+   
 
 
     useEffect(() => {
@@ -115,8 +80,8 @@ const DashBoardScreen = ({ navigation, route }) => {
         };
         fetchUserData();
         get_all_item();
-        courier_types();
-        order_types();
+        //courier_types();
+        //order_types();
 
     }, []);
 
@@ -187,8 +152,8 @@ const DashBoardScreen = ({ navigation, route }) => {
                                 <Text>Total Orders: <Text style={{ color: '#d81397', }}>({userData.shopNshipOrderCount})</Text></Text>
                             </ShimmerPlaceholder>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() =>navigation.navigate('Home', { screen: 'AddShopNShipScreen', params: { itemData:itemData } })}>
-              <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} colors={['#d81397', '#0d5cc2']} style={styles.orderButton}>
+                        <TouchableOpacity onPress={() => navigation.navigate('Home', { screen: 'AddShopNShipScreen', params: { itemData: itemData,orderData:orderData,courierData:courierData } })}>
+                            <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} colors={['#d81397', '#0d5cc2']} style={styles.orderButton}>
                                 <Text style={styles.orderButtonText}>Create Order</Text>
                             </LinearGradient>
                         </TouchableOpacity>

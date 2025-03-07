@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
   logoHorizontal: {
     width: 150, height: 35, resizeMode: 'contain'
   },
-  content: { flex: 1 },
+  content: { flex: 1 ,backgroundColor:'white'},
   footer: {
     flexDirection: 'row',
     justifyContent: 'space-around',

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     View,
     Text,
@@ -11,40 +11,101 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import Layout from '../Components/Common/Layout'
 import DropDown from '../Components/Common/DropDown';
-import { createShopNShipOrder,createAssistedSopNShipOrder } from '../services/apiServices';
+import { createShopNShipOrder, createAssistedSopNShipOrder } from '../services/apiServices';
 import ExistaddressList from './Address/ExistaddressList';
 import CreateNewAddress from './Address/CreateNewAddress';
 import Loader from '../Components/Modals/Loader';
 import { Toast } from 'react-native-toast-notifications';
+import { get_courier_types,get_order_types } from '../services/apiServices';
 
 const ShopNshipShipmentAddress = ({ navigation, route }) => {
 
-    console.log('route', route.params.additems);
+    console.log('route', route?.params);
+    // const orderType = route?.params?.orderType;
+    // const courierType = route?.params?.CourierType;
+    const[orderType,setOrderType]=useState([]);
+    const[courierType,setCourierType]=useState([]);
+
+    console.log("0000000000", courierType);
 
 
-    const order_url=route?.params?.additems[0]?.trackingNumber?createShopNShipOrder:createAssistedSopNShipOrder; 
-    console.log('order_url',order_url)
+
+
+    useEffect(() => {
+
+        const courier_types = async () => {
+            try {
+                const response = await fetch(get_courier_types, {
+
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L215eGJvcmRlci9hcGkvdjEvdmVyaWZ5X2VtYWlsX290cCIsImlhdCI6MTc0MDEzMTM5NiwibmJmIjoxNzQwMTMxMzk2LCJqdGkiOiJzU2trZEJQTDJ0VDRPSXJzIiwic3ViIjoiMTc3MCIsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.4DIewxHyolVv0u1kB6yToZ0hIeINWPDWBBH_fBNdTHo'
+                    },
+
+                })
+                const data = await response.json();
+                setCourierType(data.data);
+                //console.log("laveee", courierData)
+                console.log('Courier api response', data);
+
+            }
+            catch {
+                console.log(error);
+
+            }
+        }
+        const order_types = async () => {
+            try {
+                const response = await fetch(get_order_types, {
+
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L215eGJvcmRlci9hcGkvdjEvdmVyaWZ5X2VtYWlsX290cCIsImlhdCI6MTc0MDEzMTM5NiwibmJmIjoxNzQwMTMxMzk2LCJqdGkiOiJzU2trZEJQTDJ0VDRPSXJzIiwic3ViIjoiMTc3MCIsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.4DIewxHyolVv0u1kB6yToZ0hIeINWPDWBBH_fBNdTHo'
+                    },
+
+                })
+                const data = await response.json();
+                setOrderType(data.data);
+                console.log('order api response', data);
+
+            }
+            catch {
+                console.log(error);
+
+            }
+        }
+        courier_types();
+        order_types();
+
+    }, [])
+
+    const OrderData = orderType?.map(item => item.name);
+    const CourierData = courierType?.map(item => item.name);
+
+ 
+    //const CourierType = courierType.map(item => item.name);
+
+    const order_url = route?.params?.additems[0]?.trackingNumber ? createShopNShipOrder : createAssistedSopNShipOrder;
+    //console.log('order_url',order_url)
 
     const [goAddress, setGoAddress] = useState(false);
     const [creteAddress, setCreateAddress] = useState(false);
+
     const [selectedOrderType, setSelectedOrderType] = useState(null);
     const [selectedCourierType, setSelectedCourierType] = useState(null);
+
     const [isLoading, setIsLoading] = useState(false); // State for order items
 
-    const OrderType = [
-        "Commercial",
-        "Personal\Gift",
-        "Sample",
 
-    ]
-    const CourierType = [
-        "Normal",
-        "premium"
-    ]
+    // const CourierType = [
+    //     "Normal",
+    //     "premium"
+    // ]
 
     const handleCreateOrder = async (address) => {
-        console.log('address id ', address);
-        console.log('items', route.params.additems)
+        // console.log('address id ', address);
+        console.log('selected order type', selectedOrderType)
+
         setIsLoading(true);
         try {
             const response = await fetch(order_url, {
@@ -60,14 +121,14 @@ const ShopNshipShipmentAddress = ({ navigation, route }) => {
                     remark: "Urgent delivery",
                     chat: "Please deliver fast",
                     assestedPrice: 3000,
-                    additems:route.params.additems
+                    additems: route.params.additems
                 })
             })
             const data = await response.json();
             console.log('shop n ship response', data);
             if (data.status === true) {
                 navigation.navigate('DashBoardScreen');
-                Toast.show(data.message,Toast.SHORT);
+                Toast.show(data.message, Toast.SHORT);
                 setIsLoading(false);
             }
             else {
@@ -110,17 +171,19 @@ const ShopNshipShipmentAddress = ({ navigation, route }) => {
                                             <View style={styles.inputGroup}>
                                                 <Text style={styles.label}>Order Type*</Text>
                                                 <DropDown
-                                                    items={OrderType}
+                                                    items={OrderData}
+                                                     label="Please select Order Type"
                                                     initialValue={selectedOrderType}
-                                                    onChange={(value) => setSelectedOrderType(value)}
+                                                    onChange={(value) => setSelectedOrderType(value)} // This now holds the ID
                                                 />
                                             </View>
                                             <View style={styles.inputGroup}>
                                                 <Text style={styles.label}>Courier Type*(click here for shipping rates)</Text>
                                                 <DropDown
-                                                    items={CourierType}
+                                                    items={CourierData}
+                                                     label="Please select Courier Type"
                                                     initialValue={selectedCourierType}
-                                                    onChange={(value) => setSelectedCourierType(value)}
+                                                    onChange={(value) => setSelectedCourierType(value)} // This now holds the ID
                                                 />
                                             </View>
                                         </View>
