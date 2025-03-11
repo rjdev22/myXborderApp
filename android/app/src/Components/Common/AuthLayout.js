@@ -11,7 +11,7 @@ const AuthLayout = ({ children }) => {
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity style={{position:'absolute',left:10}} onPress={() => navigation.goBack()}>
+        <TouchableOpacity style={{position:'absolute',left:10}} onPress={() => navigation.navigate('HomeScreen')}>
           {/* <Icon name="arrow-left" size={24} color="black" /> */}
           <Image source={require('../../assets/back.png')} style={{ width:25, height: 25 }} />
 

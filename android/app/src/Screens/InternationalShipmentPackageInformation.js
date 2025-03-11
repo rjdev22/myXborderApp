@@ -14,15 +14,18 @@ import DropDown from '../Components/Common/DropDown';
 import { get_item_types } from '../services/apiServices';
 
 
-const InternationalShipmentPackageInformation = ({ navigation, }) => {
+const InternationalShipmentPackageInformation = ({ navigation, route }) => {
+    console.log('route data-', route.params);
+    const pickupData = route.params;
 
 
 
-    const [numberOfBoxes, setNumberOfBoxes] = useState(0)
-    const [weight, setWeight] = useState(0)
-    const [height, setHeight] = useState(1);
-    const [width, setWidth] = useState(1);
-    const [depth, setDepth] = useState(1);
+    const [packageBoxes, setPackageBoxes] = useState(0)
+    const [packageWeight, setPackageWeight] = useState(0)
+    const [packageHeight, setPackageHeight] = useState(1);
+    const [PackageWidth, setPackageWidth] = useState(1);
+    const [PackageDepth, setPackageDepth] = useState(1);
+
 
     const handleIncrement = (setter) => setter((prev) => prev + 0.5);
     const handleDecrement = (setter) => setter((prev) => (prev > 1 ? prev - 0.5 : prev));
@@ -34,26 +37,34 @@ const InternationalShipmentPackageInformation = ({ navigation, }) => {
         {
             itemName: '',
             itemType: 0,
-            price: 0,
-            totalPrice: 0,
-            quantity: 0,
+            itemPrice: 0,
+            itemTotalPrice: 0,
+            itemQuantity: 0,
 
         }
     ]);
-
-
+    
+    
     const handleInputChange = (index, field, value) => {
         const updatedItems = [...items];
         updatedItems[index][field] = value;
+        if (field === 'itemPrice' || field === 'itemQuantity') {
+            const price = parseFloat(updatedItems[index].itemPrice) || 0;
+            const quantity = parseInt(updatedItems[index].itemQuantity) || 0;
+            updatedItems[index].itemTotalPrice = price * quantity;
+        }
+        
+        
+        
         setItems(updatedItems);
-
+        
         setErrors(prevErrors => {
             const updatedErrors = [...prevErrors];
             if (value) updatedErrors[index] = { ...updatedErrors[index], [field]: '' };
             return updatedErrors;
         });
     };
-
+    
     // Add new item
     const addNewItem = () => {
         setItems([
@@ -62,20 +73,21 @@ const InternationalShipmentPackageInformation = ({ navigation, }) => {
                 // id: items.length + 1,
                 itemName: '',
                 itemType: 0,
-                price: 0,
-                totalPrice: 0,
-                quantity: 0,
+                itemPrice: 0,
+                itemTotalPrice:0,
+                itemQuantity: 0,
 
             }
         ]);
     };
-
+    
+    console.log('data', packageBoxes, packageHeight, packageWeight, PackageWidth, PackageDepth, items, pickupData);
     const validateFields = () => {
         let isValid = true;
         const newErrors = items.map(item => {
             let itemErrors = {};
-            if (numberOfBoxes === 0) {
-                itemErrors.numberOfBoxes = "Number of boxes is required";
+            if (packageBoxes === 0) {
+                itemErrors.packageBoxes = "Number of boxes is required";
                 isValid = false;
             }
 
@@ -87,12 +99,12 @@ const InternationalShipmentPackageInformation = ({ navigation, }) => {
                 itemErrors.itemType = "Item type is required";
                 isValid = false;
             }
-            if (!item.quantity) {
-                itemErrors.quantity = "Quantity is required";
+            if (!item.itemQuantity) {
+                itemErrors.itemQuantity = "Quantity is required";
                 isValid = false;
             }
-            if (!item.price) {
-                itemErrors.price = "Price is required";
+            if (!item.itemPrice) {
+                itemErrors.itemPrice = "Price is required";
                 isValid = false;
             }
             return itemErrors;
@@ -106,7 +118,7 @@ const InternationalShipmentPackageInformation = ({ navigation, }) => {
 
     const handleNext = () => {
         if (validateFields()) {
-            navigation.navigate('InternationalShipmentDestinationAddress');
+            navigation.navigate('InternationalShipmentDestinationAddress', { packageBoxes, packageHeight, packageWeight, PackageWidth, PackageDepth, items, pickupData });
         }
     };
 
@@ -129,14 +141,15 @@ const InternationalShipmentPackageInformation = ({ navigation, }) => {
                         <TextInput
                             style={styles.input}
                             placeholder="Enter item name"
-                            value={numberOfBoxes}
+                            value={packageBoxes}
                             //value={item.itemName}
-                            onChangeText={(value) => setNumberOfBoxes(value)}
+                            onChangeText={(value) => setPackageBoxes(value)}
 
 
                         />
                     </View>
                     
+
 
                     <View style={styles.inputGroup}>
                         <Text style={styles.label}>weight of Package*.In KG</Text>
@@ -144,21 +157,19 @@ const InternationalShipmentPackageInformation = ({ navigation, }) => {
                             style={styles.input}
                             placeholder="Enter item name"
 
-                            value={weight}
-                            onChangeText={(value) => setWeight(value)}
-
-
+                            value={packageWeight}
+                            onChangeText={(value) => setPackageWeight(value)}
                         />
                     </View>
 
                     <View style={styles.inputGroup}>
                         <Text style={styles.label}>Height (in cm):</Text>
                         <View style={styles.row}>
-                            <TouchableOpacity onPress={() => handleDecrement(setHeight)} style={styles.button}>
+                            <TouchableOpacity onPress={() => handleDecrement(setPackageHeight)} style={styles.button}>
                                 <Text style={styles.buttonText}>−</Text>
                             </TouchableOpacity>
-                            <Text style={styles.value}>{height}</Text>
-                            <TouchableOpacity onPress={() => handleIncrement(setHeight)} style={styles.button}>
+                            <Text style={styles.value}>{packageHeight}</Text>
+                            <TouchableOpacity onPress={() => handleIncrement(setPackageHeight)} style={styles.button}>
                                 <Text style={styles.buttonText}>+</Text>
                             </TouchableOpacity>
                         </View>
@@ -167,11 +178,11 @@ const InternationalShipmentPackageInformation = ({ navigation, }) => {
                     <View style={styles.inputGroup}>
                         <Text style={styles.label}>Width(in cm)</Text>
                         <View style={styles.row}>
-                            <TouchableOpacity onPress={() => handleDecrement(setWidth)} style={styles.button}>
+                            <TouchableOpacity onPress={() => handleDecrement(setPackageWidth)} style={styles.button}>
                                 <Text style={styles.buttonText}>−</Text>
                             </TouchableOpacity>
-                            <Text style={styles.value}>{width}</Text>
-                            <TouchableOpacity onPress={() => handleIncrement(setWidth)} style={styles.button}>
+                            <Text style={styles.value}>{PackageWidth}</Text>
+                            <TouchableOpacity onPress={() => handleIncrement(setPackageWidth)} style={styles.button}>
                                 <Text style={styles.buttonText}>+</Text>
                             </TouchableOpacity>
                         </View>
@@ -179,11 +190,11 @@ const InternationalShipmentPackageInformation = ({ navigation, }) => {
                     <View style={styles.inputGroup}>
                         <Text style={styles.label}>Depth(in cm)</Text>
                         <View style={styles.row}>
-                            <TouchableOpacity onPress={() => handleDecrement(setDepth)} style={styles.button}>
+                            <TouchableOpacity onPress={() => handleDecrement(setPackageDepth)} style={styles.button}>
                                 <Text style={styles.buttonText}>−</Text>
                             </TouchableOpacity>
-                            <Text style={styles.value}>{depth}</Text>
-                            <TouchableOpacity onPress={() => handleIncrement(setDepth)} style={styles.button}>
+                            <Text style={styles.value}>{PackageDepth}</Text>
+                            <TouchableOpacity onPress={() => handleIncrement(setPackageDepth)} style={styles.button}>
                                 <Text style={styles.buttonText}>+</Text>
                             </TouchableOpacity>
                         </View>
@@ -208,8 +219,8 @@ const InternationalShipmentPackageInformation = ({ navigation, }) => {
                                 <TextInput
                                     style={styles.input}
                                     placeholder="Enter item name"
-                                    value={item.itemName}
-                                    onChangeText={(value) => handleInputChange(index, 'itemName', value)}
+                                    value={item.itemType}
+                                    onChangeText={(value) => handleInputChange(index, 'itemType', value)}
 
                                 />
                             </View>
@@ -219,8 +230,8 @@ const InternationalShipmentPackageInformation = ({ navigation, }) => {
                                 <TextInput
                                     style={styles.input}
                                     placeholder="Enter Item Name"
-                                    value={item.store}
-                                    onChangeText={(value) => handleInputChange(index, 'store', value)}
+                                    value={item.itemName}
+                                    onChangeText={(value) => handleInputChange(index, 'itemName', value)}
                                 />
 
                             </View>
@@ -232,32 +243,34 @@ const InternationalShipmentPackageInformation = ({ navigation, }) => {
                                     style={styles.input}
                                     keyboardType="numeric"
                                     placeholder="1"
-                                    value={item.quantity}
-                                    onChangeText={(value) => handleInputChange(index, 'quantity', value)}
+                                    value={item.itemQuantity}
+                                    onChangeText={(value) => handleInputChange(index, 'itemQuantity', value)}
                                 />
                             </View>
-                            {errors[index]?.quantity && <Text style={styles.errorText}>{errors[index].quantity}</Text>}
+                            {errors[index]?.itemQuantity && <Text style={styles.errorText}>{errors[index].itemQuantity}</Text>}
                             <View style={styles.inputGroup}>
                                 <Text style={styles.label}>Price* (INR)</Text>
                                 <TextInput
                                     style={styles.input}
                                     keyboardType="numeric"
                                     placeholder="0"
-                                    value={item.price}
-                                    onChangeText={(value) => handleInputChange(index, 'price', value)}
+                                    value={item.itemPrice}
+                                    onChangeText={(value) =>
+                                         handleInputChange(index, 'itemPrice', value)
+                
+                                        }
                                 />
                             </View>
 
-                            {errors[index]?.price && <Text style={styles.errorText}>{errors[index].price}</Text>}
+                            {errors[index]?.itemPrice && <Text style={styles.errorText}>{errors[index].itemPrice}</Text>}
                             <View style={styles.inputGroup}>
                                 <Text style={styles.label}>Total Price*</Text>
-                                <TextInput
+                                <Text
                                     style={styles.input}
-                                    keyboardType="numeric"
-                                    placeholder="0"
-                                    value={item.price}
-                                    onChangeText={(value) => handleInputChange(index, 'price', value)}
-                                />
+                                >
+                                 {item.itemPrice*item.itemQuantity}
+                                </Text>
+
                             </View>
                         </View>
                     ))}
@@ -275,7 +288,7 @@ const InternationalShipmentPackageInformation = ({ navigation, }) => {
                     /> */}
 
                     <View style={styles.footer}>
-                        <Text style={styles.grandTotal}>Total Invoice Value: {items.reduce((total, item) => total + (parseFloat(item.price) * parseInt(item.quantity || 0)), 0)}</Text>
+                        <Text style={styles.grandTotal}>Total Invoice Value: {items.reduce((total, item) => total + (parseFloat(item.itemPrice) * parseInt(item.itemQuantity || 0)), 0)}</Text>
                         <TouchableOpacity onPress={handleNext}>
                             <LinearGradient
                                 start={{ x: 0, y: 0 }}

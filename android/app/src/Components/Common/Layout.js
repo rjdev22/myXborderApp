@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -11,12 +11,42 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation, DrawerActions } from '@react-navigation/native';
-import { Screen } from 'react-native-screens';
 import { SvgUri } from 'react-native-svg';
+import { AsyncStorage } from 'react-native';
+import Loader from '../Modals/Loader';
+
 
 const Layout = ({ children }) => {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
+  //const [token, setToken] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const token = '';
+  const signOut = async () => {
+    setIsLoading(true);
+    try {
+      await AsyncStorage.removeItem('token');
+      navigation.navigate('HomeScreen');
+    } catch (error) {
+      console.log(error);
+      setIsLoading(false);
+    }
+
+  };
+
+
+  // useEffect(() => {
+  //   const getToken = async () => {
+
+  //     const usertoken = await AsyncStorage.getItem('token');
+  //     setToken(usertoken);
+  //   }
+  //   getToken();
+  // }, []);
+
+
+
   //const[isloading,setIsLoading]=useState(true); fehfhmfirfh
 
   return (
@@ -32,7 +62,7 @@ const Layout = ({ children }) => {
           style={styles.logoHorizontal}
         />
         <TouchableOpacity onPress={() => setModalVisible(true)}>
-        <Image source={require('../../assets/profile.png')} style={{ width: 25, height: 25 }} />
+          <Image source={require('../../assets/profile.png')} style={{ width: 25, height: 25 }} />
         </TouchableOpacity>
       </View>
       <Modal
@@ -45,54 +75,106 @@ const Layout = ({ children }) => {
           <View style={styles.modalContainer}>
             <TouchableWithoutFeedback>
               <View style={styles.modalContent}>
-                <TouchableOpacity style={styles.modalItem} onPress={() => {
-                  setModalVisible(false);
-                  navigation.navigate('SignUpScreen');
-                }}>
-                  <Text style={styles.modalText}> <Icon name="share-square" size={20} color="#74c0fc" style={{ paddingRight: 10 }} />Sign Up</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.modalItem} onPress={() => {
-                  setModalVisible(false);
-                  navigation.navigate('LoginScreen');
-                }}>
-                  <Text style={styles.modalText}><Icon name="share-square" size={20} color="#74c0fc" />Sign In</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.modalItem} onPress={() => {
-                  setModalVisible(false);
-                  navigation.navigate('SignUpScreen');
-                }}>
-                  <Text style={styles.modalText}> <Icon name="user" size={18} color="#74c0fc" /> Profile</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.modalItem} onPress={() => {
-                  setModalVisible(false);
-                  navigation.navigate('NotificationScreen');
-                }}>
-                  <Text style={styles.modalText}><Icon name="bell" size={18} color="#74c0fc" />Notification</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.modalItem} onPress={() => {
-                  setModalVisible(false);
-                  navigation.navigate('NotificationScreen');
-                }}>
-                  <Text style={styles.modalText}> <Icon name="credit-card" size={20} color="#74c0fc" />Make Payment</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.modalItem} onPress={() => {
-                  setModalVisible(false);
-                  navigation.navigate('LoginScreen');
-                }}>
-                  <Text style={styles.modalText}><Icon name="wallet" size={20} color="#74c0fc" />Wallet</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.modalItem} onPress={() => {
-                  setModalVisible(false);
-                  navigation.navigate('SignUpScreen');
-                }}>
-                  <Text style={styles.modalText}> <Icon name="trash" size={20} color="#74c0fc" style={{ paddingRight: 10 }} />Delete Account</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.modalItem} onPress={() => {
-                  setModalVisible(false);
-                  navigation.navigate('LoginScreen');
-                }}>
-                  <Text style={styles.modalText}><Icon name="share-square" size={20} color="#74c0fc" />Sign Out</Text>
-                </TouchableOpacity>
+
+                {
+
+                  !token ? (
+                    <>
+                      <TouchableOpacity style={styles.modalItem} onPress={() => {
+                        setModalVisible(false);
+                        navigation.navigate('SignUpScreen');
+                      }}>
+                        <View style={styles.modalTextRow}>
+                          <View style={{ width: 30 }}>
+                            <Icon name="share-square" size={20} color="#74c0fc" />
+                          </View>
+
+                          <Text style={styles.modalText}>Sign Up</Text>
+                        </View>
+                      </TouchableOpacity>
+                      <TouchableOpacity style={styles.modalItem} onPress={() => {
+                        setModalVisible(false);
+                        navigation.navigate('LoginScreen');
+                      }}>
+                        <View style={styles.modalTextRow}>
+                          <View style={{ width: 30 }}>
+                            <Icon name="share-square" size={20} color="#74c0fc" />
+                          </View>
+                          <Text style={styles.modalText}>Sign In</Text>
+                        </View>
+                      </TouchableOpacity>
+                    </>
+                  ) : (
+                    <>
+                      <TouchableOpacity style={styles.modalItem} onPress={() => {
+                        setModalVisible(false);
+                        navigation.navigate('UserProfileScreen');
+                      }}>
+                        <View style={styles.modalTextRow}>
+                          <View style={{ width: 30 }}>
+                            <Icon name="user" size={20} color="#74c0fc" />
+                          </View>
+                          <Text style={styles.modalText}> Profile</Text>
+                        </View>
+                      </TouchableOpacity>
+                      <TouchableOpacity style={styles.modalItem} onPress={() => {
+                        setModalVisible(false);
+                        navigation.navigate('NotificationScreen');
+                      }}>
+                        <View style={styles.modalTextRow}>
+                          <View style={{ width: 30 }}>
+                            <Icon name="bell" size={20} color="#74c0fc" />
+                          </View>
+                          <Text style={styles.modalText}>Notification</Text>
+                        </View>
+                      </TouchableOpacity>
+                      <TouchableOpacity style={styles.modalItem} onPress={() => {
+                        setModalVisible(false);
+                        navigation.navigate('NotificationScreen');
+                      }}>
+                        <View style={styles.modalTextRow}>
+                          <View style={{ width: 30 }}>
+                            <Icon name="credit-card" size={20} color="#74c0fc" />
+                          </View>
+                          <Text style={styles.modalText}> Make Payment</Text>
+                        </View>
+                      </TouchableOpacity>
+                      <TouchableOpacity style={styles.modalItem} onPress={() => {
+                        setModalVisible(false);
+                        navigation.navigate('LoginScreen');
+                      }}>
+                        <View style={styles.modalTextRow}>
+                          <View style={{ width: 30 }}>
+                            <Icon name="wallet" size={20} color="#74c0fc" />
+                          </View>
+                          <Text style={styles.modalText}>Wallet</Text>
+                        </View>
+                      </TouchableOpacity>
+                      <TouchableOpacity style={styles.modalItem} onPress={() => {
+                        setModalVisible(false);
+                        navigation.navigate('SignUpScreen');
+                      }}>
+                        <View style={styles.modalTextRow}>
+                          <View style={{ width: 30 }}>
+                            <Icon name="trash" size={20} color="#74c0fc" />
+                          </View>
+                          <Text style={styles.modalText}> Delete Account</Text>
+                        </View>
+                      </TouchableOpacity>
+                      <TouchableOpacity style={styles.modalItem} onPress={() => {
+                        setModalVisible(false);
+                        signOut();
+                      }}>
+                        <View style={styles.modalTextRow}>
+                          <View style={{ width: 30 }}>
+                            <Icon name="share-square" size={20} color="#74c0fc" />
+                          </View>
+                          <Text style={styles.modalText}>Sign Out</Text>
+                        </View>
+                      </TouchableOpacity>
+                    </>
+                  )
+                }
               </View>
             </TouchableWithoutFeedback>
           </View>
@@ -104,16 +186,17 @@ const Layout = ({ children }) => {
       </ScrollView>
       {/* Footer */}
       <View style={styles.footer}>
-        <TouchableOpacity style={styles.tab} onPress={() => navigation.navigate('HomeScreen')}>
+        <TouchableOpacity style={styles.tab} onPress={() => navigation.navigate('Home',{screen:'HomeScreen'})}>
 
-        <Image source={require('../../assets/home.png')} style={{ width: 25, height: 25 }} />
+          <Image source={require('../../assets/home.png')} style={{ width: 25, height: 25 }} />
           <Text>Home</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.tab} onPress={() => navigation.navigate('UserProfileScreen')}>
-        <Image source={require('../../assets/profile.png')} style={{ width: 25, height: 25 }} />
+        <TouchableOpacity style={styles.tab} onPress={() => navigation.navigate('Home', { screen: 'UserProfileScreen'})}>
+          <Image source={require('../../assets/profile.png')} style={{ width: 25, height: 25 }} />
           <Text>Profile</Text>
         </TouchableOpacity>
       </View>
+      <Loader visible={isLoading} />
     </View>
   );
 };
@@ -142,7 +225,7 @@ const styles = StyleSheet.create({
   logoHorizontal: {
     width: 150, height: 35, resizeMode: 'contain'
   },
-  content: { flex: 1 ,backgroundColor:'white'},
+  content: { flex: 1, backgroundColor: 'white' },
   footer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
@@ -177,14 +260,18 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'start',
   },
-  modalText: {
-    fontSize: 15,
-    //fontWeight: 'bold',
-    textAlign: 'left',
+  modalTextRow: {
     borderBottomWidth: 1,
     borderBottomColor: '#dedede',
     paddingBottom: 10,
     paddingTop: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  modalText: {
+    fontSize: 15,
+    //fontWeight: 'bold',
+    textAlign: 'left',
   },
 });
 

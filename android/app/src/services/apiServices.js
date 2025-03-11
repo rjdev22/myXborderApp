@@ -21,7 +21,7 @@ export const AssistedShopNShipOrders = `${baseUrl}/order/list/assistedshopnship`
 export const InternationalOrders = `${baseUrl}/order/list/internationalshipment`;
 export const createShopNShipOrder = `${baseUrl}/order/create/shopnship`;
 export const createAssistedSopNShipOrder = `${baseUrl}/order/create/assistedshopnship`;
-export const createInternationalShipmentOrder = `${baseUrl}/order/create/internationalshipment`;
+export const createInternationalShipmentOrder = `${baseUrl}/order/create/international`;
 
 //address url
 export const getExistAddressList = `${baseUrl}/address/list`;

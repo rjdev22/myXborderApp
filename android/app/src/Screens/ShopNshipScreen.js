@@ -83,7 +83,7 @@ const ShopNshipScreen = ({ navigation }) => {
                         <ShimmerPlaceholder visible={!isLoading} style={{ height: 20 }}  >
                             <Text style={styles.orderCount}>No. of Orders: <Text style={{ color: '#d81397' }}>({orderData.length})</Text></Text>
                         </ShimmerPlaceholder>
-                        <TouchableOpacity onPress={() => navigation.navigate('AddShopNShipScreen')}>
+                        <TouchableOpacity onPress={() => navigation.navigate('Home', { screen: 'AddShopNShipScreen'})}>
                             <LinearGradient
                                 start={{ x: 0, y: 0 }}
                                 end={{ x: 1, y: 0 }}

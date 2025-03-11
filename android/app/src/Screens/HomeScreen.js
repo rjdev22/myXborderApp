@@ -84,7 +84,30 @@ const HomeScreen = ({ navigation, route }) => {
 
             {/* Exciting Deals */}
             <Text style={styles.sectionTitle} onPress={() => navigation.navigate('SplashScreen')}>Exciting Deals</Text>
-            {/* <ShimmerPlaceholder visible={!isLoading} style={styles.offerPlaceHolder}> */}
+          
+          
+          {
+
+          isLoading ? (
+            <View>
+              {[...Array(1)].map((_, index) => (
+                
+                <FlatList
+                  key={index}
+                  data={['1','2','3']} // Empty data array
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  keyExtractor={(item, idx) => idx.toString()}
+                  renderItem={({ item }) => (
+                    // <ShimmerPlaceholder visible={!isLoading} >
+                    <TouchableOpacity style={styles.offerCard}></TouchableOpacity>
+                   
+                  )}
+                />
+                
+              ))}
+            </View>
+          ):(
 
             <FlatList
               data={offers}
@@ -101,14 +124,11 @@ const HomeScreen = ({ navigation, route }) => {
                   />
                   <Text style={styles.offerTitle}>{item.name}</Text>
                   <Text style={styles.offerSubtitle}>{item.off}</Text>
-                  {/* </ShimmerPlaceholder> */}
+
                 </TouchableOpacity>
               )}
             />
-            {/* </ShimmerPlaceholder> */}
-
-
-
+            )}
 
             {/* Services */}
             <Text style={styles.sectionTitle}>Services</Text>
@@ -159,8 +179,8 @@ const HomeScreen = ({ navigation, route }) => {
             </View>
           </View>
         </Modal>
-      </View>
-    </Layout>
+      </View >
+    </Layout >
   );
 };
 
@@ -225,6 +245,7 @@ const styles = StyleSheet.create({
   },
   howCard: {
     width: width / 3.5,
+    height: 130,
     alignItems: 'center',
     marginBottom: 10,
     justifyContent: 'center',
@@ -268,7 +289,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     marginTop: 0,
-    color:'#ff5151'
+    color: '#ff5151'
   },
   //offerSubtitle: { fontSize: 14, color: 'gray' },
 

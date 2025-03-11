@@ -6,14 +6,15 @@ import {
     ScrollView,
     TouchableOpacity,
     TextInput,
-    Image
 } from 'react-native';
+
 import Icon from 'react-native-vector-icons/FontAwesome';
 import LinearGradient from 'react-native-linear-gradient';
 import Layout from '../Components/Common/Layout';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import {InternationalOrders} from '../services/apiServices';
 import { Picker } from '@react-native-picker/picker'
+import { Screen } from 'react-native-screens';
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const InternationalShipmentScreen = ({ navigation }) => {
 
@@ -72,7 +73,7 @@ const InternationalShipmentScreen = ({ navigation }) => {
                     <ShimmerPlaceholder visible={!isLoading} style={{ height: 20 }}  >
                         <Text style={styles.orderCount}>No. of Orders: <Text style={{ color: 'red' }}>({orderData.length})</Text></Text>
                     </ShimmerPlaceholder>
-                    <TouchableOpacity onPress={() => navigation.navigate('AddInternationalShipmentScreen')}>
+                    <TouchableOpacity onPress={() => navigation.navigate('Home', { screen: 'AddInternationalShipmentScreen'})}>
                         <LinearGradient
                             start={{ x: 0, y: 0 }}
                             end={{ x: 1, y: 0 }}
@@ -99,24 +100,25 @@ const InternationalShipmentScreen = ({ navigation }) => {
                   </View>
                   
                 ) : Array.isArray(orderData) && orderData.length > 0 ? (
+                    orderData.map((order, index) => (
                     <View style={styles.orderdetailsContainer}>
                         <View>
                             <Text style={styles.detailText}>
-                                <Text style={styles.boldText}>Date:</Text> Jan 28, 2025
+                                <Text style={styles.boldText}>Date:</Text> {order.created_at.split('T')[0]}
                             </Text>
 
                             <Text style={styles.detailText}>
-                                <Text style={styles.boldText}>MXB-Order Id:</Text> SNS3315
+                                <Text style={styles.boldText}>MXB-Order Id:</Text> {order.order_id}
                             </Text>
 
                             <Text style={styles.detailText}>
                                 <Text style={styles.boldText}>Order Type:</Text>
-                                <Text style={{ fontWeight: 'bold' }}> Personal \ Gift</Text>
+                                <Text style={{ fontWeight: 'bold' }}> {order.orderSubType}</Text>
                             </Text>
 
                             <Text style={styles.detailText}>
                                 <Text style={styles.boldText}>Payment Status:</Text>
-                                <Text style={{ fontWeight: 'bold' }}> NotCreated</Text>
+                                <Text style={{ fontWeight: 'bold' }}>  {order.payment_status}</Text>
                             </Text>
                         </View>
                         <LinearGradient
@@ -128,6 +130,7 @@ const InternationalShipmentScreen = ({ navigation }) => {
                             <Text style={styles.detailsButtonText}>Details</Text>
                         </LinearGradient>
                     </View>
+                     ))
                 ) : (
                     <View style={styles.noDataContainer}>
                         <Image source={require('../assets/empty_box.png')} style={styles.noDataImage} />

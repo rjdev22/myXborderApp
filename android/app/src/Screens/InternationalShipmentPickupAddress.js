@@ -18,10 +18,16 @@ import Loader from '../Components/Modals/Loader';
 import { Toast } from 'react-native-toast-notifications';
 import { get_courier_types, get_order_types } from '../services/apiServices';
 
-const InternationalShipmentPickupAddress = ({ navigation, }) => {
+const InternationalShipmentPickupAddress = ({ navigation, route }) => {
 
-    // pickup address
-    
+    console.log('ROUTE', route?.params);
+
+    const orderSubType = route?.params?.OrderTypeNumber;
+    const courierType = route?.params?.courierTypeNumber;
+    const clientOrderId = route?.params?.clientOrderId;
+
+
+    console.log('99999999', orderSubType, courierType, clientOrderId);
 
     const [pickupFirstName, setPickupFirstName] = useState('');
     const [pickupLastName, setPickupLastName] = useState('');
@@ -32,11 +38,14 @@ const InternationalShipmentPickupAddress = ({ navigation, }) => {
     const [pickupCity, setPickupCity] = useState('');
     const [pickupPin, setPickupPin] = useState('');
     const [pickupState, setPickupState] = useState('');
-    const [pickupCountry, setPickupCountry] = useState('');
+    const pickupCountry = 'IND'
 
+
+
+    console.log("pickupAddress", pickupFirstName, pickupLastName, pickupEmail, pickupPhone, pickupStreet, pickupStreet2, pickupCity, pickupPin, pickupState, pickupCountry, orderSubType, courierType, clientOrderId);
 
     const handleNext = () => {
-            navigation.navigate('InternationalShipmentPackageInformation');
+        navigation.navigate('InternationalShipmentPackageInformation', { pickupFirstName, pickupLastName, pickupEmail, pickupPhone, pickupStreet, pickupStreet2, pickupCity, pickupPin, pickupState, pickupCountry, orderSubType, courierType, clientOrderId });
     }
     return (
         <Layout>
@@ -82,12 +91,13 @@ const InternationalShipmentPickupAddress = ({ navigation, }) => {
                             </View>
                             <View style={styles.inputGroup}>
                                 <Text style={styles.label}>Country*</Text>
-                                <TextInput
+                                {/* <TextInput
                                     style={styles.input}
                                     placeholder="India"
                                     value={pickupCountry}
-                                    onChangeText={(value) => setPickupCountry(value)}
-                                />
+                                   // onChangeText={(value) => setPickupCountry(value)}
+                                /> */}
+                                <Text style={styles.input}>India</Text>
                             </View>
                             <View style={styles.inputGroup}>
                                 <Text style={styles.label}>State</Text>
@@ -137,6 +147,7 @@ const InternationalShipmentPickupAddress = ({ navigation, }) => {
                                 <TextInput
                                     style={styles.input}
                                     placeholder="Enter pin code"
+                                    keyboardType='numeric'
                                     value={pickupPin}
                                     onChangeText={(value) => setPickupPin(value)}
 
@@ -148,6 +159,7 @@ const InternationalShipmentPickupAddress = ({ navigation, }) => {
                                 <TextInput
                                     style={styles.input}
                                     placeholder="Enter mobile number"
+                                    keyboardType='numeric'
                                     value={pickupPhone}
                                     onChangeText={(value) => setPickupPhone(value)}
 
@@ -155,23 +167,24 @@ const InternationalShipmentPickupAddress = ({ navigation, }) => {
                             </View>
                         </View>
                         <View style={styles.footer}>
-                          
-                            <TouchableOpacity onPress={handleNext}>
-                                <LinearGradient
-                                    start={{ x: 0, y: 0 }}
-                                    end={{ x: 1, y: 0 }}
-                                    colors={['#d81397', '#0d5cc2']}
-                                    style={styles.nextButton}
-                                >
-                                    <Text style={styles.nextButtonText}>Next</Text>
-                                </LinearGradient>
-                            </TouchableOpacity>
+                            <View style={{ width: '100%', justifyContent: 'flex-end', alignItems: 'flex-end' }}>
+                                <TouchableOpacity onPress={handleNext}>
+                                    <LinearGradient
+                                        start={{ x: 0, y: 0 }}
+                                        end={{ x: 1, y: 0 }}
+                                        colors={['#d81397', '#0d5cc2']}
+                                        style={styles.nextButton}
+                                    >
+                                        <Text style={styles.nextButtonText}>Next</Text>
+                                    </LinearGradient>
+                                </TouchableOpacity>
+                            </View>
                         </View>
 
                     </View>
 
                 </ScrollView>
-                
+
             </View>
         </Layout>
     );
@@ -210,7 +223,7 @@ const styles = StyleSheet.create({
         padding: 0,
         fontSize: 16,
         borderBottomColor: '#ccc',
-        borderBottomWidth: 0.5
+        // borderBottomWidth: 0.5
     },
     itemContainer: {
         borderRadius: 5,
@@ -227,11 +240,11 @@ const styles = StyleSheet.create({
         fontSize: 14,
 
     },
-    footer: { flexDirection: "row", justifyContent: "space-between", marginBottom: 20, marginTop: 20 },
+    footer: { flexDirection: "row", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 20, marginTop: 20 },
     grandTotal: { fontSize: 16 },
     nextButton: { paddingVertical: 5, borderRadius: 5, padding: 10, width: 130 },
     nextButtonText: { color: "#fff", fontSize: 16, fontWeight: "bold", textAlign: "center" },
-    errorText:{color:'red',fontSize:12}
+    errorText: { color: 'red', fontSize: 12 }
 
 
 });

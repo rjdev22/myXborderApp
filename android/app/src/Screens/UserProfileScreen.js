@@ -115,7 +115,7 @@ const UserProfileScreen = () => {
                             visible={!isLoading}
                             style={styles.valuePlaceholder}
                         >
-                            <Text style={styles.value}>{userData.is_referral_code===null?'Np Referral Code':userData.referral_code}</Text>
+                            <Text style={styles.value}>{userData.is_referral_code===null?'No Referral Code':userData.referral_code}</Text>
                         </ShimmerPlaceholder>
                     </View>
 

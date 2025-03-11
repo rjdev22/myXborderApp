@@ -9,6 +9,8 @@ import Toast from "react-native-simple-toast";
 import { useToast } from "react-native-toast-notifications";
 import Recaptcha, { RecaptchaRef } from 'react-native-recaptcha-that-works';
 import { AuthContext } from '../Context/authContext';
+import { set } from "react-native-reanimated";
+
 
 
 const LoginScreen = ({ navigation }) => {
@@ -16,6 +18,7 @@ const LoginScreen = ({ navigation }) => {
     const toast = useToast();
     const [email, setEmail] = useState("");
     const [isChecked, setIsChecked] = useState(false);
+    const [isSubmitted, setIsSubmitted] = useState(false);
     const [visibleModal, setVisibleModal] = useState(false);
     const size = 'invisible';
     const [token, setToken] = useState('<none>');
@@ -34,18 +37,21 @@ const LoginScreen = ({ navigation }) => {
 
 
     const handleLogin = async () => {
+        setIsSubmitted(true);
         if (!email) {
             Toast.show('Please enter email', Toast.SHORT);
+            setIsSubmitted(false);
             return
         }
-        else if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+        else if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/) {
             Toast.show('Please enter valid email', Toast.SHORT);
+            setIsSubmitted(false);
             return
         }
 
         else {
+            setVisibleModal(true);
             try {
-                setVisibleModal(true);
                 const response = await fetch(loginApi, {
                     method: "POST",
                     headers: {
@@ -57,7 +63,8 @@ const LoginScreen = ({ navigation }) => {
                     }),
                 });
                 const data = await response.json();
-                console.log('login user data', data);
+                const emailVerification = data?.data?.emailVerification;
+                const  userEmail = data?.data?.email;
 
                 if (data.status === false) {
                     Toast.show(data.exception, Toast.SHORT);
@@ -69,15 +76,16 @@ const LoginScreen = ({ navigation }) => {
                     //     animationType: "slide-in ",
                     // });
                     setVisibleModal(false);
+
                     return
                 }
-         
+
                 navigation.dispatch(
                     CommonActions.reset({
                         index: 1,
                         routes: [
                             { name: 'HomeScreen' },
-                            { name: 'DashBoardScreen', params: data },
+                            { name: emailVerification === 'True' ? 'DashBoardScreen' : 'EmailVarificationScreen', params: {userEmail:userEmail} }
                         ],
                     })
                 );
@@ -104,7 +112,13 @@ const LoginScreen = ({ navigation }) => {
                 />
 
 
-                <Text style={{ color: 'red', marginBottom: 10, fontSize: 12 }}>Please enter email</Text>
+                {isSubmitted && !email && (
+                    <Text style={styles.helperText}>Please enter an email</Text>
+                )}
+                {isSubmitted && email && !/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email) && (
+                    <Text style={styles.helperText}>Please enter a valid email</Text>
+                )}
+
                 <View style={styles.container}>
                     <Button onPress={handleOpenPress} title="Open" />
                     {/* <Text>Token: {token}</Text>
@@ -242,14 +256,19 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
         borderRadius: 8,
-        borderWidth: 1,
-        borderColor: "#ccc",
+        borderWidth: 0.5,
+        borderColor: "#000",
         marginTop: 10,
         backgroundColor: "#fff",
     },
     socialText: {
         fontSize: 16,
         marginLeft: 10,
+    },
+    helperText: {
+        color: 'red',
+        fontSize: 12,
+        marginBottom: 10,
     },
 });
 

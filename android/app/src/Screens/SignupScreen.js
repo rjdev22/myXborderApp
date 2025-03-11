@@ -12,13 +12,13 @@ const SignupScreen = ({ navigation }) => {
     const [email, setEmail] = useState("");
     const [phone, setPhone] = useState("");
     const [visibleModal, setVisibleModal] = useState(false);
-    
 
 
 
 
     const [recaptcha, setRecaptcha] = React.useState('');
     const handleSignup = async () => {
+        console.log('dataaaaaaa',email,phone);
         setVisibleModal(true);
         try {
             const response = await fetch(registerApi, {
@@ -28,22 +28,25 @@ const SignupScreen = ({ navigation }) => {
                 },
                 body: JSON.stringify({
                     email: email,
-                    phone: phone,
+                    phone:phone,
                 }),
             });
-            //const data = await response.json();
-            console.log("register user data", response);
-            //   navigation.navigate("LoginScreen");
-            // navigation.dispatch(
-            //     CommonActions.reset({
-            //         index: 1,
-            //         routes: [
-            //             { name: 'HomeScreen' },
-            //             { name: 'DashBoardScreen',params: { data: data }},
-            //         ],
-                   
-            //     })
-            // );
+            const data = await response.json();
+            console.log("register user data", data);
+
+            const emailVerification = data?.data?.emailVerification;
+            const userEmail = data?.data?.email;
+            
+            navigation.dispatch(
+                CommonActions.reset({
+                    index: 1,
+                    routes: [
+                        { name: 'HomeScreen' },
+                        { name:emailVerification==='True'?'DashBoardScreen':'EmailVarificationScreen',params: {userEmail:userEmail}},
+                    ],
+
+                })
+            );
             setVisibleModal(false);
         } catch (error) {
             console.error("Error registering user:", error);
@@ -67,7 +70,7 @@ const SignupScreen = ({ navigation }) => {
                 <Text style={styles.label}>Phone</Text>
                 <TextInput
                     style={styles.input}
-                    placeholder="1234567890"
+                    placeholder="+441234567890"
                     keyboardType="numeric"
                     value={phone}
                     onChangeText={setPhone}
@@ -97,6 +100,19 @@ const SignupScreen = ({ navigation }) => {
                 <Text style={styles.signUpText}>
                     Already have an account? <Text style={styles.signUpLink} onPress={() => navigation.navigate("LoginScreen")}>Sign In</Text>
                 </Text>
+                <TouchableOpacity style={styles.socialButton}>
+                    <Image source={require("../assets/google.png")} style={{ width: 30, height: 30 }} />
+                    <Text style={styles.socialText}> Sign Up With Google</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.socialButton}>
+                    <Image source={require("../assets/facebook.webp")} style={{ width: 30, height: 30 }} />
+                    <Text style={styles.socialText}> Sign Up With Facebook</Text>
+                </TouchableOpacity>
+
+
+
+
 
                 <Loader visible={visibleModal} />
             </View>
@@ -148,6 +164,22 @@ const styles = StyleSheet.create({
     signUpLink: {
         color: "#0d5cc2",
         //  fontWeight: "bold",
+    },
+    socialButton: {
+        flexDirection: "row",
+        padding: 10,
+        width: "100%",
+        alignItems: "center",
+        justifyContent: "center",
+        borderRadius: 8,
+        borderWidth: 0.5,
+        borderColor: "#000",
+        marginTop: 10,
+        backgroundColor: "#fff",
+    },
+    socialText: {
+        fontSize: 16,
+        marginLeft: 10,
     },
 
 });

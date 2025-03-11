@@ -15,19 +15,19 @@ import Toast from 'react-native-simple-toast';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import { SvgUri } from 'react-native-svg';
 import { AuthContext } from '../Context/authContext';
-import { getUserProfile, get_item_types, get_courier_types, get_order_types } from '../services/apiServices';
+import { getUserProfile, get_item_types } from '../services/apiServices';
 
 
 
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
-const DashBoardScreen = ({ navigation, route }) => {
+const DashBoardScreen = ({ navigation }) => {
 
 
     //console.log('route data----', route.params.data.image)
 
     //const userData = route.params?.data
-    const [userData, setUserData] = useState({});
+    const [userData, setUserData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [itemData, setItemData] = useState({});
     const [courierData, setCourierData] = useState({});
