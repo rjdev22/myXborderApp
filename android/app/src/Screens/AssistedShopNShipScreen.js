@@ -13,7 +13,8 @@ import LinearGradient from 'react-native-linear-gradient';
 import Layout from '../Components/Common/Layout';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import { AssistedShopNShipOrders } from '../services/apiServices';
-
+import { useContext } from 'react';
+import { AuthContext } from '../Context/authContext';
 
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
@@ -22,6 +23,8 @@ const AssistedShopNshipScreen = ({ navigation }) => {
     const [query, setQuery] = useState('');
     const [isLoading, setIsLoading] = useState(true);
     const [orderData, setOrderData] = useState([]);
+        const { token } = useContext(AuthContext);
+        console.log('token', token);
 
      useEffect(() => {
            async function fetchData() {
@@ -29,7 +32,7 @@ const AssistedShopNshipScreen = ({ navigation }) => {
                    const response = await fetch(AssistedShopNShipOrders, {
                        method: 'POST',
                        headers: {
-                           'authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L215eGJvcmRlci9hcGkvdjEvdmVyaWZ5X2VtYWlsX290cCIsImlhdCI6MTc0MDEzMTM5NiwibmJmIjoxNzQwMTMxMzk2LCJqdGkiOiJzU2trZEJQTDJ0VDRPSXJzIiwic3ViIjoiMTc3MCIsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.4DIewxHyolVv0u1kB6yToZ0hIeINWPDWBBH_fBNdTHo'
+                           'authorization': `Bearer ${token}`
                        },
                    })
                    const data = await response.json();
@@ -77,7 +80,12 @@ const AssistedShopNshipScreen = ({ navigation }) => {
                     <ShimmerPlaceholder visible={!isLoading} style={{ height: 20 }}  >
                         <Text style={styles.orderCount}>No. of Orders: <Text style={{ color: 'red' }}>({orderData.length})</Text></Text>
                     </ShimmerPlaceholder>
-                    <TouchableOpacity onPress={() => navigation.navigate('Home', { screen: 'AddAssistedShopNShipScreen'})}>
+                    <TouchableOpacity onPress={() => navigation.navigate('Home', { 
+                        screen: 'AddAssistedShopNShipScreen',
+                        params: { 
+                            token: token }
+                    })
+                        }>
                         <LinearGradient
                             start={{ x: 0, y: 0 }}
                             end={{ x: 1, y: 0 }}

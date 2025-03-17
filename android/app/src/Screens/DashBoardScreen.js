@@ -153,7 +153,13 @@ const DashBoardScreen = ({ navigation }) => {
 
                         <TouchableOpacity onPress={() => 
                         
-                          navigation.navigate('Home', { screen: 'ShopNshipScreen' })
+                          navigation.navigate('Home', { 
+                            screen: 'ShopNshipScreen',
+                            params: {
+                                orderData:orderData,
+                                itemData:itemData
+                            }
+                         })
                             }>
                             <ShimmerPlaceholder visible={!isLoading} style={styles.textPlaceholder}>
                                 <Text style={styles.orderText} >Shop N Ship</Text>

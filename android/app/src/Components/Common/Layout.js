@@ -9,13 +9,17 @@ import {
   TouchableWithoutFeedback,
   ScrollView
 } from 'react-native';
+
+
+
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { useNavigation, DrawerActions } from '@react-navigation/native';
 import { SvgUri } from 'react-native-svg';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Loader from '../Modals/Loader';
 import { useContext } from 'react';
-import  {AuthContext} from '../../Context/authContext';
+import { AuthContext } from '../../Context/authContext';
+import { deleteAccountApi } from '../../services/apiServices';
 
 
 
@@ -23,11 +27,12 @@ import  {AuthContext} from '../../Context/authContext';
 const Layout = ({ children }) => {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
-  const{token,setToken}=useContext(AuthContext);
+  const { token, setToken } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(false);
 
 
-  
+
+
   const signOut = async (navigation) => {
     try {
       setIsLoading(true);
@@ -38,7 +43,7 @@ const Layout = ({ children }) => {
         routes: [{ name: 'HomeScreen' }],
       });
       setModalVisible(false);
-     
+
     } catch (error) {
       console.log(error);
       setIsLoading(false);
@@ -55,6 +60,39 @@ const Layout = ({ children }) => {
     }
     getToken();
   }, []);
+
+
+  const handleDeleteAccount = async () => {
+    try {
+      setIsLoading(true);
+      await AsyncStorage.removeItem('token');
+      const response = await fetch(deleteAccountApi, {
+
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "authorization": `Bearer ${token}`
+        },
+      })
+      const data = await response.json();
+      console.log('account delete data ',data);
+
+      if(data.status === true){
+        Toast.show(data.message, Toast.SHORT);
+      setToken(null);
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'HomeScreen' }],
+      });
+
+    }
+      setModalVisible(false);
+      setIsLoading(false);
+    } catch (error) {
+      console.log(error);
+      setIsLoading(false);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -159,7 +197,7 @@ const Layout = ({ children }) => {
                       </TouchableOpacity>
                       <TouchableOpacity style={styles.modalItem} onPress={() => {
                         setModalVisible(false);
-                        navigation.navigate('SignUpScreen');
+                        handleDeleteAccount();
                       }}>
                         <View style={styles.modalTextRow}>
                           <View style={{ width: 30 }}>

@@ -18,8 +18,9 @@ const AddShopNShipScreen = ({ navigation, route }) => {
     const itemType = route?.params?.itemData || [];
     const CourierType=route?.params?.courierData || [];
     const orderType=route?.params?.orderData || [];
+    const token=route?.params?.token;
   
-    console.log('kjfrjfr',CourierType)
+   // console.log('kjfrjfr',token,itemType,CourierType,orderType);
 
     const itemTypes = itemType.map(item => item.itemType);
 
@@ -105,7 +106,7 @@ const AddShopNShipScreen = ({ navigation, route }) => {
 
     const handleNext = () => {
         if (validateFields()) {
-            navigation.navigate('ShopNshipShipmentAddress', { additems: items, remark});
+            navigation.navigate('ShopNshipShipmentAddress', { additems: items, remark,token});
         }
     };
 

@@ -12,6 +12,7 @@ export const emailVarificationApi = `${baseUrl}/email_verification`;
 export const varifyOtpApi = `${baseUrl}/verify_email_otp`;
 export const getUserProfile = `${baseUrl}/user/profile`;
 export const updateUserProfile = `${baseUrl}/user/update_profile`;
+export const deleteAccountApi=`${baseUrl}/user/remove_account`;
 
 
 //orders url

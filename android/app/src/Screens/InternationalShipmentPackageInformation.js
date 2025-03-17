@@ -16,6 +16,7 @@ import { get_item_types } from '../services/apiServices';
 
 const InternationalShipmentPackageInformation = ({ navigation, route }) => {
     console.log('route data-', route.params);
+    const token=route?.params?.token
     const pickupData = route.params;
 
 
@@ -118,7 +119,7 @@ const InternationalShipmentPackageInformation = ({ navigation, route }) => {
 
     const handleNext = () => {
         if (validateFields()) {
-            navigation.navigate('InternationalShipmentDestinationAddress', { packageBoxes, packageHeight, packageWeight, PackageWidth, PackageDepth, items, pickupData });
+            navigation.navigate('InternationalShipmentDestinationAddress', { packageBoxes, packageHeight, packageWeight, PackageWidth, PackageDepth, items, pickupData,token });
         }
     };
 

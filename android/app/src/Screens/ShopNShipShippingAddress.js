@@ -21,12 +21,13 @@ import { get_courier_types,get_order_types } from '../services/apiServices';
 const ShopNshipShipmentAddress = ({ navigation, route }) => {
 
     console.log('route', route?.params);
+    const token = route?.params?.token;
     // const orderType = route?.params?.orderType;
     // const courierType = route?.params?.CourierType;
     const[orderType,setOrderType]=useState([]);
     const[courierType,setCourierType]=useState([]);
 
-    console.log("0000000000", courierType);
+    //console.log("0000000000", courierType,token);
 
 
 
@@ -39,7 +40,7 @@ const ShopNshipShipmentAddress = ({ navigation, route }) => {
 
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L215eGJvcmRlci9hcGkvdjEvdmVyaWZ5X2VtYWlsX290cCIsImlhdCI6MTc0MDEzMTM5NiwibmJmIjoxNzQwMTMxMzk2LCJqdGkiOiJzU2trZEJQTDJ0VDRPSXJzIiwic3ViIjoiMTc3MCIsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.4DIewxHyolVv0u1kB6yToZ0hIeINWPDWBBH_fBNdTHo'
+                        'Authorization': `Bearer ${token}`
                     },
 
                 })
@@ -60,7 +61,7 @@ const ShopNshipShipmentAddress = ({ navigation, route }) => {
 
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L215eGJvcmRlci9hcGkvdjEvdmVyaWZ5X2VtYWlsX290cCIsImlhdCI6MTc0MDEzMTM5NiwibmJmIjoxNzQwMTMxMzk2LCJqdGkiOiJzU2trZEJQTDJ0VDRPSXJzIiwic3ViIjoiMTc3MCIsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.4DIewxHyolVv0u1kB6yToZ0hIeINWPDWBBH_fBNdTHo'
+                        'Authorization': `Bearer ${token}`
                     },
 
                 })
@@ -105,6 +106,7 @@ const ShopNshipShipmentAddress = ({ navigation, route }) => {
     const handleCreateOrder = async (address) => {
         // console.log('address id ', address);
         console.log('selected order type', selectedOrderType)
+        
 
         setIsLoading(true);
         try {
@@ -112,7 +114,7 @@ const ShopNshipShipmentAddress = ({ navigation, route }) => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L215eGJvcmRlci9hcGkvdjEvdmVyaWZ5X2VtYWlsX290cCIsImlhdCI6MTc0MDEzMTM5NiwibmJmIjoxNzQwMTMxMzk2LCJqdGkiOiJzU2trZEJQTDJ0VDRPSXJzIiwic3ViIjoiMTc3MCIsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.4DIewxHyolVv0u1kB6yToZ0hIeINWPDWBBH_fBNdTHo'
+                    'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify({
                     orderSubType: 2,

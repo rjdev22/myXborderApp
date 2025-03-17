@@ -12,8 +12,8 @@ import LinearGradient from 'react-native-linear-gradient';
 import Layout from '../Components/Common/Layout';
 import DropDown from '../Components/Common/DropDown';
 
-const AddAssistedShopNShipScreen = ({ navigation }) => {
-
+const AddAssistedShopNShipScreen = ({ navigation,route }) => {
+    const token=route?.params?.token;
     const [selectedItem, setSelectedItem] = useState(null)// State for order items
     const [remark, setRemark] = useState('');
     const[errors,setErrors]=useState([])
@@ -120,7 +120,7 @@ const AddAssistedShopNShipScreen = ({ navigation }) => {
 
   const handleNext = () => {
         if (validateFields()) {
-            navigation.navigate('ShopNshipShipmentAddress', { additems: items, remark});
+            navigation.navigate('ShopNshipShipmentAddress', { additems: items, remark,token});
         }
     };
 

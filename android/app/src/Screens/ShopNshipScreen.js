@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
-    View, 
+    View,
     Text,
     Image,
     StyleSheet,
@@ -14,17 +14,21 @@ import LinearGradient from 'react-native-linear-gradient';
 import Layout from '../Components/Common/Layout';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import { ShopNShipOrders } from '../services/apiServices';
-
+import { useContext } from 'react';
+import { AuthContext } from '../Context/authContext';
 
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
-const ShopNshipScreen = ({ navigation }) => {
+const ShopNshipScreen = ({ navigation,route }) => {
 
+    const itemType = route?.params?.itemData || [];
+    const { token } = useContext(AuthContext);
+    console.log('token', token);
 
     const [query, setQuery] = useState('');
     const [isLoading, setIsLoading] = useState(true);
     const [orderData, setOrderData] = useState([]);
-    console.log('orderdata',orderData);
+    console.log('orderdata', orderData);
 
 
 
@@ -34,7 +38,7 @@ const ShopNshipScreen = ({ navigation }) => {
                 const response = await fetch(ShopNShipOrders, {
                     method: 'POST',
                     headers: {
-                        'authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L215eGJvcmRlci9hcGkvdjEvdmVyaWZ5X2VtYWlsX290cCIsImlhdCI6MTc0MDEzMTM5NiwibmJmIjoxNzQwMTMxMzk2LCJqdGkiOiJzU2trZEJQTDJ0VDRPSXJzIiwic3ViIjoiMTc3MCIsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.4DIewxHyolVv0u1kB6yToZ0hIeINWPDWBBH_fBNdTHo'
+                        'authorization': `Bearer ${token}`
                     },
                 })
                 const data = await response.json();
@@ -83,7 +87,11 @@ const ShopNshipScreen = ({ navigation }) => {
                         <ShimmerPlaceholder visible={!isLoading} style={{ height: 20 }}  >
                             <Text style={styles.orderCount}>No. of Orders: <Text style={{ color: '#d81397' }}>({orderData.length})</Text></Text>
                         </ShimmerPlaceholder>
-                        <TouchableOpacity onPress={() => navigation.navigate('Home', { screen: 'AddShopNShipScreen'})}>
+                        <TouchableOpacity onPress={() => navigation.navigate('Home', {
+                            screen: 'AddShopNShipScreen',
+                            params: { 
+                                itemData: itemType,token: token }
+                        })}>
                             <LinearGradient
                                 start={{ x: 0, y: 0 }}
                                 end={{ x: 1, y: 0 }}
@@ -93,58 +101,58 @@ const ShopNshipScreen = ({ navigation }) => {
                             </LinearGradient>
                         </TouchableOpacity>
                     </View>
-                </View>     
+                </View>
                 <View>
                     {isLoading ? (
                         <View>
-                        {[...Array(3)].map((_, index) => (
-                          <View key={index} style={styles.orderdetailsContainer}>
-                            <View>
-                              {[...Array(4)].map((_, i) => (
-                                <ShimmerPlaceholder key={i} visible={!isLoading} style={styles.detailPlaceholder} />
-                              ))}
-                            </View>
-                            <ShimmerPlaceholder visible={!isLoading} style={styles.buttonPlaceholder} />
-                          </View>
-                        ))}
-                      </View>
-                      
+                            {[...Array(3)].map((_, index) => (
+                                <View key={index} style={styles.orderdetailsContainer}>
+                                    <View>
+                                        {[...Array(4)].map((_, i) => (
+                                            <ShimmerPlaceholder key={i} visible={!isLoading} style={styles.detailPlaceholder} />
+                                        ))}
+                                    </View>
+                                    <ShimmerPlaceholder visible={!isLoading} style={styles.buttonPlaceholder} />
+                                </View>
+                            ))}
+                        </View>
+
                     ) : Array.isArray(orderData) && orderData.length > 0 ? (
 
                         orderData.map((order, index) => (
-                            <View  key={index} style={styles.orderdetailsContainer}>
-                            <View>
-                                <Text style={styles.detailText}>    
-                                <Text style={styles.boldText}>Date:</Text> {order.created_at.split('T')[0]}
-                                </Text>
+                            <View key={index} style={styles.orderdetailsContainer}>
+                                <View>
+                                    <Text style={styles.detailText}>
+                                        <Text style={styles.boldText}>Date:</Text> {order.created_at.split('T')[0]}
+                                    </Text>
 
-                                <Text style={styles.detailText}>
-                                    <Text style={styles.boldText}>MXB-Order Id:</Text> {order.order_id}
-                                </Text>
+                                    <Text style={styles.detailText}>
+                                        <Text style={styles.boldText}>MXB-Order Id:</Text> {order.order_id}
+                                    </Text>
 
-                                <Text style={styles.detailText}>
-                                    <Text style={styles.boldText}>Order Type:</Text>
-                                    <Text style={{ fontWeight: 'bold' }}> {order.orderSubType}</Text>
-                                </Text>
+                                    <Text style={styles.detailText}>
+                                        <Text style={styles.boldText}>Order Type:</Text>
+                                        <Text style={{ fontWeight: 'bold' }}> {order.orderSubType}</Text>
+                                    </Text>
 
-                                <Text style={styles.detailText}>
-                                    <Text style={styles.boldText}>Payment Status:</Text>
-                                    <Text style={{ fontWeight: 'bold' }}> {order.payment_status}</Text>
-                                </Text>
+                                    <Text style={styles.detailText}>
+                                        <Text style={styles.boldText}>Payment Status:</Text>
+                                        <Text style={{ fontWeight: 'bold' }}> {order.payment_status}</Text>
+                                    </Text>
+                                </View>
+                                <TouchableOpacity onPress={() => navigation.navigate('orderDetailsScreen', { order: order })}>
+                                    <LinearGradient
+                                        start={{ x: 0, y: 0 }}
+                                        end={{ x: 1, y: 0 }}
+                                        colors={['#d81397', '#0d5cc2']}
+                                        style={styles.detailsButton}
+                                    >
+                                        <Text style={styles.detailsButtonText}>Details</Text>
+                                    </LinearGradient>
+                                </TouchableOpacity>
                             </View>
-                            <TouchableOpacity onPress={()=>navigation.navigate('orderDetailsScreen',{order:order})}>
-                            <LinearGradient
-                                start={{ x: 0, y: 0 }}
-                                end={{ x: 1, y: 0 }}
-                                colors={['#d81397', '#0d5cc2']}
-                                style={styles.detailsButton}
-                            >
-                                <Text style={styles.detailsButtonText}>Details</Text>
-                            </LinearGradient>
-                            </TouchableOpacity>
-                        </View>   
                         ))
-                    
+
                     ) : (
                         <View style={styles.noDataContainer}>
                             <Image source={require('../assets/empty_box.png')} style={styles.noDataImage} />
@@ -158,7 +166,7 @@ const ShopNshipScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-    content: { padding: 10,},
+    content: { padding: 10, },
     ordersSection: { backgroundColor: 'white', padding: 10, borderRadius: 5, elevation: 3 },
     orderRow: {
         flexDirection: 'row',

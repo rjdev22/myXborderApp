@@ -23,6 +23,8 @@ import { Toast } from 'react-native-toast-notifications';
 const InternationalShipmentDestinationAddress = ({ navigation, route }) => {
 
     console.log('final data', route?.params);
+    const token = route?.params?.token;
+    console.log('destinatoion data', token);
 
     const orderType = route?.params?.packageBoxes;
    
@@ -54,7 +56,7 @@ const InternationalShipmentDestinationAddress = ({ navigation, route }) => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L215eGJvcmRlci9hcGkvdjEvdmVyaWZ5X2VtYWlsX290cCIsImlhdCI6MTc0MDEzMTM5NiwibmJmIjoxNzQwMTMxMzk2LCJqdGkiOiJzU2trZEJQTDJ0VDRPSXJzIiwic3ViIjoiMTc3MCIsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.4DIewxHyolVv0u1kB6yToZ0hIeINWPDWBBH_fBNdTHo'
+                    'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify({
                     

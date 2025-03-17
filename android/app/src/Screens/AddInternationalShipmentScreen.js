@@ -13,7 +13,8 @@ import Layout from '../Components/Common/Layout';
 import DropDown from '../Components/Common/DropDown';
 import { get_courier_types, get_order_types } from '../services/apiServices';
 
-const AddInternationalShipmentScreen = ({ navigation }) => {
+const AddInternationalShipmentScreen = ({ navigation,route }) => {
+    const token=route?.params?.token;
     const [errors, setErrors] = useState({});
     const [courierType, setCourierType] = useState([]);
     const [orderType, setOrderType] = useState([]);
@@ -29,13 +30,13 @@ const AddInternationalShipmentScreen = ({ navigation }) => {
                     fetch(get_courier_types, {
                         headers: {
                             'Content-Type': 'application/json',
-                            'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L215eGJvcmRlci9hcGkvdjEvdmVyaWZ5X2VtYWlsX290cCIsImlhdCI6MTc0MDEzMTM5NiwibmJmIjoxNzQwMTMxMzk2LCJqdGkiOiJzU2trZEJQTDJ0VDRPSXJzIiwic3ViIjoiMTc3MCIsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.4DIewxHyolVv0u1kB6yToZ0hIeINWPDWBBH_fBNdTHo'
+                            'Authorization': `Bearer ${token}`
                         },
                     }),
                     fetch(get_order_types, {
                         headers: {
                             'Content-Type': 'application/json',
-                            'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L215eGJvcmRlci9hcGkvdjEvdmVyaWZ5X2VtYWlsX290cCIsImlhdCI6MTc0MDEzMTM5NiwibmJmIjoxNzQwMTMxMzk2LCJqdGkiOiJzU2trZEJQTDJ0VDRPSXJzIiwic3ViIjoiMTc3MCIsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.4DIewxHyolVv0u1kB6yToZ0hIeINWPDWBBH_fBNdTHo'
+                            'Authorization': `Bearer ${token}`
                         },
                     })
                 ]);
@@ -75,7 +76,8 @@ const AddInternationalShipmentScreen = ({ navigation }) => {
         navigation.navigate('InternationalShipmentPickupAddress', {
             courierTypeNumber,
             OrderTypeNumber,
-            clientOrderId
+            clientOrderId,
+            token
         });
     
     }

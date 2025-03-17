@@ -25,6 +25,7 @@ const InternationalShipmentPickupAddress = ({ navigation, route }) => {
     const orderSubType = route?.params?.OrderTypeNumber;
     const courierType = route?.params?.courierTypeNumber;
     const clientOrderId = route?.params?.clientOrderId;
+    const token = route?.params?.token;
 
 
     console.log('99999999', orderSubType, courierType, clientOrderId);
@@ -45,7 +46,7 @@ const InternationalShipmentPickupAddress = ({ navigation, route }) => {
     console.log("pickupAddress", pickupFirstName, pickupLastName, pickupEmail, pickupPhone, pickupStreet, pickupStreet2, pickupCity, pickupPin, pickupState, pickupCountry, orderSubType, courierType, clientOrderId);
 
     const handleNext = () => {
-        navigation.navigate('InternationalShipmentPackageInformation', { pickupFirstName, pickupLastName, pickupEmail, pickupPhone, pickupStreet, pickupStreet2, pickupCity, pickupPin, pickupState, pickupCountry, orderSubType, courierType, clientOrderId });
+        navigation.navigate('InternationalShipmentPackageInformation', { pickupFirstName, pickupLastName, pickupEmail, pickupPhone, pickupStreet, pickupStreet2, pickupCity, pickupPin, pickupState, pickupCountry, orderSubType, courierType, clientOrderId ,token});
     }
     return (
         <Layout>

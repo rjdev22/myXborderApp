@@ -44,7 +44,7 @@ const ViewOrderDetailScreen = ({route}) => {
                         <Text style={styles.itemTitleRight}>{item.name}</Text>
                     </View>
                     <View style={{ marginBottom: 5, flexDirection: 'row', justifyContent: 'space-between' }}>
-                        <Text style={styles.itemTitleLeft}>Itenm Type</Text>
+                        <Text style={styles.itemTitleLeft}>Item Type</Text>
                         <Text>:</Text>
                         <Text style={styles.itemTitleRight}>{item.item_type}</Text>
                     </View>

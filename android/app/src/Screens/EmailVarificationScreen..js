@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import EmailVarificationLayout from '../Components/Common/EmailVarificationLayout'
-import { Text, View, StyleSheet, TextInput, TouchableOpacity } from 'react-native'
+import EmailVarificationLayout from '../Components/Common/EmailVarificationLayout';
+import { Text, View, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { emailVarificationApi, varifyOtpApi } from '../services/apiServices';
 import Loader from '../Components/Modals/Loader';
@@ -10,6 +10,7 @@ import { CommonActions } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useContext } from 'react';
 import  {AuthContext} from '../Context/authContext';
+
 
 
 const EmailVarificationScreen = ({ navigation, route }) => {
