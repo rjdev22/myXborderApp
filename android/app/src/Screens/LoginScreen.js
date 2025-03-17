@@ -9,10 +9,10 @@ import Toast from "react-native-simple-toast";
 import { useToast } from "react-native-toast-notifications";
 import Recaptcha, { RecaptchaRef } from 'react-native-recaptcha-that-works';
 import { AuthContext } from '../Context/authContext';
-import { set } from "react-native-reanimated";
 
 
 
+  
 const LoginScreen = ({ navigation }) => {
 
     const toast = useToast();
@@ -20,6 +20,9 @@ const LoginScreen = ({ navigation }) => {
     const [isChecked, setIsChecked] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [visibleModal, setVisibleModal] = useState(false);
+    const [emailError, setEmailError] = useState("");
+
+
     const size = 'invisible';
     const [token, setToken] = useState('<none>');
 
@@ -34,9 +37,24 @@ const LoginScreen = ({ navigation }) => {
         $recaptcha.current?.close();
     }, []);
 
-
+    const validateEmail = (email) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    };
 
     const handleLogin = async () => {
+
+        if (!email) {
+            setEmailError("Email field is required");
+        }
+
+        if (!validateEmail(email)) {
+            setEmailError("Please enter a valid email address");
+            return;
+        } if (!email ) {
+            return;
+        }
+
         setIsSubmitted(true);
         if (!email) {
             Toast.show('Please enter email', Toast.SHORT);
@@ -64,19 +82,11 @@ const LoginScreen = ({ navigation }) => {
                 });
                 const data = await response.json();
                 const emailVerification = data?.data?.emailVerification;
-                const  userEmail = data?.data?.email;
+                const userEmail = data?.data?.email;
 
                 if (data.status === false) {
                     Toast.show(data.exception, Toast.SHORT);
-                    // toast.show(data.exception,{
-                    //     type: " warning",
-                    //     placement: "Top",
-                    //     duration: 4000,
-                    //     offset: 30,
-                    //     animationType: "slide-in ",
-                    // });
                     setVisibleModal(false);
-
                     return
                 }
 
@@ -85,7 +95,10 @@ const LoginScreen = ({ navigation }) => {
                         index: 1,
                         routes: [
                             { name: 'HomeScreen' },
-                            { name: emailVerification === 'True' ? 'DashBoardScreen' : 'EmailVarificationScreen', params: {userEmail:userEmail} }
+                            {
+                                name: 'EmailVarificationScreen',
+                                params: { userEmail: userEmail } 
+                            }
                         ],
                     })
                 );
@@ -108,17 +121,13 @@ const LoginScreen = ({ navigation }) => {
                     placeholder="dev@dev.com"
                     keyboardType="email-address"
                     value={email}
-                    onChangeText={setEmail}
+                    onChangeText={(text) => {
+                        setEmail(text);
+                        if (text) setEmailError(""); // Clear error on typing
+                    }}
                 />
 
-
-                {isSubmitted && !email && (
-                    <Text style={styles.helperText}>Please enter an email</Text>
-                )}
-                {isSubmitted && email && !/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email) && (
-                    <Text style={styles.helperText}>Please enter a valid email</Text>
-                )}
-
+                {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
                 <View style={styles.container}>
                     <Button onPress={handleOpenPress} title="Open" />
                     {/* <Text>Token: {token}</Text>
@@ -265,10 +274,13 @@ const styles = StyleSheet.create({
         fontSize: 16,
         marginLeft: 10,
     },
-    helperText: {
-        color: 'red',
+  
+    errorText: {
+        color: "red",
         fontSize: 12,
-        marginBottom: 10,
+        marginTop: 5,
+        marginBottom:5,
+        paddingTop:0
     },
 });
 

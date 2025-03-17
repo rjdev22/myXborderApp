@@ -6,7 +6,7 @@ import {
     StyleSheet,
     ScrollView,
     TouchableOpacity,
-    Clipboard
+   
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import LinearGradient from 'react-native-linear-gradient';
@@ -16,6 +16,8 @@ import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import { SvgUri } from 'react-native-svg';
 import { AuthContext } from '../Context/authContext';
 import { getUserProfile, get_item_types } from '../services/apiServices';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Clipboard from '@react-native-clipboard/clipboard';
 
 
 
@@ -27,20 +29,23 @@ const DashBoardScreen = ({ navigation }) => {
     //console.log('route data----', route.params.data.image)
 
     //const userData = route.params?.data
-    const [userData, setUserData] = useState([]);
+    const [userData, setUserData] = useState({});
     const [isLoading, setIsLoading] = useState(true);
     const [itemData, setItemData] = useState({});
     const [courierData, setCourierData] = useState({});
     const [orderData, setOrderData] = useState({});
+    const[accessToken,setAccessToken]=useState(null);
 
 
     const get_all_item = async () => {
         try {
+           const token = await AsyncStorage.getItem('token');
+           setAccessToken(token);
             const response = await fetch(get_item_types, {
 
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L215eGJvcmRlci9hcGkvdjEvdmVyaWZ5X2VtYWlsX290cCIsImlhdCI6MTc0MDEzMTM5NiwibmJmIjoxNzQwMTMxMzk2LCJqdGkiOiJzU2trZEJQTDJ0VDRPSXJzIiwic3ViIjoiMTc3MCIsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.4DIewxHyolVv0u1kB6yToZ0hIeINWPDWBBH_fBNdTHo'
+                    'Authorization': `Bearer ${token}`
                 },
 
             })
@@ -60,12 +65,13 @@ const DashBoardScreen = ({ navigation }) => {
     useEffect(() => {
         const fetchUserData = async () => {
             try {
+                const token = await AsyncStorage.getItem('token');
                 const response = await fetch(getUserProfile,
                     {
                         method: "GET",
                         headers: {
                             "Content-Type": "application/json",
-                            "authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L215eGJvcmRlci9hcGkvdjEvdmVyaWZ5X2VtYWlsX290cCIsImlhdCI6MTc0MDEzMTM5NiwibmJmIjoxNzQwMTMxMzk2LCJqdGkiOiJzU2trZEJQTDJ0VDRPSXJzIiwic3ViIjoiMTc3MCIsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.4DIewxHyolVv0u1kB6yToZ0hIeINWPDWBBH_fBNdTHo",
+                            "authorization": `Bearer ${token}`
                         },
                     },
                 );
@@ -139,12 +145,16 @@ const DashBoardScreen = ({ navigation }) => {
                         </ShimmerPlaceholder>
                     </View>
                 </View>
+            
 
                 {/* Orders Section */}
                 <View style={styles.ordersSection}>
                     <View style={styles.orderRow}>
 
-                        <TouchableOpacity onPress={() => navigation.navigate('Home', { screen: 'ShopNshipScreen' })}>
+                        <TouchableOpacity onPress={() => 
+                        
+                          navigation.navigate('Home', { screen: 'ShopNshipScreen' })
+                            }>
                             <ShimmerPlaceholder visible={!isLoading} style={styles.textPlaceholder}>
                                 <Text style={styles.orderText} >Shop N Ship</Text>
                             </ShimmerPlaceholder>
@@ -268,7 +278,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         paddingHorizontal: 20
     },
-    orderButtonText: { color: 'white', fontWeight: 'bold' },
+    orderButtonText: { color: 'white',  },
     addressCard: {
         backgroundColor: 'white',
         padding: 10,

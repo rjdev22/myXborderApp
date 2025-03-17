@@ -24,9 +24,20 @@ export const AuthProvider = ({ children }) => {
 //     checkToken();
 //   }, []);
 
+const [token, setToken] = useState(null);
+
+useEffect(() => {
+  const getToken = async () => {
+    const storedToken = await AsyncStorage.getItem('token');
+    setToken(storedToken);
+  };
+  getToken();
+}, []);
+
+
 
   return (
-    <AuthContext.Provider value={{userData,setUserData }}>
+    <AuthContext.Provider value={{userData,setUserData ,token,setToken}}>
       {children}
     </AuthContext.Provider>
   );

@@ -1,16 +1,21 @@
 import React from 'react';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import { useState,useEffect } from 'react';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { ToastProvider } from 'react-native-toast-notifications';
-
+import { Image } from 'react-native';
 import {
   createDrawerNavigator,
   DrawerContentScrollView,
   DrawerItemList,
   DrawerItem
 } from '@react-navigation/drawer';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
+import { useContext } from 'react';
+import { AuthContext } from '../Context/authContext';
 import { Linking } from 'react-native';
 import HomeScreen from '../Screens/HomeScreen';
 import LoginScreen from '../Screens/LoginScreen';
@@ -31,6 +36,8 @@ import NotificationScreen from '../Screens/NotificationScreen';
 import VarifyOtpScreen from '../Screens/VarifyOtpScreen';
 import ShopNshipShipmentAddress from '../Screens/ShopNShipShippingAddress';
 import ExistaddressList from '../Screens/Address/ExistaddressList';
+import orderDetailsScreen from '../Screens/OrderDetail/orderDetailScreen';
+import ViewOrderDetailScreen from '../Screens/OrderDetail/ViewOrderDetailScreen';
 import InternationalShipmentPickupAddress from '../Screens/InternationalShipmentPickupAddress';
 import InternationalShipmentDestinationAddress from '../Screens/InternationalShipmentDestinationAddress';
 import InternationalShipmentPackageInformation from '../Screens/InternationalShipmentPackageInformation';
@@ -38,30 +45,53 @@ import InternationalShipmentPackageInformation from '../Screens/InternationalShi
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
-const token = '';
-const userToken='user.token'
 
-
-
-
-// Custom Drawer Content
 function CustomDrawerContent(props) {
+  const { token } = useContext(AuthContext);
 
+  //const [token, setToken] = useState('');
+  const navigation = useNavigation();
+  const [isServiceExpand, setIsServiceExpand] = useState(false);
+  const [isHowItsWorkExpand, setIsHowItsWorkExpand] = useState(false);
+  
+  //console.log('token', token);
 
-  const [isServiceExpand, setIsServiceExpand] = React.useState(false);
+  // useEffect(() => {
+  //   const getToken = async () => {
+  //     try {
+  //       const usertoken = await AsyncStorage.getItem('token');
+  //       console.log('getToken', usertoken);
+  //       if (usertoken) {
+  //         setToken(usertoken);
+  //       }
+  //       setToken(usertoken);
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   }
+  
+  //   getToken();
+
+  // },[navigation])
+
   return (
     <DrawerContentScrollView {...props} contentContainerStyle={{ backgroundColor: '#fff', borderRadius: 5 }}>
       <DrawerItemList {...props} />
+      {
+        token &&
+        <DrawerItem
+          label="Address Book"
+          style={{ borderRadius: 5, borderBottomWidth: 1, borderBlockColor: '#dedede' }}
+          icon={({ color, size }) => <Icon name="address-book" size={14} color={'#000'} />}
+          onPress={() => Linking.openURL('https://mywebsite.com/address-book')}
+        />
+      }
       <DrawerItem
-        label="Address Book"
+        label="About"
         style={{ borderRadius: 5, borderBottomWidth: 1, borderBlockColor: '#dedede' }}
         icon={({ color, size }) => <Icon name="address-book" size={14} color={'#000'} />}
-        onPress={() => Linking.openURL('https://mywebsite.com/address-book')}
+        onPress={() => Linking.openURL('https://uat.myxborder.com/about-us')}
       />
-      {/* <DrawerItem
-        label="About"
-        onPress={() => Linking.openURL('https://myxborder.com/about-us')}
-      /> */}
 
       <DrawerItem
         label="Services"
@@ -71,8 +101,8 @@ function CustomDrawerContent(props) {
       />
 
 
-
       {isServiceExpand &&
+      
         <>
           <DrawerItem
             label="Shop N Ship"
@@ -95,7 +125,6 @@ function CustomDrawerContent(props) {
           <DrawerItem
             label="International Shipment"
             style={{ borderRadius: 5, paddingLeft: 25, borderBottomWidth: 1, borderBlockColor: '#dedede' }}
-
             onPress={() => Linking.openURL('https://uat.myxborder.com/service/international-shippment')}
           />
         </>
@@ -118,25 +147,42 @@ function CustomDrawerContent(props) {
         label="How it Works"
         style={{ borderRadius: 5, borderBottomWidth: 1, borderBlockColor: '#dedede' }}
         icon={({ color, size }) => <Icon name="network-wired" size={14} color={'#000'} />}
-        onPress={() => Linking.openURL('https://mywebsite.com/how-it-works')}
+        onPress={() => setIsHowItsWorkExpand(prevState => !prevState)}
       />
+      {
+
+        isHowItsWorkExpand &&
+        <>
+          <DrawerItem
+            label="Shop N Ship"
+            style={{ borderRadius: 5, paddingLeft: 25, borderBottomWidth: 1, borderBlockColor: '#dedede' }}
+
+            onPress={() => Linking.openURL('https://uat.myxborder.com/how-it-works/shop-n-ship')}
+          />
+          <DrawerItem
+            label="Assisted Shop N Ship"
+            style={{ borderRadius: 5, paddingLeft: 25, borderBottomWidth: 1, borderBlockColor: '#dedede' }}
+
+            onPress={() => Linking.openURL('https://uat.myxborder.com/how-it-works/assisted-shop-n-ship')}
+          />
+        </>}
       <DrawerItem
         label="Indian Stores"
         style={{ borderRadius: 5, borderBottomWidth: 1, borderBlockColor: '#dedede' }}
-        icon={({ color, size }) => <Icon name="store-alt" size={14} color={'#000'} />}
-        onPress={() => Linking.openURL('https://mywebsite.com/indian-stores')}
+        icon={({ color, size }) => <Icon name="store" size={14} color={'#000'} />}
+        onPress={() => Linking.openURL('https://uat.myxborder.com/service/indian-store')}
       />
       <DrawerItem
         label="FAQ"
         style={{ borderRadius: 5, borderBottomWidth: 1, borderBlockColor: '#dedede' }}
         icon={({ color, size }) => <Icon name="question-circle" size={14} color={'#000'} />}
-        onPress={() => Linking.openURL('https://mywebsite.com/faq')}
+        onPress={() => Linking.openURL('https://uat.myxborder.com/faqs')}
       />
       <DrawerItem
         label="Duty & Taxes"
         style={{ borderRadius: 5, borderBottomWidth: 1, borderBlockColor: '#dedede' }}
         icon={({ color, size }) => <Icon name="address-book" size={14} color={'#000'} />}
-        onPress={() => Linking.openURL('https://mywebsite.com/duty-taxes')}
+        onPress={() => Linking.openURL('https://uat.myxborder.com/duty-taxes')}
       />
     </DrawerContentScrollView>
   );
@@ -163,6 +209,8 @@ function StackNavigator() {
       <Stack.Screen name="VarifyOtpScreen" component={VarifyOtpScreen} />
       <Stack.Screen name="ShopNshipShipmentAddress" component={ShopNshipShipmentAddress} />
       <Stack.Screen name="ExistaddressList" component={ExistaddressList} />
+      <Stack.Screen name="orderDetailsScreen" component={orderDetailsScreen} />
+      <Stack.Screen name="ViewOrderDetailScreen" component={ViewOrderDetailScreen} />
       <Stack.Screen name="InternationalShipmentPickupAddress" component={InternationalShipmentPickupAddress} />
       <Stack.Screen name="InternationalShipmentPackageInformation" component={InternationalShipmentPackageInformation} />
       <Stack.Screen name="InternationalShipmentDestinationAddress" component={InternationalShipmentDestinationAddress} />
@@ -172,6 +220,29 @@ function StackNavigator() {
 
 // Drawer Navigator
 function DrawerNavigator() {
+  
+  const navigation = useNavigation();
+  const { token } = useContext(AuthContext);
+
+  
+  // useEffect(() => {
+  //   const getToken = async () => {
+  //     try {
+  //       const usertoken = await AsyncStorage.getItem('token');
+  //       console.log('getToken', usertoken);
+  //       if (usertoken) {
+  //         setToken(usertoken);
+  //       }
+  //       setToken(usertoken);
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   }
+  // // const unsubscribe = navigation.addListener('focus', getToken);
+  // // return unsubscribe;
+  //  getToken();
+   
+  // },[navigation])
   return (
     <Drawer.Navigator
       drawerContent={(props) => <CustomDrawerContent {...props} />}
@@ -201,9 +272,11 @@ function DrawerNavigator() {
           <>
             <Drawer.Screen
               name="Dashboard"
+
               options={{
                 drawerLabel: 'Dashboard',
-                drawerIcon: ({ color, size }) => <Icon name="dashboard" color={'#000'} size={14} />,
+
+                drawerIcon: ({ color, size }) => <Image source={require('../assets/dashboards.png')} style={{ width: 15, height: 15 }} />,
               }}
               component={DashBoardScreen}
             >
@@ -216,28 +289,31 @@ function DrawerNavigator() {
             <Drawer.Screen name="Assisted Shop N Ship" component={AssistedShopNShipScreen}
               options={{
 
-                drawerIcon: ({ color, size }) => <Icon name="handshake-o" color={'#000'} size={14} />,
+                drawerIcon: ({ color, size }) =>
+                  <Image source={require('../assets/handshake.png')} style={{ width: 20, height: 20 }} />
               }} />
             <Drawer.Screen name="International Shipment" component={InternationalShipmentScreen}
               options={{
 
                 drawerIcon: ({ color, size }) => <Icon name="globe" color={'#000'} size={14} />,
+              }}
+            />
+
+            <Drawer.Screen name="Coupons" component={CouponsScreen}
+              options={{
+                drawerIcon: ({ color, size }) => <Icon name="ticket-alt" color={'#000'} size={14} />,
               }} />
+
+            <Drawer.Screen name="Help & Support" component={HelpAndSupportScreen}
+              options={{
+
+                drawerIcon: ({ color, size }) => <Icon name="phone" color={'#000'} size={14} />,
+              }} />
+
           </>
         ) : null}
 
 
-
-      <Drawer.Screen name="Coupons" component={CouponsScreen}
-        options={{
-          drawerIcon: ({ color, size }) => <Icon name="ticket-alt" color={'#000'} size={14} />,
-        }} />
-
-      <Drawer.Screen name="Help & Support" component={HelpAndSupportScreen}
-        options={{
-
-          drawerIcon: ({ color, size }) => <Icon name="phone" color={'#000'} size={14} />,
-        }} />
 
     </Drawer.Navigator>
 

@@ -125,6 +125,7 @@ const AssistedShopNshipScreen = ({ navigation }) => {
                                 <Text style={{ fontWeight: 'bold' }}> {order.payment_status}</Text>
                             </Text>
                         </View>
+                        <TouchableOpacity onPress={()=>navigation.navigate('orderDetailsScreen',{order:order})}>
                         <LinearGradient
                             start={{ x: 0, y: 0 }}
                             end={{ x: 1, y: 0 }}
@@ -133,6 +134,7 @@ const AssistedShopNshipScreen = ({ navigation }) => {
                         >
                             <Text style={styles.detailsButtonText}>Details</Text>
                         </LinearGradient>
+                        </TouchableOpacity>
                     </View>
                     ))
                 ) : (

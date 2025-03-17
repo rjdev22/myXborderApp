@@ -85,9 +85,7 @@ const HomeScreen = ({ navigation, route }) => {
             {/* Exciting Deals */}
             <Text style={styles.sectionTitle} onPress={() => navigation.navigate('SplashScreen')}>Exciting Deals</Text>
           
-          
           {
-
           isLoading ? (
             <View>
               {[...Array(1)].map((_, index) => (
@@ -100,7 +98,10 @@ const HomeScreen = ({ navigation, route }) => {
                   keyExtractor={(item, idx) => idx.toString()}
                   renderItem={({ item }) => (
                     // <ShimmerPlaceholder visible={!isLoading} >
-                    <TouchableOpacity style={styles.offerCard}></TouchableOpacity>
+                    <TouchableOpacity 
+                    style={styles.offerCard}>
+
+                    </TouchableOpacity>
                    
                   )}
                 />
@@ -143,7 +144,8 @@ const HomeScreen = ({ navigation, route }) => {
               </View>
             ))}
 
-            {/* How It Works */}
+           
+           
             <Text style={styles.sectionTitle}>How It Works</Text>
             <View style={styles.howGrid}>
               {['how1.svg', 'how2.svg', 'how3.svg', 'how4.svg', 'how5.svg'].map(

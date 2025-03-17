@@ -14,7 +14,7 @@ import Layout from '../Components/Common/Layout';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import {InternationalOrders} from '../services/apiServices';
 import { Picker } from '@react-native-picker/picker'
-import { Screen } from 'react-native-screens';
+
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const InternationalShipmentScreen = ({ navigation }) => {
 
@@ -121,6 +121,7 @@ const InternationalShipmentScreen = ({ navigation }) => {
                                 <Text style={{ fontWeight: 'bold' }}>  {order.payment_status}</Text>
                             </Text>
                         </View>
+                        <TouchableOpacity onPress={()=>navigation.navigate('orderDetailsScreen',{order:order})}>
                         <LinearGradient
                             start={{ x: 0, y: 0 }}
                             end={{ x: 1, y: 0 }}
@@ -129,6 +130,7 @@ const InternationalShipmentScreen = ({ navigation }) => {
                         >
                             <Text style={styles.detailsButtonText}>Details</Text>
                         </LinearGradient>
+                        </TouchableOpacity>
                     </View>
                      ))
                 ) : (

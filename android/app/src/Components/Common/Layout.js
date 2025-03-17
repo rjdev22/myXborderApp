@@ -9,25 +9,36 @@ import {
   TouchableWithoutFeedback,
   ScrollView
 } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 import { useNavigation, DrawerActions } from '@react-navigation/native';
 import { SvgUri } from 'react-native-svg';
-import { AsyncStorage } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Loader from '../Modals/Loader';
+import { useContext } from 'react';
+import  {AuthContext} from '../../Context/authContext';
+
+
 
 
 const Layout = ({ children }) => {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
-  //const [token, setToken] = useState(null);
+  const{token,setToken}=useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(false);
 
-  const token = '';
-  const signOut = async () => {
-    setIsLoading(true);
+
+  
+  const signOut = async (navigation) => {
     try {
+      setIsLoading(true);
       await AsyncStorage.removeItem('token');
-      navigation.navigate('HomeScreen');
+      setToken(null);
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'HomeScreen' }],
+      });
+      setModalVisible(false);
+     
     } catch (error) {
       console.log(error);
       setIsLoading(false);
@@ -36,18 +47,14 @@ const Layout = ({ children }) => {
   };
 
 
-  // useEffect(() => {
-  //   const getToken = async () => {
+  useEffect(() => {
+    const getToken = async () => {
 
-  //     const usertoken = await AsyncStorage.getItem('token');
-  //     setToken(usertoken);
-  //   }
-  //   getToken();
-  // }, []);
-
-
-
-  //const[isloading,setIsLoading]=useState(true); fehfhmfirfh
+      const usertoken = await AsyncStorage.getItem('token');
+      setToken(usertoken);
+    }
+    getToken();
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -86,7 +93,7 @@ const Layout = ({ children }) => {
                       }}>
                         <View style={styles.modalTextRow}>
                           <View style={{ width: 30 }}>
-                            <Icon name="share-square" size={20} color="#74c0fc" />
+                            <Icon name="share-square" size={18} color="#74c0fc" />
                           </View>
 
                           <Text style={styles.modalText}>Sign Up</Text>
@@ -98,7 +105,7 @@ const Layout = ({ children }) => {
                       }}>
                         <View style={styles.modalTextRow}>
                           <View style={{ width: 30 }}>
-                            <Icon name="share-square" size={20} color="#74c0fc" />
+                            <Icon name="share-square" size={18} color="#74c0fc" />
                           </View>
                           <Text style={styles.modalText}>Sign In</Text>
                         </View>
@@ -112,7 +119,7 @@ const Layout = ({ children }) => {
                       }}>
                         <View style={styles.modalTextRow}>
                           <View style={{ width: 30 }}>
-                            <Icon name="user" size={20} color="#74c0fc" />
+                            <Icon name="user" size={18} color="#74c0fc" />
                           </View>
                           <Text style={styles.modalText}> Profile</Text>
                         </View>
@@ -123,7 +130,7 @@ const Layout = ({ children }) => {
                       }}>
                         <View style={styles.modalTextRow}>
                           <View style={{ width: 30 }}>
-                            <Icon name="bell" size={20} color="#74c0fc" />
+                            <Icon name="bell" size={18} color="#74c0fc" />
                           </View>
                           <Text style={styles.modalText}>Notification</Text>
                         </View>
@@ -134,7 +141,7 @@ const Layout = ({ children }) => {
                       }}>
                         <View style={styles.modalTextRow}>
                           <View style={{ width: 30 }}>
-                            <Icon name="credit-card" size={20} color="#74c0fc" />
+                            <Icon name="credit-card" size={16} color="#74c0fc" />
                           </View>
                           <Text style={styles.modalText}> Make Payment</Text>
                         </View>
@@ -145,7 +152,7 @@ const Layout = ({ children }) => {
                       }}>
                         <View style={styles.modalTextRow}>
                           <View style={{ width: 30 }}>
-                            <Icon name="wallet" size={20} color="#74c0fc" />
+                            <Icon name="wallet" size={18} color="#74c0fc" />
                           </View>
                           <Text style={styles.modalText}>Wallet</Text>
                         </View>
@@ -156,18 +163,18 @@ const Layout = ({ children }) => {
                       }}>
                         <View style={styles.modalTextRow}>
                           <View style={{ width: 30 }}>
-                            <Icon name="trash" size={20} color="#74c0fc" />
+                            <Icon name="trash" size={18} color="#74c0fc" />
                           </View>
                           <Text style={styles.modalText}> Delete Account</Text>
                         </View>
                       </TouchableOpacity>
                       <TouchableOpacity style={styles.modalItem} onPress={() => {
                         setModalVisible(false);
-                        signOut();
+                        signOut(navigation);
                       }}>
                         <View style={styles.modalTextRow}>
                           <View style={{ width: 30 }}>
-                            <Icon name="share-square" size={20} color="#74c0fc" />
+                            <Icon name="share-square" size={18} color="#74c0fc" />
                           </View>
                           <Text style={styles.modalText}>Sign Out</Text>
                         </View>
@@ -186,12 +193,12 @@ const Layout = ({ children }) => {
       </ScrollView>
       {/* Footer */}
       <View style={styles.footer}>
-        <TouchableOpacity style={styles.tab} onPress={() => navigation.navigate('Home',{screen:'HomeScreen'})}>
+        <TouchableOpacity style={styles.tab} onPress={() => navigation.navigate('Home', { screen: 'HomeScreen' })}>
 
           <Image source={require('../../assets/home.png')} style={{ width: 25, height: 25 }} />
           <Text>Home</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.tab} onPress={() => navigation.navigate('Home', { screen: 'UserProfileScreen'})}>
+        <TouchableOpacity style={styles.tab} onPress={() => navigation.navigate('Home', { screen: 'UserProfileScreen' })}>
           <Image source={require('../../assets/profile.png')} style={{ width: 25, height: 25 }} />
           <Text>Profile</Text>
         </TouchableOpacity>
