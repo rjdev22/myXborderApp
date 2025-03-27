@@ -9,9 +9,6 @@ import {
   TouchableWithoutFeedback,
   ScrollView
 } from 'react-native';
-
-
-
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { useNavigation, DrawerActions } from '@react-navigation/native';
 import { SvgUri } from 'react-native-svg';
@@ -20,8 +17,7 @@ import Loader from '../Modals/Loader';
 import { useContext } from 'react';
 import { AuthContext } from '../../Context/authContext';
 import { deleteAccountApi } from '../../services/apiServices';
-
-
+import { scaleZetaToMatchClamps } from 'react-native-reanimated/lib/typescript/animation/springUtils';
 
 
 const Layout = ({ children }) => {
@@ -32,17 +28,20 @@ const Layout = ({ children }) => {
 
 
 
-
   const signOut = async (navigation) => {
     try {
       setIsLoading(true);
       await AsyncStorage.removeItem('token');
       setToken(null);
-      navigation.reset({
-        index: 0,
-        routes: [{ name: 'HomeScreen' }],
-      });
-      setModalVisible(false);
+      setTimeout(() => {
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'HomeScreen' }],
+        });
+        setIsLoading(false);
+      }, 2000);
+     
+  
 
     } catch (error) {
       console.log(error);
@@ -50,7 +49,6 @@ const Layout = ({ children }) => {
     }
 
   };
-
 
   useEffect(() => {
     const getToken = async () => {
@@ -78,7 +76,7 @@ const Layout = ({ children }) => {
       console.log('account delete data ',data);
 
       if(data.status === true){
-        Toast.show(data.message, Toast.SHORT);
+        Toast.show(data.message,{ type: 'success',style: { width:500}});
       setToken(null);
       navigation.reset({
         index: 0,
@@ -90,6 +88,7 @@ const Layout = ({ children }) => {
       setIsLoading(false);
     } catch (error) {
       console.log(error);
+      Toast.show('Something went wrong',{ type: 'error',style: { width:500}});
       setIsLoading(false);
     }
   };
@@ -122,7 +121,6 @@ const Layout = ({ children }) => {
               <View style={styles.modalContent}>
 
                 {
-
                   !token ? (
                     <>
                       <TouchableOpacity style={styles.modalItem} onPress={() => {
@@ -153,7 +151,8 @@ const Layout = ({ children }) => {
                     <>
                       <TouchableOpacity style={styles.modalItem} onPress={() => {
                         setModalVisible(false);
-                        navigation.navigate('UserProfileScreen');
+                        navigation.navigate('Home',
+                          {screen:'UserProfileScreen'});
                       }}>
                         <View style={styles.modalTextRow}>
                           <View style={{ width: 30 }}>
@@ -164,7 +163,7 @@ const Layout = ({ children }) => {
                       </TouchableOpacity>
                       <TouchableOpacity style={styles.modalItem} onPress={() => {
                         setModalVisible(false);
-                        navigation.navigate('NotificationScreen');
+                        navigation.navigate('Home', { screen: 'NotificationScreen'});
                       }}>
                         <View style={styles.modalTextRow}>
                           <View style={{ width: 30 }}>
@@ -173,6 +172,7 @@ const Layout = ({ children }) => {
                           <Text style={styles.modalText}>Notification</Text>
                         </View>
                       </TouchableOpacity>
+                  
                       <TouchableOpacity style={styles.modalItem} onPress={() => {
                         setModalVisible(false);
                         navigation.navigate('NotificationScreen');
@@ -184,9 +184,10 @@ const Layout = ({ children }) => {
                           <Text style={styles.modalText}> Make Payment</Text>
                         </View>
                       </TouchableOpacity>
+
                       <TouchableOpacity style={styles.modalItem} onPress={() => {
                         setModalVisible(false);
-                        navigation.navigate('LoginScreen');
+                        navigation.navigate('Home', { screen: 'WalletHistory'});
                       }}>
                         <View style={styles.modalTextRow}>
                           <View style={{ width: 30 }}>
@@ -195,6 +196,7 @@ const Layout = ({ children }) => {
                           <Text style={styles.modalText}>Wallet</Text>
                         </View>
                       </TouchableOpacity>
+
                       <TouchableOpacity style={styles.modalItem} onPress={() => {
                         setModalVisible(false);
                         handleDeleteAccount();
@@ -236,9 +238,10 @@ const Layout = ({ children }) => {
           <Image source={require('../../assets/home.png')} style={{ width: 25, height: 25 }} />
           <Text>Home</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.tab} onPress={() => navigation.navigate('Home', { screen: 'UserProfileScreen' })}>
+        <TouchableOpacity style={styles.tab} onPress={() => navigation.navigate('Home', { screen:!token ? 'SignUpScreen' : 'UserProfileScreen'})}>
           <Image source={require('../../assets/profile.png')} style={{ width: 25, height: 25 }} />
           <Text>Profile</Text>
+        
         </TouchableOpacity>
       </View>
       <Loader visible={isLoading} />

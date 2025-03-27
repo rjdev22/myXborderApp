@@ -13,8 +13,8 @@ import Layout from '../Components/Common/Layout';
 import DropDown from '../Components/Common/DropDown';
 import { get_courier_types, get_order_types } from '../services/apiServices';
 
-const AddInternationalShipmentScreen = ({ navigation,route }) => {
-    const token=route?.params?.token;
+const AddInternationalShipmentScreen = ({ navigation, route }) => {
+    const token = route?.params?.token;
     const [errors, setErrors] = useState({});
     const [courierType, setCourierType] = useState([]);
     const [orderType, setOrderType] = useState([]);
@@ -22,8 +22,9 @@ const AddInternationalShipmentScreen = ({ navigation,route }) => {
     const [selectedCourierType, setSelectedCourierType] = useState(null)
     const [clientOrderId, setClientOrderId] = useState('');
 
+   
+
     useEffect(() => {
-        
         const fetchData = async () => {
             try {
                 const [courierRes, orderRes] = await Promise.all([
@@ -40,17 +41,17 @@ const AddInternationalShipmentScreen = ({ navigation,route }) => {
                         },
                     })
                 ]);
-
+            
                 const courierData = await courierRes.json();
                 const orderData = await orderRes.json();
                 console.log('Courier api response', courierData, orderData);
-
+            
                 setCourierType(courierData.data || []);
                 setOrderType(orderData.data || []);
 
             } catch (error) {
                 console.error("API Fetch Error:", error);
-                Alert.alert("Error", "Failed to load data. Please try again.");
+                //Alert.alert("Error", "Failed to load data. Please try again.");
             }
         };
 
@@ -71,16 +72,16 @@ const AddInternationalShipmentScreen = ({ navigation,route }) => {
     const handleNext = () => {
         const courierTypeNumber = selectedCourierType;
         const OrderTypeNumber = selectedOrderType;
-        console.log('form data',courierTypeNumber, OrderTypeNumber, clientOrderId);
-     if (validateFields()) {
-        navigation.navigate('InternationalShipmentPickupAddress', {
-            courierTypeNumber,
-            OrderTypeNumber,
-            clientOrderId,
-            token
-        });
-    
-    }
+        console.log('form data', courierTypeNumber, OrderTypeNumber, clientOrderId);
+        if (validateFields()) {
+            navigation.navigate('InternationalShipmentPickupAddress', {
+                courierTypeNumber,
+                OrderTypeNumber,
+                clientOrderId,
+                token
+            });
+
+        }
     };
 
     return (
@@ -97,17 +98,15 @@ const AddInternationalShipmentScreen = ({ navigation,route }) => {
                         items={orderType.map(item => item.name)} // Ensure names are used
                         initialValue={orderType.find(item => item.id === selectedOrderType)?.name || ""}
                         label="Please select Order Type"
-                        onChange={(value) => setSelectedOrderType(value)}
-                            
-                       
+                        onChange={(value) => {
+
+                            const newValue = String(Number(value) + 1);
+                            setSelectedOrderType(newValue);
+                        }
+                        }
                     />
-
-                    
-
-
-
-                    {errors.selectedOrderType && <Text style={styles.errorText}>{errors.selectedOrderType}</Text>} 
                 </View>
+                    {errors.selectedOrderType && <Text style={styles.errorText}>{errors.selectedOrderType}</Text>}
 
 
                 <View style={styles.inputGroup}>
@@ -116,11 +115,16 @@ const AddInternationalShipmentScreen = ({ navigation,route }) => {
                         items={courierType.map(item => item.name)}
                         initialValue={selectedCourierType}
                         label="Please select Courier Type"
-                        onChange={(value) =>setSelectedCourierType(value)}
-                    />
-    {errors.selectedCourierType && <Text style={styles.errorText}>{errors.selectedCourierType}</Text>} 
-                </View>
+                        onChange={(value) => {
 
+                            const newValue = String(Number(value) + 1);
+                            setSelectedCourierType(newValue);
+                        }
+                        }
+                    />
+
+                    {errors.selectedCourierType && <Text style={styles.errorText}>{errors.selectedCourierType}</Text>}
+                </View>
 
 
                 <View style={styles.inputGroup}>
@@ -162,9 +166,9 @@ const styles = StyleSheet.create({
     errorText: { color: 'red', fontSize: 12 },
     buttonContainer: { alignItems: 'flex-end', marginTop: 20 },
     nextButton: {
-        paddingVertical: 5, borderRadius: 5, padding: 10, width: 130,alignItems:'center'
+        paddingVertical: 5, borderRadius: 5, padding: 10, width: 130, alignItems: 'center'
     },
-    nextButtonText: { color: "#fff", fontSize: 16, fontWeight: "bold" ,alignItems:'center' },
+    nextButtonText: { color: "#fff", fontSize: 16, fontWeight: "bold", alignItems: 'center' },
 });
 
 export default AddInternationalShipmentScreen;

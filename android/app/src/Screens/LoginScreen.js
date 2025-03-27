@@ -5,22 +5,22 @@ import AuthLayout from "../Components/Common/AuthLayout";
 import { loginApi } from "../services/apiServices";
 import { CommonActions } from "@react-navigation/native";
 import Loader from "../Components/Modals/Loader";
-import Toast from "react-native-simple-toast";
+import {Toast} from 'react-native-toast-notifications';
 import { useToast } from "react-native-toast-notifications";
 import Recaptcha, { RecaptchaRef } from 'react-native-recaptcha-that-works';
 import { AuthContext } from '../Context/authContext';
-
-
 
   
 const LoginScreen = ({ navigation }) => {
 
     const toast = useToast();
     const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
     const [isChecked, setIsChecked] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [visibleModal, setVisibleModal] = useState(false);
     const [emailError, setEmailError] = useState("");
+    const [passwordError, setPasswordError] = useState("");
 
 
     const size = 'invisible';
@@ -47,6 +47,9 @@ const LoginScreen = ({ navigation }) => {
         if (!email) {
             setEmailError("Email field is required");
         }
+        if (!password) {
+            setPasswordError("Password field is required");
+        }
 
         if (!validateEmail(email)) {
             setEmailError("Please enter a valid email address");
@@ -57,12 +60,12 @@ const LoginScreen = ({ navigation }) => {
 
         setIsSubmitted(true);
         if (!email) {
-            Toast.show('Please enter email', Toast.SHORT);
+           // Toast.show('Please enter email', Toast.SHORT);
             setIsSubmitted(false);
             return
         }
         else if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/) {
-            Toast.show('Please enter valid email', Toast.SHORT);
+           // Toast.show('Please enter valid email', Toast.SHORT);
             setIsSubmitted(false);
             return
         }
@@ -77,6 +80,7 @@ const LoginScreen = ({ navigation }) => {
                     },
                     body: JSON.stringify({
                         email: email,
+                        password: password,
                         isChecked: isChecked,
                     }),
                 });
@@ -85,7 +89,7 @@ const LoginScreen = ({ navigation }) => {
                 const userEmail = data?.data?.email;
 
                 if (data.status === false) {
-                    Toast.show(data.exception, Toast.SHORT);
+                    Toast.show(data.exception, {type:'success',style: { width:500}});
                     setVisibleModal(false);
                     return
                 }
@@ -104,6 +108,7 @@ const LoginScreen = ({ navigation }) => {
                 );
             } catch (error) {
                 console.error("Error logging in user:", error);
+                Toast.show('Something went wrong,try again', Toast.SHORT);
                 setVisibleModal(false);
             }
         }
@@ -128,11 +133,27 @@ const LoginScreen = ({ navigation }) => {
                 />
 
                 {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
-                <View style={styles.container}>
+                
+                <Text style={styles.label}>Password</Text>
+                <TextInput
+                    style={styles.input}
+                    placeholder="**********"
+                    keyboardType="password"
+                    value={password}
+                    onChangeText={(text) => {
+                        setPassword(text);
+                        if (text) setPasswordError(""); // Clear error on typing
+                    }}
+                    secureTextEntry
+                />
+
+                {passwordError? <Text style={styles.errorText}>{passwordError}</Text> : null}
+                
+                {/* <View style={styles.container}>
                     <Button onPress={handleOpenPress} title="Open" />
                     {/* <Text>Token: {token}</Text>
-                    <Text>Size: {size}</Text> */}
-                </View>
+                    <Text>Size: {size}</Text> 
+                </View> */}
                 <Recaptcha
                     //ref={$recaptcha}
                     lang="pt"

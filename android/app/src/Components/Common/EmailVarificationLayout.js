@@ -6,17 +6,11 @@ const EmailVarificationLayout = ({children}) => {
  <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-     
-
         <Image
           source={require('../../assets/logo-horizontal.png')}
           style={styles.logoHorizontal}
         />
-        {/* <TouchableOpacity onPress={() => navigation.navigate('LoginScreen')}>
-          <Icon name="user-circle-o" size={24} color="black" />
-        </TouchableOpacity> */}
       </View>
-
       {/* Main Content */}
       <View style={styles.content}>{children}</View>
 

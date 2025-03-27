@@ -1,11 +1,12 @@
 import React from 'react';
-import { useState,useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { ToastProvider } from 'react-native-toast-notifications';
 import { Image } from 'react-native';
+
 import {
   createDrawerNavigator,
   DrawerContentScrollView,
@@ -33,9 +34,10 @@ import UserProfileScreen from '../Screens/UserProfileScreen';
 import CouponsScreen from '../Screens/CouponsScreen';
 import SplashScreen from '../Screens/SplashScreen';
 import NotificationScreen from '../Screens/NotificationScreen';
+import WalletHistory from '../Screens/WalletHistory';
 import VarifyOtpScreen from '../Screens/VarifyOtpScreen';
 import ShopNshipShipmentAddress from '../Screens/ShopNShipShippingAddress';
-import ExistaddressList from '../Screens/Address/ExistaddressList';
+import AddressBookScreen from '../Screens/AddressBookSreen';
 import orderDetailsScreen from '../Screens/OrderDetail/orderDetailScreen';
 import ViewOrderDetailScreen from '../Screens/OrderDetail/ViewOrderDetailScreen';
 import InternationalShipmentPickupAddress from '../Screens/InternationalShipmentPickupAddress';
@@ -49,30 +51,10 @@ const Drawer = createDrawerNavigator();
 function CustomDrawerContent(props) {
   const { token } = useContext(AuthContext);
 
-  //const [token, setToken] = useState('');
   const navigation = useNavigation();
   const [isServiceExpand, setIsServiceExpand] = useState(false);
   const [isHowItsWorkExpand, setIsHowItsWorkExpand] = useState(false);
-  
-  //console.log('token', token);
 
-  // useEffect(() => {
-  //   const getToken = async () => {
-  //     try {
-  //       const usertoken = await AsyncStorage.getItem('token');
-  //       console.log('getToken', usertoken);
-  //       if (usertoken) {
-  //         setToken(usertoken);
-  //       }
-  //       setToken(usertoken);
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   }
-  
-  //   getToken();
-
-  // },[navigation])
 
   return (
     <DrawerContentScrollView {...props} contentContainerStyle={{ backgroundColor: '#fff', borderRadius: 5 }}>
@@ -83,7 +65,7 @@ function CustomDrawerContent(props) {
           label="Address Book"
           style={{ borderRadius: 5, borderBottomWidth: 1, borderBlockColor: '#dedede' }}
           icon={({ color, size }) => <Icon name="address-book" size={14} color={'#000'} />}
-          onPress={() => Linking.openURL('https://mywebsite.com/address-book')}
+          onPress={() => navigation.navigate('Home', { screen: 'AddressBookScreen' })}
         />
       }
       <DrawerItem
@@ -102,7 +84,7 @@ function CustomDrawerContent(props) {
 
 
       {isServiceExpand &&
-      
+
         <>
           <DrawerItem
             label="Shop N Ship"
@@ -191,7 +173,9 @@ function CustomDrawerContent(props) {
 // Stack Navigator
 function StackNavigator() {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator screenOptions={{
+       headerShown: false ,
+       initialRouteName: 'HomeScreen'}}>
       <Stack.Screen name="SplashScreen" component={SplashScreen} />
       <Stack.Screen name="HomeScreen" component={HomeScreen} />
       <Stack.Screen name="DashBoardScreen" component={DashBoardScreen} />
@@ -205,10 +189,11 @@ function StackNavigator() {
       <Stack.Screen name="AddAssistedShopNShipScreen" component={AddAssistedShopNShipScreen} />
       <Stack.Screen name="AddInternationalShipmentScreen" component={AddInternationalShipmentScreen} />
       <Stack.Screen name="NotificationScreen" component={NotificationScreen} />
+      <Stack.Screen name="WalletHistory" component={WalletHistory} />
       <Stack.Screen name="EmailVarificationScreen" component={EmailVarificationScreen} />
       <Stack.Screen name="VarifyOtpScreen" component={VarifyOtpScreen} />
       <Stack.Screen name="ShopNshipShipmentAddress" component={ShopNshipShipmentAddress} />
-      <Stack.Screen name="ExistaddressList" component={ExistaddressList} />
+      <Stack.Screen name="AddressBookScreen" component={AddressBookScreen} />
       <Stack.Screen name="orderDetailsScreen" component={orderDetailsScreen} />
       <Stack.Screen name="ViewOrderDetailScreen" component={ViewOrderDetailScreen} />
       <Stack.Screen name="InternationalShipmentPickupAddress" component={InternationalShipmentPickupAddress} />
@@ -220,29 +205,10 @@ function StackNavigator() {
 
 // Drawer Navigator
 function DrawerNavigator() {
-  
+
   const navigation = useNavigation();
   const { token } = useContext(AuthContext);
 
-  
-  // useEffect(() => {
-  //   const getToken = async () => {
-  //     try {
-  //       const usertoken = await AsyncStorage.getItem('token');
-  //       console.log('getToken', usertoken);
-  //       if (usertoken) {
-  //         setToken(usertoken);
-  //       }
-  //       setToken(usertoken);
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   }
-  // // const unsubscribe = navigation.addListener('focus', getToken);
-  // // return unsubscribe;
-  //  getToken();
-   
-  // },[navigation])
   return (
     <Drawer.Navigator
       drawerContent={(props) => <CustomDrawerContent {...props} />}
@@ -251,22 +217,28 @@ function DrawerNavigator() {
         headerShown: false,
         drawerType: 'front',
         drawerStyle: { width: 320 },
-        drawerActiveTintColor: '#d81397',
-        drawerItemStyle: { marginVertical: 1, borderRadius: 5, padding: 0 },
+        drawerActiveTintColor: 'gray', 
+        drawerActiveBackgroundColor: 'transparent',
+        drawerItemStyle: {
+          marginVertical: 1,
+          borderRadius: 5,
+          padding: 0,
+          borderBottomWidth: 0.5, 
+          borderBottomColor: '#ccc'
+        },
         hideDrawerStatusBar: true,
+        //drawerLabelStyle: { color: 'gray' },
       }}
     >
       <Drawer.Screen
         name="Home"
         options={{
           drawerLabel: 'Home',
-          drawerIcon: ({ color, size }) => <Icon name="home" color={'#000'} size={14} />,
+          drawerIcon: () => <Icon name="home" color={'#000'} size={14} />,
         }}
         component={StackNavigator}
       >
       </Drawer.Screen>
-
-
       {
         token ? (
           <>
@@ -276,7 +248,7 @@ function DrawerNavigator() {
               options={{
                 drawerLabel: 'Dashboard',
 
-                drawerIcon: ({ color, size }) => <Image source={require('../assets/dashboards.png')} style={{ width: 15, height: 15 }} />,
+                drawerIcon: () => <Image source={require('../assets/dashboards.png')} style={{ width: 15, height: 15 }} />,
               }}
               component={DashBoardScreen}
             >
@@ -284,37 +256,34 @@ function DrawerNavigator() {
 
             <Drawer.Screen name="Shop N Ship" component={ShopNshipScreen}
               options={{
-                drawerIcon: ({ color, size }) => <Icon name="ship" color={'#000'} size={14} />,
+                drawerIcon: () => <Icon name="ship" color={'#000'} size={14} />,
               }} />
             <Drawer.Screen name="Assisted Shop N Ship" component={AssistedShopNShipScreen}
               options={{
 
-                drawerIcon: ({ color, size }) =>
+                drawerIcon: () =>
                   <Image source={require('../assets/handshake.png')} style={{ width: 20, height: 20 }} />
               }} />
             <Drawer.Screen name="International Shipment" component={InternationalShipmentScreen}
               options={{
 
-                drawerIcon: ({ color, size }) => <Icon name="globe" color={'#000'} size={14} />,
+                drawerIcon: () => <Icon name="globe" color={'#000'} size={14} />,
               }}
             />
 
             <Drawer.Screen name="Coupons" component={CouponsScreen}
               options={{
-                drawerIcon: ({ color, size }) => <Icon name="ticket-alt" color={'#000'} size={14} />,
+                drawerIcon: () => <Icon name="ticket-alt" color={'#000'} size={14} />,
               }} />
 
             <Drawer.Screen name="Help & Support" component={HelpAndSupportScreen}
               options={{
 
-                drawerIcon: ({ color, size }) => <Icon name="phone" color={'#000'} size={14} />,
+                drawerIcon: () => <Icon name="phone" color={'#000'} size={14} />,
               }} />
 
           </>
         ) : null}
-
-
-
     </Drawer.Navigator>
 
   );
@@ -323,7 +292,7 @@ function DrawerNavigator() {
 // Main App Navigation
 export default function AppNavigation() {
   return (
-    <ToastProvider>
+    <ToastProvider placement="bottom">
       <PaperProvider>
         <NavigationContainer>
           <DrawerNavigator>

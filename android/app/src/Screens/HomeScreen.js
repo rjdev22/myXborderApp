@@ -78,12 +78,12 @@ const HomeScreen = ({ navigation, route }) => {
             {/* Referral Bonus */}
 
             <View style={styles.referralCard}>
-              <Text style={styles.bonusTitle} onPress={() => navigation.navigate('DashBoardScreen')}>Referral Bonus</Text>
+              <Text style={styles.bonusTitle} >Referral Bonus</Text>
               <Text style={styles.amount}>{referralAmount} INR</Text>
             </View>
 
             {/* Exciting Deals */}
-            <Text style={styles.sectionTitle} onPress={() => navigation.navigate('SplashScreen')}>Exciting Deals</Text>
+            <Text style={styles.sectionTitle} >Exciting Deals</Text>
           
           {
           isLoading ? (

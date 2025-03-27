@@ -3,7 +3,8 @@ import OrderDetailsLayout from '../../Components/Common/OrderDetailsLayout';
 import LinearGradient from 'react-native-linear-gradient';
 import { View, Image, Text, TextInput, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-
+import AddItemModal from '../../Components/Modals/AddItemToOrder';
+import EditItemModal from '../../Components/Modals/EditItemToOrders';
 const items = {
     id: '1',
     name: 'tzt',
@@ -20,15 +21,30 @@ const OrderDetailsScreen = ({ navigation, route }) => {
 
 
     const items = route?.params?.order.item;
-
+    const orderId = route?.params?.order.id
     const address = route?.params?.order.deliveryAddress;
+    const itemType = route?.params?.itemData || [];
+    console.log('itemType', itemType);
+    const DropDownValues = itemType.map((item) => item.itemType);
 
-    console.log('address', address);
-    console.log('items', items);
+    // console.log('address', address);
+    // console.log('items', items,orderId);
     const [activeTab, setActiveTab] = useState('Items');
+    const [selectedOrderType, setSelectedOrderType] = useState('');
+
     const [ShowAddress, setShowAddress] = useState(false)
     const [ShowMessage, setShowMessage] = useState(false)
     const [ShowItem, setShowItem] = useState(true)
+    const [openAddItem, setOpenAddItem] = useState(false)
+    const [openEditItem, setOpenEditItem] = useState(false)
+
+
+
+    const openAddItemModal = () => { setOpenAddItem(true) }
+    const closeAddItemModal = () => { setOpenAddItem(false) }
+
+    const OpenEditItemModal = () => { setOpenEditItem(true) }
+    const closeEditItemModal = () => { setOpenEditItem(false) }
 
 
     const handleTabPress = (tab) => {
@@ -103,7 +119,7 @@ const OrderDetailsScreen = ({ navigation, route }) => {
                             <Text>:</Text>
                             <Text style={styles.itemTitleRight}>{address.city}</Text>
                         </View>
-                    
+
                         <View style={{ marginBottom: 5, flexDirection: 'row', justifyContent: 'space-between' }}>
                             <Text style={styles.itemTitleLeft}>Country</Text>
                             <Text>:</Text>
@@ -120,7 +136,7 @@ const OrderDetailsScreen = ({ navigation, route }) => {
                 {ShowMessage && <Text>Message Section</Text>}
                 {ShowItem && (
                     <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
-                        <TouchableOpacity style={{ marginTop: 10, marginBottom: 10 }}>
+                        <TouchableOpacity style={{ marginTop: 10, marginBottom: 10 }} onPress={() => openAddItemModal()}>
                             <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} colors={['#d81397', '#0d5cc2']} style={styles.addButton}>
                                 <Text style={styles.addButtonText}>+ Add Items</Text>
                             </LinearGradient>
@@ -136,19 +152,21 @@ const OrderDetailsScreen = ({ navigation, route }) => {
                             <Text style={{ color: 'gray' }}>Quantity: {item.quantity}</Text>
                             <Text style={{ color: 'gray' }}>Size: {item.size}</Text>
                             <View style={styles.actions}>
-                                <TouchableOpacity>
+                                <TouchableOpacity onPress={() => OpenEditItemModal(item)}>
                                     <Text style={styles.actionText}>Edit</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => navigation.navigate('Home', { screen: 'ViewOrderDetailScreen',params:{item:item} })}>
+                                <TouchableOpacity onPress={() => navigation.navigate('Home', { screen: 'ViewOrderDetailScreen', params: { item: item } })}>
                                     <Text style={styles.actionText}>View</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>
                     ))
                 }
-
+                <EditItemModal visible={openEditItem} onClose={() => closeEditItemModal()} itemTypes={itemType} id={orderId} />
+                <AddItemModal visible={openAddItem} onClose={() => closeAddItemModal()} itemTypes={itemType} id={orderId}  />
             </View>
         </OrderDetailsLayout >
+
     );
 };
 

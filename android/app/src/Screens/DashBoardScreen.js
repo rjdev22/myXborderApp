@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState,useContext } from 'react';
 import {
     View,
     Text,
@@ -6,41 +6,40 @@ import {
     StyleSheet,
     ScrollView,
     TouchableOpacity,
-   
+    Modal
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import LinearGradient from 'react-native-linear-gradient';
 import Layout from '../Components/Common/Layout';
-import Toast from 'react-native-simple-toast';
+import { Toast } from 'react-native-toast-notifications';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import { SvgUri } from 'react-native-svg';
-import { AuthContext } from '../Context/authContext';
 import { getUserProfile, get_item_types } from '../services/apiServices';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Clipboard from '@react-native-clipboard/clipboard';
-
+import EditProfileModal from '../Components/Modals/EditProfileModal';
+import { AuthContext } from '../Context/authContext';
 
 
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const DashBoardScreen = ({ navigation }) => {
 
+    const{token,pageRefresh,setPageRefresh}=useContext(AuthContext);
 
-    //console.log('route data----', route.params.data.image)
 
-    //const userData = route.params?.data
     const [userData, setUserData] = useState({});
     const [isLoading, setIsLoading] = useState(true);
     const [itemData, setItemData] = useState({});
     const [courierData, setCourierData] = useState({});
     const [orderData, setOrderData] = useState({});
-    const[accessToken,setAccessToken]=useState(null);
-
+    const [accessToken, setAccessToken] = useState(null);
+    const [openEditModal, setOpenEditModal] = useState(false);
 
     const get_all_item = async () => {
         try {
-           const token = await AsyncStorage.getItem('token');
-           setAccessToken(token);
+            const token = await AsyncStorage.getItem('token');
+            setAccessToken(token);
             const response = await fetch(get_item_types, {
 
                 headers: {
@@ -59,7 +58,9 @@ const DashBoardScreen = ({ navigation }) => {
 
         }
     }
-   
+
+    
+
 
 
     useEffect(() => {
@@ -78,10 +79,15 @@ const DashBoardScreen = ({ navigation }) => {
                 const data = await response.json();
                 console.log('user data', data);
                 setUserData(data.data);
+                if (!data.data.first_name&&!data.data.last_name) {
+                    setOpenEditModal(true);
+                }
+                // setPageRefresh(false);
                 setIsLoading(false);
             } catch (error) {
                 console.error('Error fetching user data:', error);
                 setIsLoading(false);
+                // setPageRefresh(false);
             }
         };
         fetchUserData();
@@ -89,7 +95,12 @@ const DashBoardScreen = ({ navigation }) => {
         //courier_types();
         //order_types();
 
-    }, []);
+    }, [pageRefresh]);
+
+    const handleCloseEditModal = () => {
+        setOpenEditModal(false);
+    };
+
 
     const addressData = {
         Name: userData?.virtualAddress?.name,
@@ -103,7 +114,7 @@ const DashBoardScreen = ({ navigation }) => {
 
     const copy = (text) => {
         Clipboard.setString(text);
-        Toast.show("Copied to clipboard", Toast.SHORT);
+        Toast.show("Copied to clipboard", { type: 'success',style: { width:500}});
         //alert("Copied to clipboard!");
     };
 
@@ -116,10 +127,6 @@ const DashBoardScreen = ({ navigation }) => {
                 {/* Profile Card */}
                 <View style={styles.profileCard}>
                     <ShimmerPlaceholder visible={!isLoading} style={styles.imagePlaceholder}>
-                        {/* {/* <Image
-                            source={{ uri: userData.image }}
-                            style={styles.profileHorizontal}
-                        /> */}
 
                         <SvgUri
                             uri={userData.image}
@@ -129,10 +136,9 @@ const DashBoardScreen = ({ navigation }) => {
                         />
 
                     </ShimmerPlaceholder>
-
                     <View>
                         <ShimmerPlaceholder visible={!isLoading} style={styles.textPlaceholder}>
-                            <Text style={styles.profileDetails}>{userData.first_name !== null ? userData.first_name : "test"} {userData.last_name !== null ? userData.last_name : "User"}</Text>
+                            <Text style={styles.profileDetails}>{userData.first_name} {userData.last_name}</Text>
                         </ShimmerPlaceholder>
                         <ShimmerPlaceholder visible={!isLoading} style={styles.textPlaceholder}>
                             <Text style={styles.profileDetails}>UniqueId: {userData.user_id}</Text>
@@ -145,22 +151,22 @@ const DashBoardScreen = ({ navigation }) => {
                         </ShimmerPlaceholder>
                     </View>
                 </View>
-            
+
 
                 {/* Orders Section */}
                 <View style={styles.ordersSection}>
                     <View style={styles.orderRow}>
 
-                        <TouchableOpacity onPress={() => 
-                        
-                          navigation.navigate('Home', { 
-                            screen: 'ShopNshipScreen',
-                            params: {
-                                orderData:orderData,
-                                itemData:itemData
-                            }
-                         })
-                            }>
+                        <TouchableOpacity onPress={() =>
+
+                            navigation.navigate('Home', {
+                                screen: 'ShopNshipScreen',
+                                params: {
+                                    orderData: orderData,
+                                    itemData: itemData
+                                }
+                            })
+                        }>
                             <ShimmerPlaceholder visible={!isLoading} style={styles.textPlaceholder}>
                                 <Text style={styles.orderText} >Shop N Ship</Text>
                             </ShimmerPlaceholder>
@@ -168,7 +174,7 @@ const DashBoardScreen = ({ navigation }) => {
                                 <Text>Total Orders: <Text style={{ color: '#d81397', }}>({userData.shopNshipOrderCount})</Text></Text>
                             </ShimmerPlaceholder>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => navigation.navigate('Home', { screen: 'AddShopNShipScreen', params: { itemData: itemData,orderData:orderData,courierData:courierData } })}>
+                        <TouchableOpacity onPress={() => navigation.navigate('Home', { screen: 'AddShopNShipScreen', params: { itemData: itemData, orderData: orderData, courierData: courierData } })}>
                             <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} colors={['#d81397', '#0d5cc2']} style={styles.orderButton}>
                                 <Text style={styles.orderButtonText}>Create Order</Text>
                             </LinearGradient>
@@ -231,6 +237,15 @@ const DashBoardScreen = ({ navigation }) => {
                             </TouchableOpacity>
                         </View>
                     ))}
+
+                    <Modal
+                        animationType="slide"
+                        transparent={true}
+                        visible={openEditModal}
+                        onRequestClose={handleCloseEditModal}
+                    >
+                        <EditProfileModal onClose={handleCloseEditModal} userData={userData}  />
+                    </Modal>
                 </View>
 
             </ScrollView  >
@@ -284,7 +299,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         paddingHorizontal: 20
     },
-    orderButtonText: { color: 'white',  },
+    orderButtonText: { color: 'white', },
     addressCard: {
         backgroundColor: 'white',
         padding: 10,

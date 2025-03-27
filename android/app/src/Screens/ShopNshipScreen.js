@@ -7,29 +7,105 @@ import {
     ScrollView,
     TouchableOpacity,
     copyToClipboard,
-    TextInput
+    TextInput,
+    Modal
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import LinearGradient from 'react-native-linear-gradient';
 import Layout from '../Components/Common/Layout';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
-import { ShopNShipOrders } from '../services/apiServices';
+import { ShopNShipOrders, get_item_types, orderDetails } from '../services/apiServices';
 import { useContext } from 'react';
 import { AuthContext } from '../Context/authContext';
+import DropDown from '../Components/Common/DropDown';
+import { set } from 'react-native-reanimated';
 
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
-const ShopNshipScreen = ({ navigation,route }) => {
+const ShopNshipScreen = ({ navigation }) => {
 
-    const itemType = route?.params?.itemData || [];
     const { token } = useContext(AuthContext);
     console.log('token', token);
 
+    const [modalVisible, setModalVisible] = useState(false);
+    const [selectedOption, setSelectedOption] = useState("All orders");
     const [query, setQuery] = useState('');
     const [isLoading, setIsLoading] = useState(true);
     const [orderData, setOrderData] = useState([]);
-    console.log('orderdata', orderData);
+    const [itemType, setItemType] = useState([]);
 
+
+    console.log('itemType', itemType);
+
+    console.log('selected Option', selectedOption)
+
+    const options = [
+        { label: "All orders" },
+        { label: "Order in progress" },
+        { label: "Order in shipment" },
+        { label: "Order completed" }
+    ];
+
+    const handleFilterData = async (option) => {
+        // setSelectedOption(option);
+        console.log('option selected:', option);
+
+        let newEndPoint = '';
+        if (option === "Order in progress") {
+            newEndPoint = 'InProgress';
+        } else if (option === "Order in shipment") {
+            newEndPoint = 'InShippment';
+        } else if (option === "Order completed") {
+            newEndPoint = 'completed';
+        }
+
+        setSelectedOption(option);
+        console.log('newEndPoint', newEndPoint);
+        //setEndPoint(newEndPoint);
+
+        try {
+            const response = await fetch(ShopNShipOrders + `/${newEndPoint}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+
+
+            })
+            const data = await response.json();
+            setOrderData(data.data.data);
+            console.log('order details', data);
+
+        } catch (error) {
+            console.log("error in order details", error);
+        }
+
+    }
+
+
+    const handleSearch = async () => {
+        console.log('query', query);
+        try {
+            const response = fetch(orderDetails + `/${query}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+            })
+            const data = await response.json();
+            console.log('order details', data);
+
+        } catch (error) {
+            console.log("error in order details", error);
+
+        }
+    }
+
+    useEffect(() => {
+        handleSearch();
+    }, [query]);
 
 
     useEffect(() => {
@@ -51,6 +127,30 @@ const ShopNshipScreen = ({ navigation,route }) => {
                 setIsLoading(false);
             }
         }
+        const get_all_item = async () => {
+            try {
+
+
+                const response = await fetch(get_item_types, {
+
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+
+                })
+                const data = await response.json();
+                setItemType(data.data);
+                console.log('item api response', data);
+
+
+            }
+            catch (error) {
+                console.log(error);
+
+            }
+        }
+        get_all_item();
         fetchData();
     }, []);
 
@@ -69,17 +169,54 @@ const ShopNshipScreen = ({ navigation,route }) => {
 
 
                 <View style={styles.searchContainer}>
-                    <View style={styles.dropdown}>
-                        <Text>All orders </Text>  <Icon name="angle-down" size={20} color="gray" style={styles.searchIcon} />
-                    </View>
+                    <TouchableOpacity style={styles.dropdown} onPress={() => setModalVisible(true)}>
+                        <Text>{selectedOption}</Text>
+                        {
+                            modalVisible ?
+                                <Icon name="angle-up" size={20} color="gray" style={styles.searchIcon} />
+                                :
+                                <Icon name="angle-down" size={20} color="gray" style={styles.searchIcon} />
+                        }
+                    </TouchableOpacity>
+
+
+                    <Modal transparent={true} visible={modalVisible} animationType="fade">
+                        <TouchableOpacity style={styles.modalOverlay} onPress={() => setModalVisible(false)}>
+                            <View style={styles.modalContent}>
+                                {options.map((item, index) => (
+                                    <TouchableOpacity
+                                        key={index}
+                                        style={styles.option}
+                                        onPress={() => {
+                                            setSelectedOption(item.label);
+                                            handleFilterData(item.label);
+                                            setModalVisible(false);
+                                        }}
+                                    >
+                                        <View style={{ desplay: 'flex', justifyContent: 'space-between', flexDirection: 'row', alignItems: 'flex-end', paddingHorizontal: 5, paddingVertical: 5 }}>
+
+                                            <Text style={styles.optionText}>{item.label}</Text>
+                                            <Icon
+                                                name={selectedOption === item.label ? "dot-circle-o" : "circle-o"}
+                                                size={20}
+                                                color={selectedOption === item.label ? "#008000" : "#000"}
+                                                style={styles.radioIcon}
+                                            />
+
+                                        </View>
+                                    </TouchableOpacity>
+                                ))}
+                            </View>
+                        </TouchableOpacity>
+                    </Modal>
                     <View style={styles.inputContainer}>
+                        <Icon name="search" size={20} color="gray" style={styles.searchIcon} />
                         <TextInput
                             style={styles.input}
                             placeholder="Search"
                             value={query}
                             onChangeText={setQuery}
                         />
-                        <Icon name="search" size={20} color="gray" style={styles.searchIcon} />
                     </View>
                 </View>
                 <View style={styles.orderContainer}>
@@ -89,8 +226,9 @@ const ShopNshipScreen = ({ navigation,route }) => {
                         </ShimmerPlaceholder>
                         <TouchableOpacity onPress={() => navigation.navigate('Home', {
                             screen: 'AddShopNShipScreen',
-                            params: { 
-                                itemData: itemType,token: token }
+                            params: {
+                                itemData: itemType, token: token
+                            }
                         })}>
                             <LinearGradient
                                 start={{ x: 0, y: 0 }}
@@ -100,7 +238,11 @@ const ShopNshipScreen = ({ navigation,route }) => {
                                 <Text style={styles.createOrderText}>+ Create Order</Text>
                             </LinearGradient>
                         </TouchableOpacity>
+
                     </View>
+                </View>
+                <View>
+
                 </View>
                 <View>
                     {isLoading ? (
@@ -140,7 +282,15 @@ const ShopNshipScreen = ({ navigation,route }) => {
                                         <Text style={{ fontWeight: 'bold' }}> {order.payment_status}</Text>
                                     </Text>
                                 </View>
-                                <TouchableOpacity onPress={() => navigation.navigate('orderDetailsScreen', { order: order })}>
+                                <TouchableOpacity onPress={() => navigation.navigate('Home',
+                                    {
+                                        screen: 'orderDetailsScreen',
+                                        params:
+                                        {
+                                            order: order, token: token, itemData: itemType,
+
+                                        }
+                                    })}>
                                     <LinearGradient
                                         start={{ x: 0, y: 0 }}
                                         end={{ x: 1, y: 0 }}
@@ -348,11 +498,11 @@ const styles = StyleSheet.create({
         flex: 1
     },
     noDataImage: {
-        width: 180,
-        height: 180,
+        width: 120,
+        height: 120,
         alignSelf: 'center',
-        marginTop: 50,
-        marginBottom: 20,
+        marginTop: 80,
+        marginBottom: 5,
     },
     noDataText: {
         fontSize: 16,
@@ -361,6 +511,31 @@ const styles = StyleSheet.create({
         color: '#2c71bc',
         fontWeight: 'bold'
     },
+    modalOverlay: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "rgba(0,0,0,0.5)",
+    },
+    modalContent: {
+        width: 300,
+        backgroundColor: "#fff",
+
+        padding: 10,
+        elevation: 5,
+    },
+    option: {
+        paddingVertical: 12,
+        paddingHorizontal: 15,
+        borderBottomWidth: 1,
+        borderBottomColor: "#ddd",
+    },
+    optionText: {
+        fontSize: 18,
+    },
+    radioIcon: {
+        alignItems: 'flex-end'
+    }
 
 });
 

@@ -22,12 +22,12 @@ import { Toast } from 'react-native-toast-notifications';
 
 const InternationalShipmentDestinationAddress = ({ navigation, route }) => {
 
-    console.log('final data', route?.params);
+    console.log('final data...', route?.params);
     const token = route?.params?.token;
     console.log('destinatoion data', token);
 
     const orderType = route?.params?.packageBoxes;
-   
+
     console.log("orderType", orderType);
 
     const [isLoading, setIsLoading] = useState(false);
@@ -44,48 +44,71 @@ const InternationalShipmentDestinationAddress = ({ navigation, route }) => {
     const [destinationCountry, setDestinationCountry] = useState('');
     const [destinationRemark, setDestinationRemark] = useState('');
 
+    const [errors, setErrors] = useState({});
+
     //console.log("0000000000",destinationFirstName,destinationLastName,destinationState,destinationCity,destinationStreet,destinationStreet2,destinationPin,destinationPhone,destinationCountry,destinationRemark);
 
+    const validateForm = () => {
+        let newErrors = {};
 
+        if (!destinationFirstName.trim()) newErrors.destinationFirstName = 'First Name is required';
+        if (!destinationLastName.trim()) newErrors.destinationLastName = 'Last Name is required';
+    
+     if (!destinationPhone.trim()) {
+            newErrors.destinationPhone = 'Enter a valid mobile number';
+        }
+        if (!destinationStreet.trim()) newErrors.destinationStreet = 'Street Address is required';
+        if (!destinationCity.trim()) newErrors.destinationCity = 'City is required';
+        if (!destinationState.trim()) newErrors.destinationState = 'State is required';
+        if (!destinationCountry.trim()) newErrors.destinationCountry = 'Country is required';
+     
+       if (!/^\d{6}$/.test(destinationPin)) {
+            newErrors.destinationPin = 'Enter a valid 6-digit pin code';
+        }
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
 
     const handleSubmit = async () => {
-        console.log('final data', route?.params?.pickupData.courierType);
-        setIsLoading(true);
-        try {
-            const response = await fetch(createInternationalShipmentOrder, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                    
+        
+            //console.log('final data', route?.params?.destinationData.courierType);
+            try {
+                setIsLoading(true);
+                const response = await fetch(createInternationalShipmentOrder, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+
                         result: [
                             {
-                                "orderSubType": 1,
-                                "courierType":route?.params?.pickupData.courierType,
+                                "orderSubType": route?.params?.pickupData.orderSubType,
+                                "courierType": route?.params?.pickupData.courierType,
                                 "clientOrderId": route?.params?.pickupData.clientOrderId,
                                 "prescription": null,
                                 "bill": null,
                                 "payLater": "yes",
-                                "pickupFirstName": route?.params?.pickupData.pickupFirstName,
-                                "pickupLastName": route?.params?.pickupData.pickupLastName,
-                                "pickupEmail": route?.params?.pickupData.pickupEmail,
-                                "pickupCountry": route?.params?.pickupData.pickupCountry,
-                                "pickupState": route?.params?.pickupData.pickupState,
-                                "pickupCity": route?.params?.pickupData.pickupCity,
-                                "pickupStreet": route?.params?.pickupData.pickupStreet,
-                                "pickupStreet2":route?.params?.pickupData.pickupStreet2,
-                                "pickupPin": route?.params?.pickupData.pickupPin,
-                                "pickupPhone": route?.params?.pickupData.pickupPhone,
+                                "pickupFirstName":  route?.params?.pickupData.pickupFirstName,
+                                "pickupLastName":  route?.params?.pickupData.pickupLastName,
+                                "pickupCountry":  route?.params?.pickupData.pickupCountry,
+                                "pickupState":  route?.params?.pickupData.pickupState,
+                                "pickupCity":  route?.params?.pickupData.pickupCity,
+                                "pickupStreet":  route?.params?.pickupData.pickupStreet ,
+                                "pickupStreet2":  route?.params?.pickupData.pickupStreet2,
+                                "pickupPin":  route?.params?.pickupData.pickupPin,
+                                "pickupPhone":  route?.params?.pickupData.pickupPhone,
+                                "pickupEmail":  route?.params?.pickupData.pickupEmail,
                                 "destinationFirstName": destinationFirstName,
                                 "destinationLastName": destinationLastName,
                                 "destinationCountry": destinationCountry,
-                                "destinationState":destinationState,
+                                "destinationState": destinationState,
                                 "destinationCity": destinationCity,
                                 "destinationStreet": destinationStreet,
                                 "destinationStreet2": destinationStreet2,
-                                "destinationPin":destinationPin,
+                                "destinationPin": destinationPin,
                                 "destinationPhone": destinationPhone,
                                 "destinationRemark": destinationRemark,
                                 "packageBoxes": route?.params?.packageBoxes,
@@ -97,26 +120,35 @@ const InternationalShipmentDestinationAddress = ({ navigation, route }) => {
                                 "image": ["base64_encoded_image_1", "base64_encoded_image_2"]
                             }
                         ]
-            })
-            })
-            const data = await response.json();
-            console.log('shop n ship response', data);
-            if (data.status === true) {
-                navigation.navigate('DashBoardScreen');
-                Toast.show(data.message, Toast.SHORT);
+                    })
+                })
+                const data = await response.json();
+                console.log('shop n ship response', data);
+                if (data.status === true) {
+                    navigation.navigate('DashBoardScreen');
+                    Toast.show(data.message, { type: 'success',style: { width:500}});
+                    setIsLoading(false);
+                }
+                else {
+                    Toast.show(data.error,{ type: 'warning',style: { width:500}});
+                    setIsLoading(false);
+                }
+
                 setIsLoading(false);
             }
-            else {
-                Toast.show(data.error, Toast.SHORT);
+            catch(error) {
+                console.log(error);
+                setIsLoading(false);
             }
+        }
 
-            setIsLoading(false);
-        }
-        catch {
-            console.log(error);
-            setIsLoading(false);
-        }
-    }
+
+        const handleCreteOrder = () => {
+            if (validateForm()) {
+                handleSubmit();
+            }
+        };
+    
 
     return (
         <Layout>
@@ -139,32 +171,54 @@ const InternationalShipmentDestinationAddress = ({ navigation, route }) => {
                                     style={styles.input}
                                     placeholder="Enter FirstName"
                                     value={destinationFirstName}
-                                    onChangeText={(value) => setDestinationFirstName(value)}
+                                    onChangeText={(value) => {
 
+                                        setDestinationFirstName(value)
+                                        if (value.trim() !== '') {
+                                            setErrors((prevErrors) => ({ ...prevErrors, destinationFirstName: '' }));
+                                        }
+                                    }
+                                    }
 
                                 />
                             </View>
+                            {errors.destinationFirstName && <Text style={styles.errorText}>{errors.destinationFirstName}</Text>}
                             <View style={styles.inputGroup}>
                                 <Text style={styles.label}>Last Name*</Text>
                                 <TextInput
                                     style={styles.input}
                                     placeholder="Enter LastName"
                                     value={destinationLastName}
-                                    onChangeText={(value) => setDestinationLastName(value)}
+                                    onChangeText={(value) => {
+
+                                        setDestinationLastName(value)
+                                        if (value.trim() !== '') {
+                                            setErrors((prevErrors) => ({ ...prevErrors, destinationLastName: '' }));
+                                        }
+                                    }
+                                    }
 
 
                                 />
                             </View>
+                            {errors.destinationLastName && <Text style={styles.errorText}>{errors.destinationLastName}</Text>}
                             <View style={styles.inputGroup}>
                                 <Text style={styles.label}>Country*</Text>
                                 <TextInput
                                     style={styles.input}
-                                    placeholder="Enter Email"
+                                    placeholder="Enter country"
                                     value={destinationCountry}
-                                    onChangeText={(value) => setDestinationCountry(value)}
+                                    onChangeText={(value) => {
 
+                                        setDestinationCountry(value)
+                                        if (value.trim() !== '') {
+                                            setErrors((prevErrors) => ({ ...prevErrors, destinationCountry: '' }));
+                                        }
+                                    }
+                                    }
                                 />
                             </View>
+                            {errors.destinationCountry && <Text style={styles.errorText}>{errors.destinationCountry}</Text>}
 
                             <View style={styles.inputGroup}>
                                 <Text style={styles.label}>State</Text>
@@ -172,7 +226,14 @@ const InternationalShipmentDestinationAddress = ({ navigation, route }) => {
                                     style={styles.input}
                                     placeholder="Enter State"
                                     value={destinationState}
-                                    onChangeText={(value) => setDestinationState(value)}
+                                    onChangeText={(value) => {
+
+                                        setDestinationState(value)
+                                        if (value.trim() !== '') {
+                                            setErrors((prevErrors) => ({ ...prevErrors, destinationState: '' }));
+                                        }
+                                    }
+                                    }
 
                                 />
                             </View>
@@ -182,68 +243,114 @@ const InternationalShipmentDestinationAddress = ({ navigation, route }) => {
                                     style={styles.input}
                                     placeholder="Enter city"
                                     value={destinationCity}
-                                    onChangeText={(value) => setDestinationCity(value)}
+                                    onChangeText={(value) => {
 
+                                        setDestinationCity(value)
+                                        if (value.trim() !== '') {
+                                            setErrors((prevErrors) => ({ ...prevErrors, destinationCity: '' }));
+                                        }
+                                    }
+                                    }
 
                                 />
                             </View>
+                            {errors.destinationCity && <Text style={styles.errorText}>{errors.destinationCity}</Text>}
                             <View style={styles.inputGroup}>
                                 <Text style={styles.label}>Street Address 1*</Text>
                                 <TextInput
                                     style={styles.input}
                                     placeholder="Enter street address 1"
                                     value={destinationStreet}
-                                    onChangeText={(value) => setDestinationStreet(value)}
+                                    onChangeText={(value) => {
+
+                                        setDestinationStreet(value)
+                                        if (value.trim() !== '') {
+                                            setErrors((prevErrors) => ({ ...prevErrors, destinationStreet: '' }));
+                                        }
+                                    }
+                                    }
 
 
                                 />
                             </View>
+                            {errors.destinationStreet && <Text style={styles.errorText}>{errors.destinationStreet}</Text>}
                             <View style={styles.inputGroup}>
                                 <Text style={styles.label}>Street Address 2 </Text>
                                 <TextInput
                                     style={styles.input}
                                     placeholder="Enter street address "
                                     value={destinationStreet2}
-                                    onChangeText={(value) => setDestinationStreet2(value)}
+                                    onChangeText={(value) => {
+
+                                        setDestinationStreet2(value)
+                                        if (value.trim() !== '') {
+                                            setErrors((prevErrors) => ({ ...prevErrors, destinationStreet2: '' }));
+                                        }
+                                    }
+                                    }
 
 
                                 />
                             </View>
                             <View style={styles.inputGroup}>
-                                <Text style={styles.label}>Pin code*</Text>
+                                <Text style={styles.label}>Pin code</Text>
                                 <TextInput
                                     style={styles.input}
                                     placeholder="Enter pin code"
                                     value={destinationPin}
-                                    onChangeText={(value) => setDestinationPin(value)}
+                                    onChangeText={(value) => {
+
+                                        setDestinationPin(value)
+                                        if (value.trim() !== '') {
+                                            setErrors((prevErrors) => ({ ...prevErrors, destinationPin: '' }));
+                                        }
+                                    }
+                                    }
 
 
                                 />
                             </View>
+                            {/* {errors.destinationPin && <Text style={styles.errorText}>{errors.destinationPin}</Text>} */}
                             <View style={styles.inputGroup}>
-                                <Text style={styles.label}>Mobile Number*</Text>
+                                <Text style={styles.label}>Mobile Number</Text>
                                 <TextInput
                                     style={styles.input}
                                     placeholder="Enter mobile number"
                                     value={destinationPhone}
-                                    onChangeText={(value) => setDestinationPhone(value)}
+                                    onChangeText={(value) => {
+
+                                        setDestinationPhone(value)
+                                        if (value.trim() !== '') {
+                                            setErrors((prevErrors) => ({ ...prevErrors, destinationPhone: '' }));
+                                        }
+                                    }
+                                    }
 
                                 />
                             </View>
+                            {/* {errors.destinationPhone && <Text style={styles.errorText}>{errors.destinationPhone}</Text>} */}
                             <View style={styles.inputGroup}>
-                                <Text style={styles.label}>Remarks*</Text>
+                                <Text style={styles.label}>Remarks</Text>
                                 <TextInput
                                     style={styles.input}
                                     placeholder="Remarks"
                                     value={destinationRemark}
-                                    onChangeText={(value) => setDestinationRemark(value)}
+                                    onChangeText={(value) => {
+
+                                        setDestinationRemark(value)
+                                        if (value.trim() !== '') {
+                                            setErrors((prevErrors) => ({ ...prevErrors, destinationRemark: '' }));
+                                        }
+                                    }
+                                    }
 
                                 />
                             </View>
+                            {/* {errors.destinationRemark && <Text style={styles.errorText}>{errors.destinationRemark}</Text>} */}
                         </View>
                         <View style={styles.footer}>
                             <View style={{ width: '100%', justifyContent: 'flex-end', alignItems: 'flex-end' }}>
-                                <TouchableOpacity onPress={handleSubmit}>
+                                <TouchableOpacity onPress={handleCreteOrder}>
                                     <LinearGradient
                                         start={{ x: 0, y: 0 }}
                                         end={{ x: 1, y: 0 }}

@@ -1,16 +1,19 @@
-import React, { useState } from 'react'
+import React, { useState,useContext } from 'react'
 import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { CreateNewAddressURl } from '../../services/apiServices';
 import Loader from '../../Components/Modals/Loader';
 import { Toast } from 'react-native-toast-notifications';
 import { useNavigation } from '@react-navigation/native';
+import { AuthContext } from '../../Context/authContext';
+
 
 
 
 const CreateNewAddress = () => {
 
     const navigation = useNavigation();
+    const {token} = useContext(AuthContext);
     console.log('create address url', CreateNewAddressURl)
 
     const [isLoading, setIsLoading] = useState(false);
@@ -22,7 +25,7 @@ const CreateNewAddress = () => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L215eGJvcmRlci9hcGkvdjEvdmVyaWZ5X2VtYWlsX290cCIsImlhdCI6MTc0MDEzMTM5NiwibmJmIjoxNzQwMTMxMzk2LCJqdGkiOiJzU2trZEJQTDJ0VDRPSXJzIiwic3ViIjoiMTc3MCIsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.4DIewxHyolVv0u1kB6yToZ0hIeINWPDWBBH_fBNdTHo'
+                    'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify({
                     firstName: "ved",
@@ -51,7 +54,7 @@ const CreateNewAddress = () => {
             if (data.status === true) {
                 setIsLoading(false)
                 navigation.navigate('ShopNshipScreen');
-                Toast.show('order created successfully', Toast.Short)
+                Toast.show('order created successfully', { type: 'success',style: { width:500}})
             }
 
 

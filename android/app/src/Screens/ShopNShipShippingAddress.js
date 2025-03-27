@@ -16,7 +16,7 @@ import ExistaddressList from './Address/ExistaddressList';
 import CreateNewAddress from './Address/CreateNewAddress';
 import Loader from '../Components/Modals/Loader';
 import { Toast } from 'react-native-toast-notifications';
-import { get_courier_types,get_order_types } from '../services/apiServices';
+import { get_courier_types, get_order_types } from '../services/apiServices';
 
 const ShopNshipShipmentAddress = ({ navigation, route }) => {
 
@@ -24,8 +24,8 @@ const ShopNshipShipmentAddress = ({ navigation, route }) => {
     const token = route?.params?.token;
     // const orderType = route?.params?.orderType;
     // const courierType = route?.params?.CourierType;
-    const[orderType,setOrderType]=useState([]);
-    const[courierType,setCourierType]=useState([]);
+    const [orderType, setOrderType] = useState([]);
+    const [courierType, setCourierType] = useState([]);
 
     //console.log("0000000000", courierType,token);
 
@@ -83,11 +83,11 @@ const ShopNshipShipmentAddress = ({ navigation, route }) => {
     const OrderData = orderType?.map(item => item.name);
     const CourierData = courierType?.map(item => item.name);
 
- 
+
     //const CourierType = courierType.map(item => item.name);
 
     const order_url = route?.params?.additems[0]?.trackingNumber ? createShopNShipOrder : createAssistedSopNShipOrder;
-    //console.log('order_url',order_url)
+
 
     const [goAddress, setGoAddress] = useState(false);
     const [creteAddress, setCreateAddress] = useState(false);
@@ -98,15 +98,17 @@ const ShopNshipShipmentAddress = ({ navigation, route }) => {
     const [isLoading, setIsLoading] = useState(false); // State for order items
 
 
-    // const CourierType = [
-    //     "Normal",
-    //     "premium"
-    // ]
+    // console.log('selected order type', selectedOrderType)
+    // console.log('selected courier type', selectedCourierType)
 
+
+    const num = Number(selectedOrderType);
+    const initialOrderValue = !isNaN(num) ? num - 1 : 0; // Defaulting to 0 if invalid
+    console.log('Initial value:', initialValue);
     const handleCreateOrder = async (address) => {
         // console.log('address id ', address);
-        console.log('selected order type', selectedOrderType)
-        
+       
+
 
         setIsLoading(true);
         try {
@@ -117,8 +119,8 @@ const ShopNshipShipmentAddress = ({ navigation, route }) => {
                     'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify({
-                    orderSubType: 2,
-                    courierType: 2,
+                    orderSubType: selectedOrderType,
+                    courierType: selectedCourierType,
                     addressId: address,
                     remark: "Urgent delivery",
                     chat: "Please deliver fast",
@@ -174,18 +176,28 @@ const ShopNshipShipmentAddress = ({ navigation, route }) => {
                                                 <Text style={styles.label}>Order Type*</Text>
                                                 <DropDown
                                                     items={OrderData}
-                                                     label="Please select Order Type"
-                                                    initialValue={selectedOrderType}
-                                                    onChange={(value) => setSelectedOrderType(value)} // This now holds the ID
+                                                    label="Please select Order Type"
+                                                    initialValue={initialOrderValue}
+                                                    onChange={(value) => {
+
+                                                        const newValue = String(Number(value) + 1);
+                                                        setSelectedOrderType(newValue);
+                                                    }
+                                                    }
                                                 />
                                             </View>
                                             <View style={styles.inputGroup}>
                                                 <Text style={styles.label}>Courier Type*(click here for shipping rates)</Text>
                                                 <DropDown
                                                     items={CourierData}
-                                                     label="Please select Courier Type"
+                                                    label="Please select Courier Type"
                                                     initialValue={selectedCourierType}
-                                                    onChange={(value) => setSelectedCourierType(value)} // This now holds the ID
+                                                    onChange={(value) => {
+
+                                                        const newValue = String(Number(value) + 1);
+                                                        setSelectedCourierType(newValue);
+                                                    }
+                                                    }
                                                 />
                                             </View>
                                         </View>

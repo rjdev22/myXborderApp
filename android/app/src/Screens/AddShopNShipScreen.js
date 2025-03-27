@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react';
 import {
     View,
     Text,
+    Alert,
     TextInput,
     StyleSheet,
     ScrollView,
-    TouchableOpacity
+    TouchableOpacity  
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Layout from '../Components/Common/Layout';
@@ -15,16 +16,17 @@ import { get_item_types } from '../services/apiServices';
 
 const AddShopNShipScreen = ({ navigation, route }) => {
 
-    const itemType = route?.params?.itemData || [];
-    const CourierType=route?.params?.courierData || [];
-    const orderType=route?.params?.orderData || [];
-    const token=route?.params?.token;
-  
-   // console.log('kjfrjfr',token,itemType,CourierType,orderType);
+    const itemData = route?.params?.itemData || [];
+    const CourierType = route?.params?.courierData || [];
+    const orderType = route?.params?.orderData || [];
+    const token = route?.params?.token;
 
-    const itemTypes = itemType.map(item => item.itemType);
+
+    const itemTypes = itemData.map(item => item.itemType);
+    console.log('kjfrjfr', itemTypes,);
 
     //const[itemsData,setItemData]=useState([])
+    
     const [remark, setRemark] = useState('');
     const [errors, setErrors] = useState([]);
     const [items, setItems] = useState([
@@ -47,6 +49,18 @@ const AddShopNShipScreen = ({ navigation, route }) => {
         const updatedItems = [...items];
         updatedItems[index][field] = value;
         setItems(updatedItems);
+
+        if (field === 'itemType' && value === "1") {
+            Alert.alert("Alert", "Additional document required for shipping through out trusted shipping partners i.e. COA. and MSDA.Otherwise we can only ship via India Post!");
+        }
+        if (field === 'itemType' && value === "10") {
+            Alert.alert("Alert", "valuation ceritificate might be required by customs for shipping!");
+        }
+        if (field === 'itemType' && value === "9") {
+            Alert.alert("Alert", "Please insure there is no batteries in the package,Please Check with our support before placing orders ");
+        }
+    
+    
 
         setErrors(prevErrors => {
             const updatedErrors = [...prevErrors];
@@ -74,6 +88,12 @@ const AddShopNShipScreen = ({ navigation, route }) => {
         ]);
     };
 
+
+
+
+
+
+
     const validateFields = () => {
         let isValid = true;
         const newErrors = items.map(item => {
@@ -91,6 +111,10 @@ const AddShopNShipScreen = ({ navigation, route }) => {
                 itemErrors.quantity = "Quantity is required";
                 isValid = false;
             }
+            if (!item.quantity > 0) {
+                itemErrors.quantity = "Quantity must be atleast 1";
+                isValid = false;
+            }
             if (!item.price) {
                 itemErrors.price = "Price is required";
                 isValid = false;
@@ -106,7 +130,7 @@ const AddShopNShipScreen = ({ navigation, route }) => {
 
     const handleNext = () => {
         if (validateFields()) {
-            navigation.navigate('ShopNshipShipmentAddress', { additems: items, remark,token});
+            navigation.navigate('ShopNshipShipmentAddress', { additems: items, remark, token });
         }
     };
 
@@ -126,12 +150,17 @@ const AddShopNShipScreen = ({ navigation, route }) => {
                                 <DropDown
                                     style={styles.input}
                                     items={itemTypes}
-                                     label="Please select Item Type"
-                                    initialValue={item.itemType}
-                                    onChange={(value) => handleInputChange(index, 'itemType', value)}
+                                    label="Please select Item Type"
+                                    initialValue={itemTypes[Math.max(0, itemTypes.indexOf(item.itemType) - 1)]}
+                                    onChange={(value) => {
+                                       const newValue = String(Number(value) + 1);
+                                        handleInputChange(index, 'itemType', newValue);
+
+
+                                    }}
                                 />
                             </View>
-                                  {errors[index]?.itemType && <Text style={styles.errorText}>{errors[index].itemType}</Text>}
+                            {errors[index]?.itemType && <Text style={styles.errorText}>{errors[index].itemType}</Text>}
                             <View style={styles.inputGroup}>
                                 <Text style={styles.label}>Item Name*</Text>
                                 <TextInput
@@ -143,7 +172,7 @@ const AddShopNShipScreen = ({ navigation, route }) => {
 
                                 />
                             </View>
-                                 {errors[index]?.itemName && <Text style={styles.errorText}>{errors[index].itemName}</Text>}
+                            {errors[index]?.itemName && <Text style={styles.errorText}>{errors[index].itemName}</Text>}
                             <View style={styles.inputGroup}>
                                 <Text style={styles.label}>Online Store</Text>
                                 <TextInput
@@ -152,7 +181,7 @@ const AddShopNShipScreen = ({ navigation, route }) => {
                                     value={item.store}
                                     onChangeText={(value) => handleInputChange(index, 'store', value)}
                                 />
-                  
+
                             </View>
                             <View style={styles.inputGroup}>
                                 <Text style={styles.label}>Tracking Number</Text>
@@ -162,7 +191,7 @@ const AddShopNShipScreen = ({ navigation, route }) => {
                                     value={item.trackingNumber}
                                     onChangeText={(value) => handleInputChange(index, 'trackingNumber', value)}
                                 />
-                
+
                             </View>
                             <View style={styles.inputGroup}>
                                 <Text style={styles.label}>Color</Text>
@@ -172,7 +201,7 @@ const AddShopNShipScreen = ({ navigation, route }) => {
                                     value={item.color}
                                     onChangeText={(value) => handleInputChange(index, 'color', value)}
                                 />
-                           
+
                             </View>
                             <View style={styles.inputGroup}>
                                 <Text style={styles.label}>Size</Text>
@@ -182,19 +211,19 @@ const AddShopNShipScreen = ({ navigation, route }) => {
                                     value={item.size}
                                     onChangeText={(value) => handleInputChange(index, 'size', value)}
                                 />
-                         
+
                             </View>
                             <View style={styles.inputGroup}>
                                 <Text style={styles.label}>Quantity*</Text>
                                 <TextInput
                                     style={styles.input}
                                     keyboardType="numeric"
-                                    placeholder="1"
+                                    placeholder="0"
                                     value={item.quantity}
                                     onChangeText={(value) => handleInputChange(index, 'quantity', value)}
                                 />
                             </View>
-                                  {errors[index]?.quantity && <Text style={styles.errorText}>{errors[index].quantity}</Text>}
+                            {errors[index]?.quantity && <Text style={styles.errorText}>{errors[index].quantity}</Text>}
                             <View style={styles.inputGroup}>
                                 <Text style={styles.label}>Price* (INR)</Text>
                                 <TextInput
@@ -205,12 +234,12 @@ const AddShopNShipScreen = ({ navigation, route }) => {
                                     onChangeText={(value) => handleInputChange(index, 'price', value)}
                                 />
                             </View>
-                                  {errors[index]?.price && <Text style={styles.errorText}>{errors[index].price}</Text>}
+                            {errors[index]?.price && <Text style={styles.errorText}>{errors[index].price}</Text>}
                         </View>
                     ))}
 
                     <TouchableOpacity style={styles.addItemButton} onPress={addNewItem}>
-                        
+
                         <Text style={styles.addItemText}>+ Add More Item</Text>
                     </TouchableOpacity>
                     <Text style={styles.label}>Remarks</Text>
@@ -254,7 +283,7 @@ const styles = StyleSheet.create({
     grandTotal: { fontSize: 16 },
     nextButton: { paddingVertical: 5, borderRadius: 5, padding: 10, width: 130 },
     nextButtonText: { color: "#fff", fontSize: 16, fontWeight: "bold", textAlign: "center" },
-    errorText:{color:'red',fontSize:12}
+    errorText: { color: 'red', fontSize: 12 }
 });
 
 export default AddShopNShipScreen;

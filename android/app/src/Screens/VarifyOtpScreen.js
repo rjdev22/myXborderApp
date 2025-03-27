@@ -35,9 +35,9 @@ const VarifyOtpScreen = ({ navigation, route }) => {
             console.log('email varification data', data);
             if(data.status === true){
 
-               Toast.show(data.data, Toast.SHORT,{
-                placement: 'top',
-               });
+               Toast.show(data.data, { type: 'success',style: { width:500}}
+           
+               );
             }
             setVisibleModal(false);
         } catch (error) {

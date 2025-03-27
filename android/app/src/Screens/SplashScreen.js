@@ -1,11 +1,9 @@
 import React, { useEffect } from 'react'
 import { View, Image, StyleSheet } from 'react-native'
 const SplashScreen = ({ navigation }) => {
-
-
   useEffect(() => {
     setTimeout(() => {
-      navigation.navigate('HomeScreen')
+      navigation.replace('HomeScreen')
     }, 3000)
   }, [])
 

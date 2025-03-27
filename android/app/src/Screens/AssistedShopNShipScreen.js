@@ -6,13 +6,14 @@ import {
     StyleSheet,
     ScrollView,
     TouchableOpacity,
-    TextInput
+    TextInput,
+    Modal
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import LinearGradient from 'react-native-linear-gradient';
 import Layout from '../Components/Common/Layout';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
-import { AssistedShopNShipOrders } from '../services/apiServices';
+import { AssistedShopNShipOrders, get_item_types } from '../services/apiServices';
 import { useContext } from 'react';
 import { AuthContext } from '../Context/authContext';
 
@@ -23,31 +24,104 @@ const AssistedShopNshipScreen = ({ navigation }) => {
     const [query, setQuery] = useState('');
     const [isLoading, setIsLoading] = useState(true);
     const [orderData, setOrderData] = useState([]);
-        const { token } = useContext(AuthContext);
-        console.log('token', token);
+    const { token } = useContext(AuthContext);
+    const [selectedOption, setSelectedOption] = useState("All orders");
+    const [modalVisible, setModalVisible] = useState(false);
+    const [itemType, setItemType] = useState([]);
 
-     useEffect(() => {
-           async function fetchData() {
-               try {
-                   const response = await fetch(AssistedShopNShipOrders, {
-                       method: 'POST',
-                       headers: {
-                           'authorization': `Bearer ${token}`
-                       },
-                   })
-                   const data = await response.json();
-                   console.log(' assisted shop n ship data', data.data.data);
-                   setOrderData(data.data.data);
-                   setIsLoading(false);
+    const options = [
+        { label: "All orders" },
+        { label: "Order in progress" },
+        { label: "Order in shipment" },
+        { label: "Order completed" }
+    ];
 
-               } catch (error) {
-                   console.log(error);
-                   setIsLoading(false);
-               }
+const handleFilterData = async (option) => {
+        // setSelectedOption(option);
+        console.log('option selected:', option);
 
-           }
-           fetchData();
-       }, []);
+        let newEndPoint = '';
+        if (option === "Order in progress") {
+            newEndPoint = 'InProgress';
+        } else if (option === "Order in shipment") {
+            newEndPoint = 'InShippment';
+        } else if (option === "Order completed") {
+            newEndPoint = 'completed';
+        }
+
+        setSelectedOption(option);
+        console.log('newEndPoint', newEndPoint);
+        //setEndPoint(newEndPoint);
+
+        try {
+            const response = await fetch(AssistedShopNShipOrders + `/${newEndPoint}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+
+
+            })
+            const data = await response.json();
+            setOrderData(data.data.data);
+            console.log('order details', data);
+
+        } catch (error) {
+            console.log("error in order details", error);
+        }
+
+    }
+
+
+
+
+
+    useEffect(() => {
+        async function fetchData() {
+            try {
+                const response = await fetch(AssistedShopNShipOrders, {
+                    method: 'POST',
+                    headers: {
+                        'authorization': `Bearer ${token}`
+                    },
+                })
+                const data = await response.json();
+                console.log(' assisted shop n ship data', data.data.data);
+                setOrderData(data.data.data);
+                setIsLoading(false);
+
+            } catch (error) {
+                console.log(error);
+                setIsLoading(false);
+            }
+
+        }
+        const get_all_item = async () => {
+            try {
+
+
+                const response = await fetch(get_item_types, {
+
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+
+                })
+                const data = await response.json();
+                setItemType(data.data);
+                console.log('item api response', data);
+
+            }
+            catch {
+                console.log(error);
+
+            }
+        }
+        get_all_item();
+        fetchData();
+    }, []);
 
 
 
@@ -55,110 +129,154 @@ const AssistedShopNshipScreen = ({ navigation }) => {
 
     return (
         <Layout>
-        <ScrollView
-            showsVerticalScrollIndicator={false}
-            showsHorizontalScrollIndicator={false}
-            style={styles.content}>
+            <ScrollView
+                showsVerticalScrollIndicator={false}
+                showsHorizontalScrollIndicator={false}
+                style={styles.content}>
 
 
-            <View style={styles.searchContainer}>
-                <View style={styles.dropdown}>
-                    <Text>All orders </Text>  <Icon name="angle-down" size={20} color="gray" style={styles.searchIcon} />
-                </View>
-                <View style={styles.inputContainer}>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Search"
-                        value={query}
-                        onChangeText={setQuery}
-                    />
-                    <Icon name="search" size={20} color="gray" style={styles.searchIcon} />
-                </View>
-            </View>
-            <View style={styles.orderContainer}>
-                <View style={styles.orderHeader}>
-                    <ShimmerPlaceholder visible={!isLoading} style={{ height: 20 }}  >
-                        <Text style={styles.orderCount}>No. of Orders: <Text style={{ color: 'red' }}>({orderData.length})</Text></Text>
-                    </ShimmerPlaceholder>
-                    <TouchableOpacity onPress={() => navigation.navigate('Home', { 
-                        screen: 'AddAssistedShopNShipScreen',
-                        params: { 
-                            token: token }
-                    })
-                        }>
-                        <LinearGradient
-                            start={{ x: 0, y: 0 }}
-                            end={{ x: 1, y: 0 }}
-                            colors={['#d81397', '#0d5cc2']}
-                            style={styles.createOrderButton}>
-                            <Text style={styles.createOrderText}>+ Create Order</Text>
-                        </LinearGradient>
+                <View style={styles.searchContainer}>
+                    <TouchableOpacity style={styles.dropdown} onPress={() => setModalVisible(true)}>
+                        <Text>{selectedOption}</Text>
+                        {
+                            modalVisible ?
+                                <Icon name="angle-up" size={20} color="gray" style={styles.searchIcon} />
+                                :
+                                <Icon name="angle-down" size={20} color="gray" style={styles.searchIcon} />
+                        }
                     </TouchableOpacity>
+
+                    <Modal transparent={true} visible={modalVisible} animationType="fade">
+                        <TouchableOpacity style={styles.modalOverlay} onPress={() => setModalVisible(false)}>
+                            <View style={styles.modalContent}>
+                                {options.map((item, index) => (
+                                    <TouchableOpacity
+                                        key={index}
+                                        style={styles.option}
+                                        onPress={() => {
+                                            setSelectedOption(item.label);
+                                            handleFilterData(item.label);
+                                            setModalVisible(false);
+                                        }}
+                                    >
+                                        <View style={{ desplay: 'flex', justifyContent: 'space-between', flexDirection: 'row', alignItems: 'flex-end', paddingHorizontal: 5, paddingVertical: 5 }} >
+                                        <Text style={styles.optionText}>{item.label}</Text>
+                                        <Icon
+                                            name={selectedOption === item.label ? "dot-circle-o" : "circle-o"}
+                                            size={20}
+                                            color={selectedOption === item.label ? "#008000" : "#000"}
+                                            style={styles.radioIcon}
+                                        />
+                                        </View>
+                                    </TouchableOpacity>
+                                ))}
+                            </View>
+                        </TouchableOpacity>
+                    </Modal>
+
+
+
+                    <View style={styles.inputContainer}>
+                        <Icon name="search" size={20} color="gray" style={styles.searchIcon} />
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Search"
+                            value={query}
+                            onChangeText={setQuery}
+                        />
+                    </View>
                 </View>
-            </View>     
-            <View>
-                {isLoading ? (
-                    <View>
-                    {[...Array(4)].map((_, index) => (
-                      <View key={index} style={styles.orderdetailsContainer}>
-                        <View>
-                          {[...Array(4)].map((_, i) => (
-                            <ShimmerPlaceholder key={i} visible={!isLoading} style={styles.detailPlaceholder} />
-                          ))}
-                        </View>
-                        <ShimmerPlaceholder visible={!isLoading} style={styles.buttonPlaceholder} />
-                      </View>
-                    ))}
-                  </View>
-                  
-                ) : Array.isArray(orderData) && orderData.length > 0 ? (
-                    orderData.map((order, index) => (
-                    <View  key={index} style={styles.orderdetailsContainer}>
-                        <View>
-                            <Text style={styles.detailText}>
-                                <Text style={styles.boldText}>Date:</Text> {order.created_at.split('T')[0]}
-                            </Text>
-
-                            <Text style={styles.detailText}>
-                                <Text style={styles.boldText}>MXB-Order Id:</Text> {order.order_id}
-                            </Text>
-
-                            <Text style={styles.detailText}>
-                                <Text style={styles.boldText}>Order Type:</Text>
-                                <Text style={{ fontWeight: 'bold' }}> {order.orderSubType}</Text>
-                            </Text>
-
-                            <Text style={styles.detailText}>
-                                <Text style={styles.boldText}>Payment Status:</Text>
-                                <Text style={{ fontWeight: 'bold' }}> {order.payment_status}</Text>
-                            </Text>
-                        </View>
-                        <TouchableOpacity onPress={()=>navigation.navigate('orderDetailsScreen',{order:order})}>
-                        <LinearGradient
-                            start={{ x: 0, y: 0 }}
-                            end={{ x: 1, y: 0 }}
-                            colors={['#d81397', '#0d5cc2']}
-                            style={styles.detailsButton}
-                        >
-                            <Text style={styles.detailsButtonText}>Details</Text>
-                        </LinearGradient>
+                <View style={styles.orderContainer}>
+                    <View style={styles.orderHeader}>
+                        <ShimmerPlaceholder visible={!isLoading} style={{ height: 20 }}  >
+                            <Text style={styles.orderCount}>No. of Orders: <Text style={{ color: 'red' }}>({orderData.length})</Text></Text>
+                        </ShimmerPlaceholder>
+                        <TouchableOpacity onPress={() => navigation.navigate('Home', {
+                            screen: 'AddAssistedShopNShipScreen',
+                            params: {
+                                token: token,
+                                itemData: itemType
+                            }
+                        })
+                        }>
+                            <LinearGradient
+                                start={{ x: 0, y: 0 }}
+                                end={{ x: 1, y: 0 }}
+                                colors={['#d81397', '#0d5cc2']}
+                                style={styles.createOrderButton}>
+                                <Text style={styles.createOrderText}>+ Create Order</Text>
+                            </LinearGradient>
                         </TouchableOpacity>
                     </View>
-                    ))
-                ) : (
-                    <View style={styles.noDataContainer}>
-                        <Image source={require('../assets/empty_box.png')} style={styles.noDataImage} />
-                        <Text style={styles.noDataText}>No Orders Available</Text>
-                    </View>
-                )}
-            </View>
-        </ScrollView>
-    </Layout>
+                </View>
+                <View>
+                    {isLoading ? (
+                        <View>
+                            {[...Array(4)].map((_, index) => (
+                                <View key={index} style={styles.orderdetailsContainer}>
+                                    <View>
+                                        {[...Array(4)].map((_, i) => (
+                                            <ShimmerPlaceholder key={i} visible={!isLoading} style={styles.detailPlaceholder} />
+                                        ))}
+                                    </View>
+                                    <ShimmerPlaceholder visible={!isLoading} style={styles.buttonPlaceholder} />
+                                </View>
+                            ))}
+                        </View>
+
+                    ) : Array.isArray(orderData) && orderData.length > 0 ? (
+                        orderData.map((order, index) => (
+                            <View key={index} style={styles.orderdetailsContainer}>
+                                <View>
+                                    <Text style={styles.detailText}>
+                                        <Text style={styles.boldText}>Date:</Text> {order.created_at.split('T')[0]}
+                                    </Text>
+
+                                    <Text style={styles.detailText}>
+                                        <Text style={styles.boldText}>MXB-Order Id:</Text> {order.order_id}
+                                    </Text>
+
+                                    <Text style={styles.detailText}>
+                                        <Text style={styles.boldText}>Order Type:</Text>
+                                        <Text style={{ fontWeight: 'bold' }}> {order.orderSubType}</Text>
+                                    </Text>
+
+                                    <Text style={styles.detailText}>
+                                        <Text style={styles.boldText}>Payment Status:</Text>
+                                        <Text style={{ fontWeight: 'bold' }}> {order.payment_status}</Text>
+                                    </Text>
+                                </View>
+                                <TouchableOpacity onPress={() => navigation.navigate('Home', {
+                                    screen: 'orderDetailsScreen',
+                                    params: {
+                                        order: order, type: 'assisted'
+                                    }
+                                })}>
+                                    <LinearGradient
+                                        start={{ x: 0, y: 0 }}
+                                        end={{ x: 1, y: 0 }}
+                                        colors={['#d81397', '#0d5cc2']}
+                                        style={styles.detailsButton}
+                                    >
+                                        <Text style={styles.detailsButtonText}>Details</Text>
+                                    </LinearGradient>
+                                </TouchableOpacity>
+                            </View>
+                        ))
+                    ) : (
+                        <View style={styles.noDataContainer}>
+                            <Image source={require('../assets/empty_box.png')} style={styles.noDataImage} />
+                            <Text style={styles.noDataText}>No Orders Available</Text>
+                        </View>
+                    )}
+                </View>
+            </ScrollView>
+        </Layout>
     );
 };
 
 const styles = StyleSheet.create({
-    content: { padding: 10,},
+    content: { padding: 10, },
     searchContainer: {
         display: "flex",
         flexDirection: "row",
@@ -338,8 +456,8 @@ const styles = StyleSheet.create({
         width: 120,
         height: 120,
         alignSelf: 'center',
-        marginTop: 50,
-        marginBottom: 20,
+        marginTop: 80,
+        marginBottom: 5,
     },
     noDataText: {
         fontSize: 16,
@@ -348,6 +466,29 @@ const styles = StyleSheet.create({
         color: '#2c71bc',
         fontWeight: 'bold'
     },
+    modalOverlay: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "rgba(0,0,0,0.5)",
+    },
+    modalContent: {
+        width: 300,
+        backgroundColor: "#fff",
+
+        padding: 10,
+        elevation: 5,
+    },
+    option: {
+        paddingVertical: 12,
+        paddingHorizontal: 15,
+        borderBottomWidth: 1,
+        borderBottomColor: "#ddd",
+    },
+    optionText: {
+        fontSize: 18,
+    },
+
 
 });
 

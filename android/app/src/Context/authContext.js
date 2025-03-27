@@ -5,26 +5,9 @@ export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const[userData,setUserData]=useState(null);
- // const [accessToken, setAccessToken] = useState(null);
- // const[address,setAddress]=useState(null);
- // const[refreshAlertData,setRefreshAlertData]=useState(false);
-
-  //const [isLoading, setIsLoading] = useState(true);
-
-//   useEffect(() => {
-//     const checkToken = async () => {
-//       //const token = await AsyncStorage.getItem('userToken');
-//       //const token ='47|qvkxPNtzKn0A0i4WvrqoobCwgQAxqMkcrr1Po53Sacd126ff'
-//       const token=accessToken;
-//       if (token) {
-//         setAccessToken(token);
-//       }
-//       setIsLoading(false);
-//     };
-//     checkToken();
-//   }, []);
 
 const [token, setToken] = useState(null);
+const[pageRefresh,setPageRefresh]=useState(false);
 
 useEffect(() => {
   const getToken = async () => {
@@ -33,11 +16,13 @@ useEffect(() => {
   };
   getToken();
 }, []);
-
-
-
+       
   return (
-    <AuthContext.Provider value={{userData,setUserData ,token,setToken}}>
+    <AuthContext.Provider value={{
+      userData,setUserData 
+      ,token,setToken
+      ,pageRefresh,setPageRefresh
+      }}>
       {children}
     </AuthContext.Provider>
   );

@@ -16,13 +16,13 @@ import { get_item_types } from '../services/apiServices';
 
 const InternationalShipmentPackageInformation = ({ navigation, route }) => {
     console.log('route data-', route.params);
-    const token=route?.params?.token
+    const token = route?.params?.token
     const pickupData = route.params;
 
 
 
-    const [packageBoxes, setPackageBoxes] = useState(0)
-    const [packageWeight, setPackageWeight] = useState(0)
+    const [packageBoxes, setPackageBoxes] = useState('')
+    const [packageWeight, setPackageWeight] = useState('')
     const [packageHeight, setPackageHeight] = useState(1);
     const [PackageWidth, setPackageWidth] = useState(1);
     const [PackageDepth, setPackageDepth] = useState(1);
@@ -34,6 +34,9 @@ const InternationalShipmentPackageInformation = ({ navigation, route }) => {
     //const[itemsData,setItemData]=useState([])
     const [remark, setRemark] = useState('');
     const [errors, setErrors] = useState([]);
+    const [itemType, setItemType] = useState([]);
+    const itemTypes = itemType.map(item => item.itemType);
+
     const [items, setItems] = useState([
         {
             itemName: '',
@@ -44,8 +47,37 @@ const InternationalShipmentPackageInformation = ({ navigation, route }) => {
 
         }
     ]);
-    
-    
+    useEffect(() => {
+        const get_all_item = async () => {
+            try {
+                const response = await fetch(get_item_types, {
+
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+
+                })
+                const data = await response.json();
+                setItemType(data.data);
+                console.log('item api response', data);
+
+            }
+            catch (error) {
+                console.log(error);
+
+            }
+        }
+        get_all_item();
+       
+    }, []);
+
+
+
+
+
+
+
     const handleInputChange = (index, field, value) => {
         const updatedItems = [...items];
         updatedItems[index][field] = value;
@@ -54,18 +86,18 @@ const InternationalShipmentPackageInformation = ({ navigation, route }) => {
             const quantity = parseInt(updatedItems[index].itemQuantity) || 0;
             updatedItems[index].itemTotalPrice = price * quantity;
         }
-        
-        
-        
+
+
+
         setItems(updatedItems);
-        
+
         setErrors(prevErrors => {
             const updatedErrors = [...prevErrors];
             if (value) updatedErrors[index] = { ...updatedErrors[index], [field]: '' };
             return updatedErrors;
         });
     };
-    
+
     // Add new item
     const addNewItem = () => {
         setItems([
@@ -75,20 +107,25 @@ const InternationalShipmentPackageInformation = ({ navigation, route }) => {
                 itemName: '',
                 itemType: 0,
                 itemPrice: 0,
-                itemTotalPrice:0,
+                itemTotalPrice: 0,
                 itemQuantity: 0,
 
             }
         ]);
     };
-    
+
     console.log('data', packageBoxes, packageHeight, packageWeight, PackageWidth, PackageDepth, items, pickupData);
     const validateFields = () => {
         let isValid = true;
         const newErrors = items.map(item => {
             let itemErrors = {};
-            if (packageBoxes === 0) {
-                itemErrors.packageBoxes = "Number of boxes is required";
+            if (!packageBoxes || packageBoxes <= 0) {
+                itemErrors.packageBoxes = "Number of boxes is required and must be greater than 0";
+                isValid = false;
+            }
+
+            if (!packageWeight || packageWeight <= 0) {
+                itemErrors.packageWeight = "Weight of package is required and must be greater than 0";
                 isValid = false;
             }
 
@@ -119,7 +156,7 @@ const InternationalShipmentPackageInformation = ({ navigation, route }) => {
 
     const handleNext = () => {
         if (validateFields()) {
-            navigation.navigate('InternationalShipmentDestinationAddress', { packageBoxes, packageHeight, packageWeight, PackageWidth, PackageDepth, items, pickupData,token });
+            navigation.navigate('InternationalShipmentDestinationAddress', { packageBoxes, packageHeight, packageWeight, PackageWidth, PackageDepth, items, pickupData, token });
         }
     };
 
@@ -146,10 +183,10 @@ const InternationalShipmentPackageInformation = ({ navigation, route }) => {
                             //value={item.itemName}
                             onChangeText={(value) => setPackageBoxes(value)}
 
-
                         />
                     </View>
-                    
+                    {errors[0]?.packageBoxes && packageBoxes === '' && <Text style={styles.errorText}>{errors[0].packageBoxes}</Text>}
+
 
 
                     <View style={styles.inputGroup}>
@@ -162,6 +199,7 @@ const InternationalShipmentPackageInformation = ({ navigation, route }) => {
                             onChangeText={(value) => setPackageWeight(value)}
                         />
                     </View>
+                    {errors[0]?.packageWeight && packageWeight === '' && <Text style={styles.errorText}>{errors[0].packageWeight}</Text>}
 
                     <View style={styles.inputGroup}>
                         <Text style={styles.label}>Height (in cm):</Text>
@@ -200,29 +238,20 @@ const InternationalShipmentPackageInformation = ({ navigation, route }) => {
                             </TouchableOpacity>
                         </View>
                     </View>
-
-
                     {items.map((item, index) => (
                         <View key={item.id} style={styles.itemContainer}>
-                            {/* <View style={styles.inputGroup}>
+                           
+                            <View style={styles.inputGroup}>
                                 <Text style={styles.label}>Item Type*</Text>
                                 <DropDown
                                     style={styles.input}
                                     items={itemTypes}
-                                     label="Please select Item Type"
+                                    label="Please select Item Type"
                                     initialValue={item.itemType}
-                                    onChange={(value) => handleInputChange(index, 'itemType', value)}
-                                />
-                            </View>
-                                  {errors[index]?.itemType && <Text style={styles.errorText}>{errors[index].itemType}</Text>} */}
-                            <View style={styles.inputGroup}>
-                                <Text style={styles.label}>Item Type*</Text>
-                                <TextInput
-                                    style={styles.input}
-                                    placeholder="Enter item name"
-                                    value={item.itemType}
-                                    onChangeText={(value) => handleInputChange(index, 'itemType', value)}
-
+                                    onChange={(value) => {
+                                        const newValue = String(Number(value) + 1);
+                                        handleInputChange(index, 'itemType', newValue);
+                                    }}
                                 />
                             </View>
                             {errors[index]?.itemType && <Text style={styles.errorText}>{errors[index].itemType}</Text>}
@@ -234,7 +263,6 @@ const InternationalShipmentPackageInformation = ({ navigation, route }) => {
                                     value={item.itemName}
                                     onChangeText={(value) => handleInputChange(index, 'itemName', value)}
                                 />
-
                             </View>
                             {errors[index]?.itemName && <Text style={styles.errorText}>{errors[index].itemName}</Text>}
 
@@ -257,9 +285,9 @@ const InternationalShipmentPackageInformation = ({ navigation, route }) => {
                                     placeholder="0"
                                     value={item.itemPrice}
                                     onChangeText={(value) =>
-                                         handleInputChange(index, 'itemPrice', value)
-                
-                                        }
+                                        handleInputChange(index, 'itemPrice', value)
+
+                                    }
                                 />
                             </View>
 
@@ -269,7 +297,7 @@ const InternationalShipmentPackageInformation = ({ navigation, route }) => {
                                 <Text
                                     style={styles.input}
                                 >
-                                 {item.itemPrice*item.itemQuantity}
+                                    {item.itemPrice * item.itemQuantity}
                                 </Text>
 
                             </View>

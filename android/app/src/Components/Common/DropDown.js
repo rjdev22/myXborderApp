@@ -14,7 +14,7 @@ const DropDown = ({ items, initialValue, onChange,label }) => {
     setSelectedVal(value);
     if (onChange) {
       onChange(value);
-    }
+    } 
   };
 
   return (
@@ -40,8 +40,7 @@ const DropDown = ({ items, initialValue, onChange,label }) => {
 
 const styles = StyleSheet.create({
   picker: {
-    
-    width: '100%',
+    width: '80%',
     fontSize: 14,
     color: '#333333',
     fontWeight: 'bold',

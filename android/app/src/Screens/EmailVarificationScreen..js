@@ -57,12 +57,12 @@ const EmailVarificationScreen = ({ navigation, route }) => {
             console.log('email verification data', data);
             
             if (data.status === true) {
-                Toast.show(data.data, Toast.SHORT);
+                Toast.show(data.data,{ type: 'success',style: { width:500}});
                 setIsEmailSent(true);
                 setCountdown(600); // Reset countdown
                 setIsCounting(true); // Show OTP field after successful email send
             } else {
-                Toast.show(data.error, Toast.SHORT);
+                Toast.show(data.error,{ type: 'warning',style: { width:500 }});
             }
         } catch (error) {
             console.log(error);
@@ -84,7 +84,7 @@ const EmailVarificationScreen = ({ navigation, route }) => {
             
             
             if (data.status === true) {
-                Toast.show('Congrats! You are varified user', Toast.SHORT);
+                Toast.show('Congrats! You are varified user', { type: 'success',style: { width: 500 }});
                 console.log('otp verification data', data.data.token);
     
                await AsyncStorage.setItem("token", data.data.token);
@@ -102,14 +102,13 @@ const EmailVarificationScreen = ({ navigation, route }) => {
                 })
             );
             } else {
-                Toast.show(data.error, Toast.SHORT);
+                Toast.show(data.error, { type: 'warning',style: { width: 500 }});
             }
         } catch (error) {
             console.log(error);
         }
         setVisibleModal(false);
     };
-
 
     return (
         <EmailVarificationLayout>
@@ -140,6 +139,7 @@ const EmailVarificationScreen = ({ navigation, route }) => {
                                 placeholder="Enter OTP"
                                 keyboardType='numeric'
                                 style={styles.input}
+                                maxLength={4}
                                 onChangeText={setOtp}
                             />
                             <TouchableOpacity onPress={handleOtpVarification}>
@@ -171,6 +171,8 @@ const styles = StyleSheet.create({
         borderColor: "#ccc",
         borderRadius: 5,
         fontSize: 16,
+        paddingVertical: 5
+        
     },
     inputGroup: {
         alignItems: 'center',
@@ -178,9 +180,9 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         width: '90%',
         borderBottomWidth: 1,
-
         borderColor: '#ccc',
-        paddingBottom: 5
+        paddingBottom: 5,
+        paddingLeft: 18
     },
     inputGroupOtp: {
         alignItems: 'center', display: 'flex',

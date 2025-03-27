@@ -5,20 +5,19 @@ import Layout from '../Components/Common/Layout';
 import { ScrollView } from 'react-native-gesture-handler';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
-import { get_order_notification } from '../services/apiServices';
-
+import { get_wallet_history } from '../services/apiServices';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
-export const NotificationScreen = () => {
+export const WalletHistory = () => {
     const [isLoading, setIsLoading] = useState(true);
-    const [notificationData, setNotificationData] = useState([]);
+    const [walletData, setWalletData] = useState([]);
     useEffect(() => {
         const get_notification = async () => {
             try {
                 const token = await AsyncStorage.getItem('token');
                 setAccessToken(token);
-                const response = await fetch(get_order_notification, {
+                const response = await fetch(get_wallet_history, {
 
                     headers: {
                         'Content-Type': 'application/json',
@@ -27,9 +26,7 @@ export const NotificationScreen = () => {
 
                 })
                 const data = await response.json();
-                setNotificationData(data.data);
-
-
+                setWalletData(data.data);
             }
             catch {
                 console.log(error);
@@ -49,7 +46,6 @@ export const NotificationScreen = () => {
         <Layout>
             <View style={styles.container}>
                 {
-
                     isLoading ?
                         (<FlatList
                             data={[1, 2, 3, 4, 5, 6, 7, 8, 9]}
@@ -57,9 +53,7 @@ export const NotificationScreen = () => {
                             renderItem={({ item }) => (
                                 <TouchableOpacity>
                                     <View style={styles.notificationItem}>
-                                        <ShimmerPlaceholder visible={!isLoading} style={styles.iconPlaceholder}>
-
-                                        </ShimmerPlaceholder>
+                        
                                         <View style={styles.textContainer}>
                                             <ShimmerPlaceholder visible={!isLoading} style={styles.textPlaceholder}>
 
@@ -71,17 +65,17 @@ export const NotificationScreen = () => {
                                             <ShimmerPlaceholder visible={!isLoading} style={styles.textPlaceholder}>
 
                                             </ShimmerPlaceholder>
+                                            <ShimmerPlaceholder visible={!isLoading} style={styles.textPlaceholder}>
+
+                                            </ShimmerPlaceholder>
                                         </View>
                                     </View>
                                 </TouchableOpacity>
                             )}
                         />) : (
-
-
-
-                            notificationData.length === 0 ? (
+                            walletData.length === 0 ? (
                                 <View style={styles.emptyCard}>
-                                    <Text>No notifications <Text style={{color: '#008000'}}>(Available:0)</Text> at tha moment</Text>
+                                    <Text>You Have<Text style={{ color: '#008000' }}>(Available:0)</Text>Wallet Transaction list</Text>
                                 </View>
                             ) :
                                 <FlatList
@@ -100,12 +94,7 @@ export const NotificationScreen = () => {
                                         </TouchableOpacity>
                                     )}
                                 />
-
-
-
                         )
-
-
 
                 }
             </View>
@@ -116,7 +105,7 @@ export const NotificationScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        //backgroundColor: '#f5f5f5',
+       // backgroundColor: '#f5f5f5',
         padding: 10,
     },
     notificationItem: {
@@ -161,21 +150,22 @@ const styles = StyleSheet.create({
         borderRadius: 50,
     },
     textPlaceholder: {
-        marginBottom: 5,
+        marginBottom: 8,
+        width:280,
     },
 
     emptyCard: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    //margin: 10,
-    padding: 15,
-    backgroundColor: 'white',
-    
-    borderRadius: 5,
-    elevation: 3
-},
+        justifyContent: 'center',
+        alignItems: 'center',
+        //margin: 10,
+        padding: 15,
+        backgroundColor: 'white',
+
+        borderRadius: 5,
+        elevation: 3
+    },
 
 
 });
 
-export default NotificationScreen;
+export default WalletHistory;

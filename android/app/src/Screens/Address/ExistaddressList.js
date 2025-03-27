@@ -1,5 +1,5 @@
 ExistaddressList
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
     View,
     Text,
@@ -12,17 +12,18 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import Layout from '../../Components/Common/Layout';
 import { getExistAddressList } from '../../services/apiServices';
-//import DropDown from '../../Components/Common/DropDown';
-//import { createShopNShipOrder } from '../../services/apiServices';
-
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
+import { AuthContext } from '../../Context/authContext';
 
 
 
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
-const ExistaddressList = ({ navigation,handleCreateOrder}) => {
+const ExistaddressList = ({ navigation, handleCreateOrder }) => {
+
+
+    const { token } = useContext(AuthContext);
     const [isLoading, setIsLoading] = useState(true);
     const [addressListData, setAddressListData] = useState([]);
     useEffect(() => {
@@ -31,7 +32,7 @@ const ExistaddressList = ({ navigation,handleCreateOrder}) => {
                 const response = await fetch(getExistAddressList, {
 
                     headers: {
-                        'authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L215eGJvcmRlci9hcGkvdjEvdmVyaWZ5X2VtYWlsX290cCIsImlhdCI6MTc0MDEzMTM5NiwibmJmIjoxNzQwMTMxMzk2LCJqdGkiOiJzU2trZEJQTDJ0VDRPSXJzIiwic3ViIjoiMTc3MCIsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.4DIewxHyolVv0u1kB6yToZ0hIeINWPDWBBH_fBNdTHo'
+                        'authorization': `Bearer ${token}`
                     },
                 })
                 const data = await response.json();
@@ -84,14 +85,14 @@ const ExistaddressList = ({ navigation,handleCreateOrder}) => {
                             </Text>
                         </View>
                         <TouchableOpacity onPress={() => handleCreateOrder(address.id)}>
-                        <LinearGradient
-                            start={{ x: 0, y: 0 }}
-                            end={{ x: 1, y: 0 }}
-                            colors={['#d81397', '#0d5cc2']}
-                            style={styles.detailsButton}
-                        >
-                            <Text style={styles.detailsButtonText}>Continue with this address</Text>
-                        </LinearGradient>
+                            <LinearGradient
+                                start={{ x: 0, y: 0 }}
+                                end={{ x: 1, y: 0 }}
+                                colors={['#d81397', '#0d5cc2']}
+                                style={styles.detailsButton}
+                            >
+                                <Text style={styles.detailsButtonText}>Continue with this address</Text>
+                            </LinearGradient>
                         </TouchableOpacity>
                     </View>
                 ))
@@ -112,9 +113,17 @@ const ExistaddressList = ({ navigation,handleCreateOrder}) => {
 
 const styles = StyleSheet.create({
 
-    ordersSection: { backgroundColor: 'white', padding: 10, borderRadius: 5, elevation: 3 },
+    ordersSection: {
+        backgroundColor: 'white',
+        padding: 10,
+        borderRadius: 5,
+        elevation: 3
+    },
 
-    orderButtonText: { color: 'white', fontWeight: 'bold' },
+    orderButtonText: {
+        color: 'white',
+        fontWeight: 'bold'
+    },
     addressCard: {
         backgroundColor: 'white',
         padding: 10,
@@ -124,11 +133,21 @@ const styles = StyleSheet.create({
         paddingBottom: 10,
 
     },
-    sectionTitle: { fontSize: 18, fontWeight: 'bold', marginBottom: 5 },
-    addressText: { fontSize: 14, color: 'gray' },
-    addressValue: { fontSize: 16, color: 'black' },
-
-
+    sectionTitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 5
+    },
+    addressText:
+    {
+        fontSize: 14,
+        color: 'gray'
+    },
+    addressValue:
+    {
+        fontSize: 16,
+        color: 'black'
+    },
     headerText: {
         fontSize: 16,
         //fontWeight: "bold",

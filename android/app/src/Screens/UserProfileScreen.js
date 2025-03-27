@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
     View,
     Text,
@@ -15,6 +15,9 @@ import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
 import Layout from '../Components/Common/Layout';
 import { getUserProfile } from '../services/apiServices';
+import { AuthContext } from '../Context/authContext';
+
+
 
 
 
@@ -25,11 +28,9 @@ const UserProfileScreen = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [userData, setUserData] = useState({});
 
-    // useEffect(() => {
-    //     setTimeout(() => {
-    //         setIsLoading(false);
-    //     }, 3000);
-    // }, []);
+    const { token, pageRefresh, setPageRefresh } = useContext(AuthContext);
+    console.log('token', token);
+
     useEffect(() => {
         const fetchUserProfile = async () => {
             setIsLoading(true);
@@ -40,21 +41,24 @@ const UserProfileScreen = () => {
                         method: 'GET',
                         headers: {
                             "Content-Type": "application/json",
-                            "authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L215eGJvcmRlci9hcGkvdjEvdmVyaWZ5X2VtYWlsX290cCIsImlhdCI6MTc0MDEzMTM5NiwibmJmIjoxNzQwMTMxMzk2LCJqdGkiOiJzU2trZEJQTDJ0VDRPSXJzIiwic3ViIjoiMTc3MCIsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.4DIewxHyolVv0u1kB6yToZ0hIeINWPDWBBH_fBNdTHo",
+                            "authorization": `Bearer ${token}`,
                         }
                     }
                 );
                 const data = await response.json();
                 setUserData(data.data);
+
+                setPageRefresh(false);
                 setIsLoading(false);
             } catch (error) {
                 console.error('Error fetching user data:', error);
                 setIsLoading(false);
             }
         }
+
         fetchUserProfile();
         console.log('user data', userData);
-    }, []);
+    }, [pageRefresh]);
 
 
     const handleOpenEditModal = () => {
@@ -115,7 +119,7 @@ const UserProfileScreen = () => {
                             visible={!isLoading}
                             style={styles.valuePlaceholder}
                         >
-                            <Text style={styles.value}>{userData.is_referral_code===null?'No Referral Code':userData.referral_code}</Text>
+                            <Text style={styles.value}>{userData.is_referral_code === null ? 'No Referral Code' : userData.referral_code}</Text>
                         </ShimmerPlaceholder>
                     </View>
 
@@ -127,6 +131,8 @@ const UserProfileScreen = () => {
                         >
                             <Text style={styles.label}>Primary mobile number:</Text>
                         </ShimmerPlaceholder>
+
+
                         <View style={styles.phoneContainer}>
                             <ShimmerPlaceholder
                                 LinearGradient={LinearGradient}
@@ -186,41 +192,44 @@ const UserProfileScreen = () => {
                             visible={!isLoading}
                             style={styles.valuePlaceholder}
                         >
-                            <Text style={styles.value}>{userData.shopNshipOrderCount+userData.internationalOrderCount+userData.assistedShopNshipOrderCount}</Text>
+                            <Text style={styles.value}>{userData.shopNshipOrderCount + userData.internationalOrderCount + userData.assistedShopNshipOrderCount}</Text>
                         </ShimmerPlaceholder>
                     </View>
+                    {
+                        !isLoading &&
 
-                    <View style={styles.buttonContainer}>
+                        <View style={styles.buttonContainer}>
 
 
-                        <TouchableOpacity
-                            style={styles.button}
-                            onPress={handleOpenEditModal}
-                        >
-                            <LinearGradient
-                                start={{ x: 0, y: 0 }}
-                                end={{ x: 1, y: 0 }}
-                                colors={['#d81397', '#0d5cc2']}
-                                style={styles.gradientButton}
+                            <TouchableOpacity
+                                style={styles.button}
+                                onPress={handleOpenEditModal}
                             >
-                                <Text style={styles.buttonText}>Edit Profile</Text>
-                            </LinearGradient>
-                        </TouchableOpacity>
+                                <LinearGradient
+                                    start={{ x: 0, y: 0 }}
+                                    end={{ x: 1, y: 0 }}
+                                    colors={['#d81397', '#0d5cc2']}
+                                    style={styles.gradientButton}
+                                >
+                                    <Text style={styles.buttonText}>Edit Profile</Text>
+                                </LinearGradient>
+                            </TouchableOpacity>
 
-                        <TouchableOpacity
-                            style={styles.button}
-                            onPress={handleNotificationOff}
-                        >
-                            <LinearGradient
-                                start={{ x: 0, y: 0 }}
-                                end={{ x: 1, y: 0 }}
-                                colors={['#d81397', '#0d5cc2']}
-                                style={styles.gradientButton}
+                            <TouchableOpacity
+                                style={styles.button}
+                                onPress={handleNotificationOff}
                             >
-                                <Text style={styles.buttonText}>Notification off</Text>
-                            </LinearGradient>
-                        </TouchableOpacity>
-                    </View>
+                                <LinearGradient
+                                    start={{ x: 0, y: 0 }}
+                                    end={{ x: 1, y: 0 }}
+                                    colors={['#d81397', '#0d5cc2']}
+                                    style={styles.gradientButton}
+                                >
+                                    <Text style={styles.buttonText}>Notification off</Text>
+                                </LinearGradient>
+                            </TouchableOpacity>
+                        </View>
+                    }
                 </View>
                 <Modal
                     animationType="slide"

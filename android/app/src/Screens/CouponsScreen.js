@@ -1,7 +1,16 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Layout from '../Components/Common/Layout';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { Toast } from 'react-native-toast-notifications';
+import Clipboard from '@react-native-clipboard/clipboard';
+
+const copy = (text) => {
+    Clipboard.setString(text);
+    Toast.show("Copied to clipboard", { type: 'success', style: { width: 500 } });
+
+};
+
 
 
 const CouponsScreen = () => {
@@ -12,22 +21,29 @@ const CouponsScreen = () => {
                 <View style={styles.card}>
                     <View style={{ flexDirection: 'row', justifyContent: 'center', width: '100%' }}>
                         <Text style={styles.title}>Referral Bonus</Text>
-                        <Icon style={{ position: 'absolute', right: 20 }} name="clone" size={24} color="white" />
+                        <TouchableOpacity onPress={() => copy('250')} style={{ position: 'absolute', right: 20 }}>
+                            <Icon name="clone" size={24} color="white" />
+                        </TouchableOpacity>
                     </View>
+
                     <Text style={styles.amount}>250</Text>
+
                     <Text style={styles.description}>Get Discount of INR 250 by referring to your Friends and family</Text>
                 </View>
                 <View style={styles.card}>
-                <View style={{ flexDirection: 'row', justifyContent: 'center', width: '100%' }}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'center', width: '100%' }}>
                         <Text style={styles.title}>Sign Up Bonus</Text>
-                        <Icon style={{ position: 'absolute', right: 20 }} name="clone" size={24} color="white" />
+                        <TouchableOpacity onPress={() => copy('150')} style={{ position: 'absolute', right: 20 }}>
+                            <Icon name="clone" size={24} color="white" />
+                        </TouchableOpacity>
                     </View>
+
                     <Text style={styles.amount}>150</Text>
                     <Text style={styles.description}>150 In your wallet after successful OTP verification</Text>
                 </View>
             </View>
 
-       </Layout>
+        </Layout>
     );
 };
 
@@ -63,7 +79,7 @@ const styles = StyleSheet.create({
         color: 'gold',
         marginVertical: 8,
         textAlign: 'center',
-       
+
     },
     description: {
         fontSize: 14,

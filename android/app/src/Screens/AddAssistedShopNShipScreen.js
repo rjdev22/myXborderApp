@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import {
     View,
     Text,
@@ -12,48 +12,41 @@ import LinearGradient from 'react-native-linear-gradient';
 import Layout from '../Components/Common/Layout';
 import DropDown from '../Components/Common/DropDown';
 
-const AddAssistedShopNShipScreen = ({ navigation,route }) => {
-    const token=route?.params?.token;
+const AddAssistedShopNShipScreen = ({ navigation, route }) => {
+    const itemData=route?.params?.itemData || [];
+    const token = route?.params?.token;
     const [selectedItem, setSelectedItem] = useState(null)// State for order items
     const [remark, setRemark] = useState('');
-    const[errors,setErrors]=useState([])
+    const [errors, setErrors] = useState([])
+    const [grandTotal, setGrandTotal] = useState(0);
     const [items, setItems] = useState([
         {
-
             itemName: '',
-            itemType: 3,
+            itemType: 0,
             store: '',
             color: '',
             size: '',
-            price: 0,
-            totalPrice:0,
+            price: '',
+            totalPrice: 0,
             quantity: 0,
 
         }
     ]);
     console.log({ additems: items });
-
-    const itemData = [
-        "Liquid",
-        "Cosmetic",
-        "Toys",
-        "Shoes",
-        "Men Clothing",
-        "Women Clothing",
-        "Men Shoe",
-        "Women Dress",
-        "Electromices",
-        "Artificilly Jewlery",
-        "Women Saree",
-        "Women gowen",
-        "Men Shirts",
-        "Men t shirt",
-        "sandel"
-    ]
-
+// console.log('itemData',itemData);
+const itemTypes = itemData.map(item => item.itemType);
+   
     const handleInputChange = (index, field, value) => {
         const updatedItems = [...items];
         updatedItems[index][field] = value;
+
+        if (field === 'price' || field === 'quantity') {
+            const price = parseFloat(updatedItems[index].price) || 0;
+            const quantity = parseInt(updatedItems[index].quantity, 10) || 0;
+            updatedItems[index].totalPrice = price * quantity;
+        }
+    
+    
         setItems(updatedItems);
 
         setErrors(prevErrors => {
@@ -72,12 +65,12 @@ const AddAssistedShopNShipScreen = ({ navigation,route }) => {
             {
                 // id: items.length + 1,
                 itemName: '',
-                itemType: 3,
+                itemType: 0,
                 store: '',
                 color: '',
                 size: '',
                 price: 0,
-                totalPrice:0,
+                totalPrice: 0,
                 quantity: 0,
 
             }
@@ -91,9 +84,10 @@ const AddAssistedShopNShipScreen = ({ navigation,route }) => {
 
 
             if (!item.store) {
-                itemErrors.store= "Online Store/Item URL is required";
+                itemErrors.store = "Please provide valid Item URL or Local Store Name";
                 isValid = false;
             }
+
             if (!item.itemName) {
                 itemErrors.itemName = "Item name is required";
                 isValid = false;
@@ -118,16 +112,21 @@ const AddAssistedShopNShipScreen = ({ navigation,route }) => {
     };
 
 
-  const handleNext = () => {
+    const handleNext = () => {
         if (validateFields()) {
-            navigation.navigate('ShopNshipShipmentAddress', { additems: items, remark,token});
+            navigation.navigate('ShopNshipShipmentAddress', { additems: items, remark, token });
         }
     };
 
+    useEffect(() => {
+       
+        const total = items.reduce((sum, item) => sum + item.totalPrice, 0);
+        setGrandTotal(total);
+    }, [items]);
 
 
-    
-   
+
+
 
     return (
         <Layout>
@@ -148,17 +147,21 @@ const AddAssistedShopNShipScreen = ({ navigation,route }) => {
                                     onChangeText={(value) => handleInputChange(index, 'store', value)}
                                 />
                             </View>
-                             {errors[index]?.store && <Text style={styles.errorText}>{errors[index].store}</Text>}
-                              {/* {errors[index]?.store && <Text style={styles.errorText}>{errors[index].store}</Text>} */}
-                            {/* <View style={styles.inputGroup}>
+                            {errors[index]?.store && <Text style={styles.errorText}>{errors[index].store}</Text>}
+                            {/* {errors[index]?.store && <Text style={styles.errorText}>{errors[index].store}</Text>} */}
+                            <View style={styles.inputGroup}>
                                 <Text style={styles.label}>Item Type*</Text>
                                 <DropDown
                                     style={styles.input}
-                                    items={itemData}
-                                    initialValue={item.itemType}
-                                    onChangeText={(value) => handleInputChange(index, '', value)}
+                                    items={itemTypes}
+                                    label="Please select Item Type"
+                                    initialValue={itemTypes[Math.max(0, itemTypes.indexOf(item.itemType) - 1)]}
+                                    onChange={(value) => {
+                                        handleInputChange(index, 'itemType', String(Number(value) + 1));
+                                    }
+                                    }
                                 />
-                            </View> */}
+                            </View>
                             <View style={styles.inputGroup}>
                                 <Text style={styles.label}>Item Name*</Text>
                                 <TextInput
@@ -218,10 +221,11 @@ const AddAssistedShopNShipScreen = ({ navigation,route }) => {
                                 <TextInput
                                     style={styles.input}
                                     value={(item.price * item.quantity).toString()}
-                                //editable={false} // Make it read-only
+                                    onChangeText={(value) => handleInputChange(index, 'totalPrice', value)}
+                            
                                 />
                             </View>
-                           
+
                         </View>
                     ))}
 
@@ -235,7 +239,7 @@ const AddAssistedShopNShipScreen = ({ navigation,route }) => {
                     </View>
 
                     <View style={styles.footer}>
-                        <Text style={styles.grandTotal}>Grand Total: 0</Text>
+                        <Text style={styles.grandTotal}>Grand Total: {grandTotal}</Text>
                         <TouchableOpacity onPress={handleNext}>
                             <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} colors={['#d81397', '#0d5cc2']} style={styles.nextButton}>
                                 <Text style={styles.nextButtonText}>Next</Text>
@@ -274,7 +278,7 @@ const styles = StyleSheet.create({
     grandTotal: { fontSize: 16 },
     nextButton: { paddingVertical: 5, borderRadius: 5, padding: 10, width: 130 },
     nextButtonText: { color: "#fff", fontSize: 16, fontWeight: "bold", textAlign: "center" },
-    errorText:{color:'red',fontSize:12}
+    errorText: { color: 'red', fontSize: 12 }
 });
 
 export default AddAssistedShopNShipScreen;
