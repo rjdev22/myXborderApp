@@ -9,7 +9,7 @@ import {
   TouchableWithoutFeedback,
   ScrollView
 } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 import { useNavigation, DrawerActions } from '@react-navigation/native';
 import { SvgUri } from 'react-native-svg';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -88,7 +88,7 @@ const Layout = ({ children }) => {
       setIsLoading(false);
     } catch (error) {
       console.log(error);
-      Toast.show('Something went wrong',{ type: 'error',style: { width:500}});
+      Toast.show('Something went wrong',{ type: 'danger',style: { width:500}});
       setIsLoading(false);
     }
   };

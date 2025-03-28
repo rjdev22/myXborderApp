@@ -18,9 +18,6 @@ import { getUserProfile } from '../services/apiServices';
 import { AuthContext } from '../Context/authContext';
 
 
-
-
-
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
 const UserProfileScreen = () => {
@@ -33,7 +30,7 @@ const UserProfileScreen = () => {
 
     useEffect(() => {
         const fetchUserProfile = async () => {
-            setIsLoading(true);
+            //setIsLoading(true);
 
             try {
                 const response = await fetch(getUserProfile,

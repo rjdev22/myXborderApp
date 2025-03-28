@@ -53,10 +53,9 @@ const CreateNewAddress = () => {
             console.log('Create address response:', data);
             if (data.status === true) {
                 setIsLoading(false)
-                navigation.navigate('ShopNshipScreen');
+                navigation.navigate('DashBoardScreen');
                 Toast.show('order created successfully', { type: 'success',style: { width:500}})
             }
-
 
         } catch (error) {
             console.error('Error:', error);

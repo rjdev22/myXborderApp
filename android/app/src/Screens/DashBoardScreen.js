@@ -60,9 +60,6 @@ const DashBoardScreen = ({ navigation }) => {
     }
 
     
-
-
-
     useEffect(() => {
         const fetchUserData = async () => {
             try {

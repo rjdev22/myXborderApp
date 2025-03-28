@@ -6,13 +6,16 @@ import {
     StyleSheet,
     ScrollView,
     TouchableOpacity,
-    Alert
+    Alert,
+    Modal
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Layout from '../Components/Common/Layout';
 import DropDown from '../Components/Common/DropDown';
 import { get_courier_types, get_order_types } from '../services/apiServices';
 import { Checkbox } from 'react-native-paper';
+import MedicalItemWarningModal from '../Components/Modals/MedicalItemWarningModal';
+
 
 const AddInternationalShipmentScreen = ({ navigation, route }) => {
     const token = route?.params?.token;
@@ -22,6 +25,16 @@ const AddInternationalShipmentScreen = ({ navigation, route }) => {
     const [selectedOrderType, setSelectedOrderType] = useState(null);
     const [selectedCourierType, setSelectedCourierType] = useState(null)
     const [clientOrderId, setClientOrderId] = useState('');
+    const [checked, setChecked] = useState(false);
+    const [isMedicalItem, setIsMedicalItem] = useState(false);
+
+
+    const openModal = () => {
+        setIsMedicalItem(true);
+    }
+    const closeModal = () => {
+        setIsMedicalItem(false);
+    }
 
 
 
@@ -137,15 +150,45 @@ const AddInternationalShipmentScreen = ({ navigation, route }) => {
                         onChangeText={setClientOrderId}
                     />
                 </View>
+                <View style={{ flexDirection: 'row', alignItems: 'center', top: 5, bottom: 10 }}>
+                    <Checkbox
+                        status={checked ? 'checked' : 'unchecked'}
+                        onPress={() => {
+                            const newChecked = !checked;
+                            setChecked(newChecked);
+                            if (newChecked) {
+                                openModal();
+                            }
+                        }}
+                    />
+                    <Text style={{ fontSize: 12, color: "#000", marginBottom: 5 }}>Medical items</Text>
+                </View>
 
-                <Checkbox
-                    status={checked ? 'checked' : 'unchecked'}
-                    onPress={() => {
-                        setChecked(!checked);
-                    }}
-                />
+                {checked &&
+                    <View>
+                        <View style={styles.inputGroup}>
+                            <Text style={styles.label}>Upload Indian Prescription</Text>
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Enter Client Order ID"
+                                value={clientOrderId}
+                                onChangeText={setClientOrderId}
+                            />
+                        </View>
+                        <View style={styles.inputGroup}>
+                            <Text style={styles.label}>Upload Indian Bill</Text>
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Enter Client Order ID"
+                                value={clientOrderId}
+                                onChangeText={setClientOrderId}
+                            />
+                        </View>
+                    </View>
 
-                {/* Next Button */}
+
+                }
+
                 <View style={styles.buttonContainer}>
                     <TouchableOpacity onPress={handleNext}>
                         <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} colors={['#d81397', '#0d5cc2']} style={styles.nextButton}>
@@ -153,15 +196,19 @@ const AddInternationalShipmentScreen = ({ navigation, route }) => {
                         </LinearGradient>
                     </TouchableOpacity>
                 </View>
+
+            
+                    <MedicalItemWarningModal onClose={closeModal}  visible={isMedicalItem} />
+               
             </ScrollView>
         </Layout>
     );
 };
 
 const styles = StyleSheet.create({
-    content: { paddingHorizontal: 15, backgroundColor: 'white' },
+    content: { paddingHorizontal: 15, backgroundColor: 'white',paddingBottom: 50 },
     header: { marginBottom: 30, marginTop: 20 },
-    headerText: { fontSize: 16, fontWeight: 'bold' },
+    headerText: { fontSize: 16, fontWeight: 'bold', borderColor: "#ccc", borderBottomWidth: 0.5 },
     inputGroup: { marginBottom: 15 },
     label: { fontSize: 12, color: "#000", marginBottom: 5 },
     input: {

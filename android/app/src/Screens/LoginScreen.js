@@ -8,11 +8,15 @@ import Loader from "../Components/Modals/Loader";
 import { Toast } from 'react-native-toast-notifications';
 import { useToast } from "react-native-toast-notifications";
 import Recaptcha, { RecaptchaRef } from 'react-native-recaptcha-that-works';
-import { AuthContext } from '../Context/authContext';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useContext } from 'react';
+import { AuthContext } from '../Context/authContext'
 
 
 const LoginScreen = ({ navigation }) => {
+
+const { setToken } = useContext(AuthContext);
 
     const toast = useToast();
     const [email, setEmail] = useState("");
@@ -23,11 +27,11 @@ const LoginScreen = ({ navigation }) => {
     const [emailError, setEmailError] = useState("");
     const [passwordError, setPasswordError] = useState("");
     const [securePasswordEntry, setSecurePasswordEntry] = useState(true);
-    
+
 
 
     const size = 'invisible';
-    const [token, setToken] = useState('<none>');
+ 
 
     const $recaptcha = useRef < RecaptchaRef | null > (null);
 
@@ -57,9 +61,9 @@ const LoginScreen = ({ navigation }) => {
 
         else if (!validateEmail(email)) {
             setEmailError("Please enter a valid email address");
-           // return;
-        } 
-        
+            // return;
+        }
+
         else {
             setVisibleModal(true);
             try {
@@ -80,27 +84,31 @@ const LoginScreen = ({ navigation }) => {
                 console.log('data', data);
 
                 if (data.status === false) {
-                    Toast.show(data.message, { type: 'success', style: { width: 500 } });
+                    Toast.show(data.exception, { type: 'success', style: { width: 500 } });
                     setVisibleModal(false);
                     return
-                }
+                }else{
+                    
+                    await AsyncStorage.setItem("token", data?.data?.token);
+                    setToken(data.data.token);
+                    
+                    navigation.dispatch(
+                        CommonActions.reset({
+                            index: 1,
+                            routes: [
+                                { name: 'HomeScreen' },
+                                emailVerification === 'True'
+                                    ? { name: 'DashBoardScreen' }
+                                    : { name: 'EmailVarificationScreen', params: { userEmail: userEmail } }
+                            ]
+                        })
+                    );
 
-                navigation.dispatch(
-                    CommonActions.reset({
-                        index: 1,
-                        routes: [
-                            { name: 'HomeScreen' },
-                            {
-                                name: 'EmailVarificationScreen',
-                                params: { userEmail: userEmail }
-                            }
-                        ],
-                    })
-                );
+                }
 
             } catch (error) {
                 console.error("Error logging in user:", error);
-                Toast.show('Something went wrong,try again', Toast.SHORT);
+                Toast.show('Something went wrong,try again', {type:'danger',style:{width:500}});
                 setVisibleModal(false);
             }
         }

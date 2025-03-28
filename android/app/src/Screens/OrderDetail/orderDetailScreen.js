@@ -6,6 +6,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import AddItemModal from '../../Components/Modals/AddItemToOrder';
 import EditItemModal from '../../Components/Modals/EditItemToOrders';
 import { set } from 'react-native-reanimated';
+import { ScrollView } from 'react-native-gesture-handler';
 const items = {
     id: '1',
     name: 'tzt',
@@ -16,7 +17,6 @@ const items = {
     quantity: 12,
     size: 2
 };
-
 
 const OrderDetailsScreen = ({ navigation, route }) => {
 
@@ -38,9 +38,9 @@ const OrderDetailsScreen = ({ navigation, route }) => {
     const [ShowItem, setShowItem] = useState(true)
     const [openAddItem, setOpenAddItem] = useState(false)
     const [openEditItem, setOpenEditItem] = useState(false)
-    const [selectedItem, setSelectedItem] = useState(null)// State for order items
+    const [selectedItem, setSelectedItem] = useState(null)
 
-console.log('selectedItem', selectedItem);
+    console.log('selectedItem', selectedItem);
 
     const openAddItemModal = () => { setOpenAddItem(true) }
     const closeAddItemModal = () => { setOpenAddItem(false) }
@@ -69,10 +69,10 @@ console.log('selectedItem', selectedItem);
         }
     };
 
-    return (
+    return ( 
         <OrderDetailsLayout>
 
-
+<ScrollView showsVerticalScrollIndicator={false}>
             <View style={styles.container}>
                 <View style={styles.tabContainer}>
                     {/* Tabs */}
@@ -170,6 +170,7 @@ console.log('selectedItem', selectedItem);
                 <EditItemModal visible={openEditItem} onClose={() => closeEditItemModal()} itemTypes={itemType} id={orderId} item={selectedItem} />
                 <AddItemModal visible={openAddItem} onClose={() => closeAddItemModal()} itemTypes={itemType} id={orderId}  />
             </View>
+            </ScrollView>
         </OrderDetailsLayout >
 
     );

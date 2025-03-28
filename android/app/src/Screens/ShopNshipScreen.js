@@ -24,7 +24,7 @@ import { set } from 'react-native-reanimated';
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const ShopNshipScreen = ({ navigation }) => {
 
-    const { token } = useContext(AuthContext);
+    const { token,pageRefresh } = useContext(AuthContext);
     console.log('token', token);
 
     const [modalVisible, setModalVisible] = useState(false);
@@ -142,8 +142,6 @@ const ShopNshipScreen = ({ navigation }) => {
                 const data = await response.json();
                 setItemType(data.data);
                 console.log('item api response', data);
-
-
             }
             catch (error) {
                 console.log(error);
@@ -152,7 +150,7 @@ const ShopNshipScreen = ({ navigation }) => {
         }
         get_all_item();
         fetchData();
-    }, []);
+    }, [pageRefresh]);
 
     const copy = (text) => {
         copyToClipboard(text);

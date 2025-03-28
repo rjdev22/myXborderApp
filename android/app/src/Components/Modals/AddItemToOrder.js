@@ -6,6 +6,8 @@ import Loader from './Loader';
 import { AddItemToOrder } from '../../services/apiServices';
 import { AuthContext } from '../../Context/authContext';
 import { Toast } from 'react-native-toast-notifications';
+import { set } from 'react-native-reanimated';
+
 
 
 
@@ -28,7 +30,7 @@ const AddItemModal = ({ visible, onClose, itemTypes, id }) => {
   const DropDownValues = itemTypes.map((item) => item.itemType);
   console.log("DropDownValues", DropDownValues)
 
-  const { token } = useContext(AuthContext);
+  const { token,setPageRefresh } = useContext(AuthContext);
 
   const handleAddItem = async () => {
     console.log('id', id)
@@ -50,18 +52,20 @@ const AddItemModal = ({ visible, onClose, itemTypes, id }) => {
           price: price,
           color: color,
           size: size,
+          store: store,
           quantity: quantity
         })
       })
       const data = await response.json();
       console.log('add item response', data);
 
-      if (data.status === 'true') {
-        Toast.success(data.message, { type: 'success', style: { width: 500 } });
+      if (data.status === true) {
+        Toast.show(data.message, { type: 'success', style: { width: 500 } });
         setIsLoading(false);
+        set
         onClose();
       } else {
-        Toast.warning('Something went wrong,try again', { type: 'error', style: { width: 500 } });
+        Toast.show(data.message, { type: 'danger', style: { width: 500 } });
         setIsLoading(false);
       }
       setIsLoading(false);

@@ -10,6 +10,7 @@ import { Picker } from "@react-native-picker/picker";
 import { Toast } from 'react-native-toast-notifications';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { ScrollView } from "react-native-gesture-handler";
+import { set } from "react-native-reanimated";
 
 const SignupScreen = ({ navigation }) => {
 
@@ -95,8 +96,17 @@ const SignupScreen = ({ navigation }) => {
                 const data = await response.json();
                 console.log("register user data", data);
 
-                const emailVerification = data?.data?.emailVerification;
+               // const emailVerification = data?.data?.emailVerification;
                 const userEmail = data?.data?.email;
+
+                if(data.status === false){  
+
+                    Toast.show(data.error, { type:'danger', style: { width: 500 } });
+                    setVisibleModal(false);
+                    return;
+                }
+
+
 
                 navigation.dispatch(
                     CommonActions.reset({
@@ -112,7 +122,7 @@ const SignupScreen = ({ navigation }) => {
             } catch (error) {
                 setVisibleModal(false);
                 console.error("Error registering user:", error);
-                Toast.show('Something went wrong,Please try again', { type: 'error', });
+                Toast.show('Something went wrong,Please try again', { type: 'danger', });
             }
         }
     };

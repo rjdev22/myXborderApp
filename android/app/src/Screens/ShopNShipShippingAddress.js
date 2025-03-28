@@ -27,7 +27,7 @@ const ShopNshipShipmentAddress = ({ navigation, route }) => {
     const [orderType, setOrderType] = useState([]);
     const [courierType, setCourierType] = useState([]);
 
-    console.log("0000000000", courierType, token);
+  //  console.log("0000000000", courierType, token);
 
     useEffect(() => {
 
@@ -129,7 +129,7 @@ const ShopNshipShipmentAddress = ({ navigation, route }) => {
             console.log('shop n ship response', data);
             if (data.status === true) {
                 navigation.navigate('DashBoardScreen');
-                Toast.show(data.message, Toast.SHORT);
+                Toast.show(data.message, {type: 'success',style: { width:500}});
                 setIsLoading(false);
             }
             else {
