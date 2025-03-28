@@ -108,7 +108,9 @@ const InternationalShipmentScreen = ({ navigation }) => {
                 style={styles.content}>
 
 
-                <View style={styles.searchContainer}>
+                {
+                    !isLoading &&
+                    <View style={styles.searchContainer}>
                     <TouchableOpacity style={styles.dropdown} onPress={() => setModalVisible(true)}>
                         <Text>{selectedOption}</Text>
                         {
@@ -118,8 +120,16 @@ const InternationalShipmentScreen = ({ navigation }) => {
                                 <Icon name="angle-down" size={20} color="gray" style={styles.searchIcon} />
                         }
                     </TouchableOpacity>
-
-
+                    <View style={styles.inputContainer}>
+                        <Icon name="search" size={20} color="gray" style={styles.searchIcon} />
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Search"
+                            value={query}
+                            onChangeText={setQuery}
+                        />
+                    </View>
+                </View>}
                     <Modal transparent={true} visible={modalVisible} animationType="fade">
                         <TouchableOpacity style={styles.modalOverlay} onPress={() => setModalVisible(false)}>
                             <View style={styles.modalContent}>
@@ -147,21 +157,13 @@ const InternationalShipmentScreen = ({ navigation }) => {
                             </View>
                         </TouchableOpacity>
                     </Modal>
-                    <View style={styles.inputContainer}>
-                        <Icon name="search" size={20} color="gray" style={styles.searchIcon} />
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Search"
-                            value={query}
-                            onChangeText={setQuery}
-                        />
-                    </View>
-                </View>
                 <View style={styles.orderContainer}>
                     <View style={styles.orderHeader}>
                         <ShimmerPlaceholder visible={!isLoading} style={{ height: 20 }}  >
                             <Text style={styles.orderCount}>No. of Orders: <Text style={{ color: 'red' }}>({orderData.length})</Text></Text>
                         </ShimmerPlaceholder>
+
+                        {!isLoading &&
                         <TouchableOpacity onPress={() => navigation.navigate('Home', { screen: 'AddInternationalShipmentScreen', params: { token: token } })}>
                             <LinearGradient
                                 start={{ x: 0, y: 0 }}
@@ -170,7 +172,7 @@ const InternationalShipmentScreen = ({ navigation }) => {
                                 style={styles.createOrderButton}>
                                 <Text style={styles.createOrderText}>+ Create Order</Text>
                             </LinearGradient>
-                        </TouchableOpacity>
+                        </TouchableOpacity>}
                     </View>
                 </View>
                 <View>

@@ -174,11 +174,13 @@ const DashBoardScreen = ({ navigation }) => {
                                 <Text>Total Orders: <Text style={{ color: '#d81397', }}>({userData.shopNshipOrderCount})</Text></Text>
                             </ShimmerPlaceholder>
                         </TouchableOpacity>
+                        {
+                            !isLoading &&
                         <TouchableOpacity onPress={() => navigation.navigate('Home', { screen: 'AddShopNShipScreen', params: { itemData: itemData, orderData: orderData, courierData: courierData } })}>
                             <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} colors={['#d81397', '#0d5cc2']} style={styles.orderButton}>
                                 <Text style={styles.orderButtonText}>Create Order</Text>
                             </LinearGradient>
-                        </TouchableOpacity>
+                        </TouchableOpacity>}
                     </View>
 
                     <View style={styles.orderRow}>
@@ -192,11 +194,13 @@ const DashBoardScreen = ({ navigation }) => {
                                 })</Text></Text>
                             </ShimmerPlaceholder>
                         </TouchableOpacity>
+                        {
+                            !isLoading &&
                         <TouchableOpacity onPress={() => navigation.navigate('Home', { screen: 'AddAssistedShopNShipScreen' })}>
                             <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} colors={['#d81397', '#0d5cc2']} style={styles.orderButton}>
                                 <Text style={styles.orderButtonText}>Create Order</Text>
                             </LinearGradient>
-                        </TouchableOpacity>
+                        </TouchableOpacity>}
                     </View>
 
                     <View style={styles.orderRowlast}>
@@ -209,11 +213,15 @@ const DashBoardScreen = ({ navigation }) => {
                                 <Text>Total Orders: <Text style={{ color: '#d81397', }}>({userData.internationalOrderCount})</Text></Text>
                             </ShimmerPlaceholder>
                         </TouchableOpacity>
+                        {
+                            !isLoading &&
                         <TouchableOpacity onPress={() => navigation.navigate('Home', { screen: 'AddInternationalShipmentScreen' })}>
                             <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} colors={['#d81397', '#0d5cc2']} style={styles.orderButton}>
                                 <Text style={styles.orderButtonText}>Create Order</Text>
                             </LinearGradient>
                         </TouchableOpacity>
+
+                        }
                     </View>
                 </View>
 

@@ -5,12 +5,13 @@ import AuthLayout from "../Components/Common/AuthLayout";
 import { loginApi } from "../services/apiServices";
 import { CommonActions } from "@react-navigation/native";
 import Loader from "../Components/Modals/Loader";
-import {Toast} from 'react-native-toast-notifications';
+import { Toast } from 'react-native-toast-notifications';
 import { useToast } from "react-native-toast-notifications";
 import Recaptcha, { RecaptchaRef } from 'react-native-recaptcha-that-works';
 import { AuthContext } from '../Context/authContext';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
-  
+
 const LoginScreen = ({ navigation }) => {
 
     const toast = useToast();
@@ -21,6 +22,8 @@ const LoginScreen = ({ navigation }) => {
     const [visibleModal, setVisibleModal] = useState(false);
     const [emailError, setEmailError] = useState("");
     const [passwordError, setPasswordError] = useState("");
+    const [securePasswordEntry, setSecurePasswordEntry] = useState(true);
+    
 
 
     const size = 'invisible';
@@ -43,6 +46,7 @@ const LoginScreen = ({ navigation }) => {
     };
 
     const handleLogin = async () => {
+        console.log('password', password);
 
         if (!email) {
             setEmailError("Email field is required");
@@ -51,25 +55,11 @@ const LoginScreen = ({ navigation }) => {
             setPasswordError("Password field is required");
         }
 
-        if (!validateEmail(email)) {
+        else if (!validateEmail(email)) {
             setEmailError("Please enter a valid email address");
-            return;
-        } if (!email ) {
-            return;
-        }
-
-        setIsSubmitted(true);
-        if (!email) {
-           // Toast.show('Please enter email', Toast.SHORT);
-            setIsSubmitted(false);
-            return
-        }
-        else if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/) {
-           // Toast.show('Please enter valid email', Toast.SHORT);
-            setIsSubmitted(false);
-            return
-        }
-
+           // return;
+        } 
+        
         else {
             setVisibleModal(true);
             try {
@@ -87,9 +77,10 @@ const LoginScreen = ({ navigation }) => {
                 const data = await response.json();
                 const emailVerification = data?.data?.emailVerification;
                 const userEmail = data?.data?.email;
+                console.log('data', data);
 
                 if (data.status === false) {
-                    Toast.show(data.exception, {type:'success',style: { width:500}});
+                    Toast.show(data.message, { type: 'success', style: { width: 500 } });
                     setVisibleModal(false);
                     return
                 }
@@ -101,11 +92,12 @@ const LoginScreen = ({ navigation }) => {
                             { name: 'HomeScreen' },
                             {
                                 name: 'EmailVarificationScreen',
-                                params: { userEmail: userEmail } 
+                                params: { userEmail: userEmail }
                             }
                         ],
                     })
                 );
+
             } catch (error) {
                 console.error("Error logging in user:", error);
                 Toast.show('Something went wrong,try again', Toast.SHORT);
@@ -133,22 +125,27 @@ const LoginScreen = ({ navigation }) => {
                 />
 
                 {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
-                
-                <Text style={styles.label}>Password</Text>
-                <TextInput
-                    style={styles.input}
-                    placeholder="**********"
-                    keyboardType="password"
-                    value={password}
-                    onChangeText={(text) => {
-                        setPassword(text);
-                        if (text) setPasswordError(""); // Clear error on typing
-                    }}
-                    secureTextEntry
-                />
 
-                {passwordError? <Text style={styles.errorText}>{passwordError}</Text> : null}
-                
+                <Text style={styles.label}>Password</Text>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="**********"
+                        keyboardType="password"
+                        value={password}
+                        onChangeText={(text) => {
+                            setPassword(text);
+                            if (text) setPasswordError(""); // Clear error on typing
+                        }}
+                        secureTextEntry={securePasswordEntry}
+                    />
+                    <TouchableOpacity style={{ position: 'absolute', right: 20, top: 10 }} onPress={() => setSecurePasswordEntry(!securePasswordEntry)}>
+                        <Icon name={securePasswordEntry ? "eye-slash" : "eye"} size={20} color="gray" />
+                    </TouchableOpacity>
+                </View>
+
+                {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
+
                 {/* <View style={styles.container}>
                     <Button onPress={handleOpenPress} title="Open" />
                     {/* <Text>Token: {token}</Text>
@@ -295,13 +292,13 @@ const styles = StyleSheet.create({
         fontSize: 16,
         marginLeft: 10,
     },
-  
+
     errorText: {
         color: "red",
         fontSize: 12,
         marginTop: 5,
-        marginBottom:5,
-        paddingTop:0
+        marginBottom: 5,
+        paddingTop: 0
     },
 });
 

@@ -1,6 +1,5 @@
-const API_DOMAIN = 'https://uat.myxborder.com'
+const API_DOMAIN = 'https://uat.myxborder.com' 
 const baseUrl = `${API_DOMAIN}/api/v1`;
-
 
 //auth url
 export const imageUrl = `${API_DOMAIN}`;
@@ -8,7 +7,7 @@ export const registerApi = `${baseUrl}/register`;
 export const loginApi = `${baseUrl}/login`;
 export const homeApi = `${baseUrl}/home`;
 export const referralAmountApi = `${baseUrl}/referral_amount`;
-export const emailVarificationApi = `${baseUrl}/email_verification`;
+export const emailVarificationApi = `${baseUrl}/email_verification`;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
 export const varifyOtpApi = `${baseUrl}/verify_email_otp`;
 export const getUserProfile = `${baseUrl}/user/profile`;
 export const updateUserProfile = `${baseUrl}/user/update_profile`;

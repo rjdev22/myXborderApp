@@ -23,7 +23,7 @@ const AddItemModal = ({ visible, onClose, itemTypes, id }) => {
   const [trackingNumber, setTrackingNumber] = useState('');
   const [selectedItemType, setSelectedItemType] = useState('');
   const [isLoading, setIsLoading] = useState(false);
- 
+
 
   const DropDownValues = itemTypes.map((item) => item.itemType);
   console.log("DropDownValues", DropDownValues)
@@ -31,7 +31,7 @@ const AddItemModal = ({ visible, onClose, itemTypes, id }) => {
   const { token } = useContext(AuthContext);
 
   const handleAddItem = async () => {
-    console.log('id',id)
+    console.log('id', id)
     try {
       setIsLoading(true);
       const response = await fetch(AddItemToOrder, {
@@ -78,23 +78,23 @@ const AddItemModal = ({ visible, onClose, itemTypes, id }) => {
       <View style={styles.overlay}>
         <View style={styles.modalContainer}>
           <View style={{
-                                  display: 'flex', flexDirection: 'row',
-                                  justifyContent: 'space-between', borderBottomColor: '#dedede',
-                                  borderBottomWidth: 0.7, paddingHorizontal: 15, paddingVertical: 15,
-                                  boxShadow: 'rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px'
-                              }}>
-          <Text style={styles.title}>Add Item</Text>
-          <TouchableOpacity onPress={onClose}>
-            <Image source={require('../../assets/close.png')} style={{ width: 15, height: 15 }}>
-            </Image>
-          </TouchableOpacity>
+            display: 'flex', flexDirection: 'row',
+            justifyContent: 'space-between', borderBottomColor: '#dedede',
+            borderBottomWidth: 0.7, paddingHorizontal: 15, paddingVertical: 15,
+            boxShadow: 'rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px'
+          }}>
+            <Text style={styles.title}>Add Item</Text>
+            <TouchableOpacity onPress={onClose}>
+              <Image source={require('../../assets/close.png')} style={{ width: 15, height: 15 }}>
+              </Image>
+            </TouchableOpacity>
           </View>
           <ScrollView style={{ padding: 15 }} showsVerticalScrollIndicator={false} >
             <Text style={styles.label}>Item Type*</Text>
             <DropDown
               items={DropDownValues}
               label="Please select Order Type"
-              initialValue={selectedItemType}
+              initialValue={String(Number(selectedItemType) - 1)}
 
               onChange={(value) => {
                 const newValue = String(Number(value) + 1);

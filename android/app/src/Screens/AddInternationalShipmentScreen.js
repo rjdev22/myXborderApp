@@ -12,6 +12,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import Layout from '../Components/Common/Layout';
 import DropDown from '../Components/Common/DropDown';
 import { get_courier_types, get_order_types } from '../services/apiServices';
+import { Checkbox } from 'react-native-paper';
 
 const AddInternationalShipmentScreen = ({ navigation, route }) => {
     const token = route?.params?.token;
@@ -22,7 +23,7 @@ const AddInternationalShipmentScreen = ({ navigation, route }) => {
     const [selectedCourierType, setSelectedCourierType] = useState(null)
     const [clientOrderId, setClientOrderId] = useState('');
 
-   
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -41,11 +42,11 @@ const AddInternationalShipmentScreen = ({ navigation, route }) => {
                         },
                     })
                 ]);
-            
+
                 const courierData = await courierRes.json();
                 const orderData = await orderRes.json();
                 console.log('Courier api response', courierData, orderData);
-            
+
                 setCourierType(courierData.data || []);
                 setOrderType(orderData.data || []);
 
@@ -106,7 +107,7 @@ const AddInternationalShipmentScreen = ({ navigation, route }) => {
                         }
                     />
                 </View>
-                    {errors.selectedOrderType && <Text style={styles.errorText}>{errors.selectedOrderType}</Text>}
+                {errors.selectedOrderType && <Text style={styles.errorText}>{errors.selectedOrderType}</Text>}
 
 
                 <View style={styles.inputGroup}>
@@ -136,6 +137,13 @@ const AddInternationalShipmentScreen = ({ navigation, route }) => {
                         onChangeText={setClientOrderId}
                     />
                 </View>
+
+                <Checkbox
+                    status={checked ? 'checked' : 'unchecked'}
+                    onPress={() => {
+                        setChecked(!checked);
+                    }}
+                />
 
                 {/* Next Button */}
                 <View style={styles.buttonContainer}>

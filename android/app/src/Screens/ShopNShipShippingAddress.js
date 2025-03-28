@@ -17,20 +17,17 @@ import CreateNewAddress from './Address/CreateNewAddress';
 import Loader from '../Components/Modals/Loader';
 import { Toast } from 'react-native-toast-notifications';
 import { get_courier_types, get_order_types } from '../services/apiServices';
+import { AuthContext } from '../Context/authContext';
+import { useContext } from 'react';
 
 const ShopNshipShipmentAddress = ({ navigation, route }) => {
 
     console.log('route', route?.params);
-    const token = route?.params?.token;
-    // const orderType = route?.params?.orderType;
-    // const courierType = route?.params?.CourierType;
+    const { token } = useContext(AuthContext);
     const [orderType, setOrderType] = useState([]);
     const [courierType, setCourierType] = useState([]);
 
-    //console.log("0000000000", courierType,token);
-
-
-
+    console.log("0000000000", courierType, token);
 
     useEffect(() => {
 
@@ -50,8 +47,8 @@ const ShopNshipShipmentAddress = ({ navigation, route }) => {
                 console.log('Courier api response', data);
 
             }
-            catch {
-                console.log(error);
+            catch (error) {
+                console.log("error", error);
 
             }
         }
@@ -70,8 +67,8 @@ const ShopNshipShipmentAddress = ({ navigation, route }) => {
                 console.log('order api response', data);
 
             }
-            catch {
-                console.log(error);
+            catch (error) {
+                console.log("erorr", error);
 
             }
         }
@@ -103,11 +100,11 @@ const ShopNshipShipmentAddress = ({ navigation, route }) => {
 
 
     const num = Number(selectedOrderType);
-    const initialOrderValue = !isNaN(num) ? num - 1 : 0; // Defaulting to 0 if invalid
-    console.log('Initial value:', initialValue);
+   // const initialOrderValue = !isNaN(num) ? num - 1 : 0; // Defaulting to 0 if invalid
+    // console.log('Initial value:', initialValue);
     const handleCreateOrder = async (address) => {
         // console.log('address id ', address);
-       
+
 
 
         setIsLoading(true);
@@ -177,7 +174,7 @@ const ShopNshipShipmentAddress = ({ navigation, route }) => {
                                                 <DropDown
                                                     items={OrderData}
                                                     label="Please select Order Type"
-                                                    initialValue={initialOrderValue}
+                                                    initialValue={String(Number(selectedOrderType) - 1)}
                                                     onChange={(value) => {
 
                                                         const newValue = String(Number(value) + 1);
@@ -191,7 +188,7 @@ const ShopNshipShipmentAddress = ({ navigation, route }) => {
                                                 <DropDown
                                                     items={CourierData}
                                                     label="Please select Courier Type"
-                                                    initialValue={selectedCourierType}
+                                                    initialValue={String(Number(selectedCourierType) - 1)}
                                                     onChange={(value) => {
 
                                                         const newValue = String(Number(value) + 1);

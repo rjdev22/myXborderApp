@@ -5,6 +5,7 @@ import { View, Image, Text, TextInput, TouchableOpacity, FlatList, StyleSheet } 
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import AddItemModal from '../../Components/Modals/AddItemToOrder';
 import EditItemModal from '../../Components/Modals/EditItemToOrders';
+import { set } from 'react-native-reanimated';
 const items = {
     id: '1',
     name: 'tzt',
@@ -37,13 +38,17 @@ const OrderDetailsScreen = ({ navigation, route }) => {
     const [ShowItem, setShowItem] = useState(true)
     const [openAddItem, setOpenAddItem] = useState(false)
     const [openEditItem, setOpenEditItem] = useState(false)
+    const [selectedItem, setSelectedItem] = useState(null)// State for order items
 
-
+console.log('selectedItem', selectedItem);
 
     const openAddItemModal = () => { setOpenAddItem(true) }
     const closeAddItemModal = () => { setOpenAddItem(false) }
 
-    const OpenEditItemModal = () => { setOpenEditItem(true) }
+    const OpenEditItemModal = (item) => {
+         setSelectedItem(item)
+        }
+
     const closeEditItemModal = () => { setOpenEditItem(false) }
 
 
@@ -162,7 +167,7 @@ const OrderDetailsScreen = ({ navigation, route }) => {
                         </View>
                     ))
                 }
-                <EditItemModal visible={openEditItem} onClose={() => closeEditItemModal()} itemTypes={itemType} id={orderId} />
+                <EditItemModal visible={openEditItem} onClose={() => closeEditItemModal()} itemTypes={itemType} id={orderId} item={selectedItem} />
                 <AddItemModal visible={openAddItem} onClose={() => closeAddItemModal()} itemTypes={itemType} id={orderId}  />
             </View>
         </OrderDetailsLayout >

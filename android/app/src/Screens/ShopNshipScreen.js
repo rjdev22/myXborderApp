@@ -166,9 +166,8 @@ const ShopNshipScreen = ({ navigation }) => {
                 showsVerticalScrollIndicator={false}
                 showsHorizontalScrollIndicator={false}
                 style={styles.content}>
-
-
-                <View style={styles.searchContainer}>
+                {
+                    !isLoading&&<View style={styles.searchContainer}>
                     <TouchableOpacity style={styles.dropdown} onPress={() => setModalVisible(true)}>
                         <Text>{selectedOption}</Text>
                         {
@@ -179,36 +178,6 @@ const ShopNshipScreen = ({ navigation }) => {
                         }
                     </TouchableOpacity>
 
-
-                    <Modal transparent={true} visible={modalVisible} animationType="fade">
-                        <TouchableOpacity style={styles.modalOverlay} onPress={() => setModalVisible(false)}>
-                            <View style={styles.modalContent}>
-                                {options.map((item, index) => (
-                                    <TouchableOpacity
-                                        key={index}
-                                        style={styles.option}
-                                        onPress={() => {
-                                            setSelectedOption(item.label);
-                                            handleFilterData(item.label);
-                                            setModalVisible(false);
-                                        }}
-                                    >
-                                        <View style={{ desplay: 'flex', justifyContent: 'space-between', flexDirection: 'row', alignItems: 'flex-end', paddingHorizontal: 5, paddingVertical: 5 }}>
-
-                                            <Text style={styles.optionText}>{item.label}</Text>
-                                            <Icon
-                                                name={selectedOption === item.label ? "dot-circle-o" : "circle-o"}
-                                                size={20}
-                                                color={selectedOption === item.label ? "#008000" : "#000"}
-                                                style={styles.radioIcon}
-                                            />
-
-                                        </View>
-                                    </TouchableOpacity>
-                                ))}
-                            </View>
-                        </TouchableOpacity>
-                    </Modal>
                     <View style={styles.inputContainer}>
                         <Icon name="search" size={20} color="gray" style={styles.searchIcon} />
                         <TextInput
@@ -218,26 +187,58 @@ const ShopNshipScreen = ({ navigation }) => {
                             onChangeText={setQuery}
                         />
                     </View>
-                </View>
+                </View>}
+                <Modal transparent={true} visible={modalVisible} animationType="fade">
+                    <TouchableOpacity style={styles.modalOverlay} onPress={() => setModalVisible(false)}>
+                        <View style={styles.modalContent}>
+                            {options.map((item, index) => (
+                                <TouchableOpacity
+                                    key={index}
+                                    style={styles.option}
+                                    onPress={() => {
+                                        setSelectedOption(item.label);
+                                        handleFilterData(item.label);
+                                        setModalVisible(false);
+                                    }}
+                                >
+                                    <View style={{ desplay: 'flex', justifyContent: 'space-between', flexDirection: 'row', alignItems: 'flex-end', paddingHorizontal: 5, paddingVertical: 5 }}>
+
+                                        <Text style={styles.optionText}>{item.label}</Text>
+                                        <Icon
+                                            name={selectedOption === item.label ? "dot-circle-o" : "circle-o"}
+                                            size={20}
+                                            color={selectedOption === item.label ? "#008000" : "#000"}
+                                            style={styles.radioIcon}
+                                        />
+
+                                    </View>
+                                </TouchableOpacity>
+                            ))}
+                        </View>
+                    </TouchableOpacity>
+                </Modal>
                 <View style={styles.orderContainer}>
                     <View style={styles.orderHeader}>
                         <ShimmerPlaceholder visible={!isLoading} style={{ height: 20 }}  >
                             <Text style={styles.orderCount}>No. of Orders: <Text style={{ color: '#d81397' }}>({orderData.length})</Text></Text>
                         </ShimmerPlaceholder>
-                        <TouchableOpacity onPress={() => navigation.navigate('Home', {
-                            screen: 'AddShopNShipScreen',
-                            params: {
-                                itemData: itemType, token: token
-                            }
-                        })}>
-                            <LinearGradient
-                                start={{ x: 0, y: 0 }}
-                                end={{ x: 1, y: 0 }}
-                                colors={['#d81397', '#0d5cc2']}
-                                style={styles.createOrderButton}>
-                                <Text style={styles.createOrderText}>+ Create Order</Text>
-                            </LinearGradient>
-                        </TouchableOpacity>
+                        {
+                            !isLoading &&
+                            <TouchableOpacity onPress={() => navigation.navigate('Home', {
+                                screen: 'AddShopNShipScreen',
+                                params: {
+                                    itemData: itemType, token: token
+                                }
+                            })}>
+                                <LinearGradient
+                                    start={{ x: 0, y: 0 }}
+                                    end={{ x: 1, y: 0 }}
+                                    colors={['#d81397', '#0d5cc2']}
+                                    style={styles.createOrderButton}>
+                                    <Text style={styles.createOrderText}>+ Create Order</Text>
+                                </LinearGradient>
+                            </TouchableOpacity>
+                        }
 
                     </View>
                 </View>

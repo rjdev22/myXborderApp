@@ -3,7 +3,8 @@ import { View, Text, Image, TextInput, TouchableOpacity, Modal, StyleSheet, Scro
 import LinearGradient from 'react-native-linear-gradient';
 import DropDown from '../Common/DropDown';
 
-const EditItemModal = ({ visible, onClose, itemTypes }) => {
+const EditItemModal = ({ visible, onClose, itemTypes,item }) => {
+    console.log("itemedit", item)    
     const [storeId, setStoreId] = useState('');
     const [color, setColor] = useState('');
     const [size, setSize] = useState('');

@@ -64,32 +64,31 @@ const HomeScreen = ({ navigation, route }) => {
   return (
     <Layout>
       <View>
-        {/* Content */}
+      
         <ScrollView
           style={styles.scrollContainer}
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}>
-          {/* Banner Image */}
+         
           <Image
             source={require('../assets/DxxfKrd9IwwMnBrA.jpg')}
             style={styles.backgroundImage}
           />
           <View style={styles.content}>
-            {/* Referral Bonus */}
+          
 
             <View style={styles.referralCard}>
               <Text style={styles.bonusTitle} >Referral Bonus</Text>
               <Text style={styles.amount}>{referralAmount} INR</Text>
             </View>
 
-            {/* Exciting Deals */}
+           
             <Text style={styles.sectionTitle} >Exciting Deals</Text>
           
           {
           isLoading ? (
             <View>
               {[...Array(1)].map((_, index) => (
-                
                 <FlatList
                   key={index}
                   data={['1','2','3']} // Empty data array
@@ -97,11 +96,13 @@ const HomeScreen = ({ navigation, route }) => {
                   showsHorizontalScrollIndicator={false}
                   keyExtractor={(item, idx) => idx.toString()}
                   renderItem={({ item }) => (
-                    // <ShimmerPlaceholder visible={!isLoading} >
+                    <ShimmerPlaceholder visible={!isLoading} style={styles.offerCardplaceholder}>
+                    
                     <TouchableOpacity 
                     style={styles.offerCard}>
 
                     </TouchableOpacity>
+                </ShimmerPlaceholder>
                    
                   )}
                 />
@@ -131,7 +132,6 @@ const HomeScreen = ({ navigation, route }) => {
             />
             )}
 
-            {/* Services */}
             <Text style={styles.sectionTitle}>Services</Text>
             {services.map((service, index) => (
               <View key={index} style={styles.serviceCard}>
@@ -144,8 +144,6 @@ const HomeScreen = ({ navigation, route }) => {
               </View>
             ))}
 
-           
-           
             <Text style={styles.sectionTitle}>How It Works</Text>
             <View style={styles.howGrid}>
               {['how1.svg', 'how2.svg', 'how3.svg', 'how4.svg', 'how5.svg'].map(
@@ -217,7 +215,7 @@ const styles = StyleSheet.create({
   bonusTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: 'goldenrod', // White text for better contrast
+    color: 'goldenrod', 
   },
   amount: {
     fontSize: 24,
@@ -234,7 +232,7 @@ const styles = StyleSheet.create({
   },
   serviceImage: {
     width: '100%',
-    height: 210, // Adjust based on your layout
+    height: 210, 
     borderRadius: 10,
     resizeMode: 'cover', // Ensures image fits well
   },
@@ -278,7 +276,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     margin: 5,
     width: width * 0.7,
-    height: 200
+    height: 150
   },
   offerImage: {
     width: '80%',

@@ -135,7 +135,8 @@ const handleFilterData = async (option) => {
                 style={styles.content}>
 
 
-                <View style={styles.searchContainer}>
+                {
+                    !isLoading&&<View style={styles.searchContainer}>
                     <TouchableOpacity style={styles.dropdown} onPress={() => setModalVisible(true)}>
                         <Text>{selectedOption}</Text>
                         {
@@ -143,8 +144,18 @@ const handleFilterData = async (option) => {
                                 <Icon name="angle-up" size={20} color="gray" style={styles.searchIcon} />
                                 :
                                 <Icon name="angle-down" size={20} color="gray" style={styles.searchIcon} />
-                        }
+                            }
                     </TouchableOpacity>
+                    <View style={styles.inputContainer}>
+                        <Icon name="search" size={20} color="gray" style={styles.searchIcon} />
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Search"
+                            value={query}
+                            onChangeText={setQuery}
+                        />
+                    </View>
+                </View>}
 
                     <Modal transparent={true} visible={modalVisible} animationType="fade">
                         <TouchableOpacity style={styles.modalOverlay} onPress={() => setModalVisible(false)}>
@@ -176,21 +187,13 @@ const handleFilterData = async (option) => {
 
 
 
-                    <View style={styles.inputContainer}>
-                        <Icon name="search" size={20} color="gray" style={styles.searchIcon} />
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Search"
-                            value={query}
-                            onChangeText={setQuery}
-                        />
-                    </View>
-                </View>
                 <View style={styles.orderContainer}>
                     <View style={styles.orderHeader}>
                         <ShimmerPlaceholder visible={!isLoading} style={{ height: 20 }}  >
                             <Text style={styles.orderCount}>No. of Orders: <Text style={{ color: 'red' }}>({orderData.length})</Text></Text>
                         </ShimmerPlaceholder>
+                        {
+                            !isLoading &&   
                         <TouchableOpacity onPress={() => navigation.navigate('Home', {
                             screen: 'AddAssistedShopNShipScreen',
                             params: {
@@ -206,7 +209,7 @@ const handleFilterData = async (option) => {
                                 style={styles.createOrderButton}>
                                 <Text style={styles.createOrderText}>+ Create Order</Text>
                             </LinearGradient>
-                        </TouchableOpacity>
+                        </TouchableOpacity>}
                     </View>
                 </View>
                 <View>

@@ -9,12 +9,12 @@ import { Toast } from 'react-native-toast-notifications';
 import { CommonActions } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useContext } from 'react';
-import  {AuthContext} from '../Context/authContext';
+import { AuthContext } from '../Context/authContext';
 
 
 
 const EmailVarificationScreen = ({ navigation, route }) => {
-    const{setToken}=useContext(AuthContext);
+    const { setToken } = useContext(AuthContext);
 
     const [visibleModal, setVisibleModal] = React.useState(false);
     const [email, setEmail] = React.useState(route.params.userEmail);
@@ -55,21 +55,21 @@ const EmailVarificationScreen = ({ navigation, route }) => {
             });
             const data = await response.json();
             console.log('email verification data', data);
-            
+
             if (data.status === true) {
-                Toast.show(data.data,{ type: 'success',style: { width:500}});
+                Toast.show(data.data, { type: 'success', style: { width: 500 } });
                 setIsEmailSent(true);
                 setCountdown(600); // Reset countdown
                 setIsCounting(true); // Show OTP field after successful email send
             } else {
-                Toast.show(data.error,{ type: 'warning',style: { width:500 }});
+                Toast.show(data.error, { type: 'warning', style: { width: 500 } });
             }
         } catch (error) {
             console.log(error);
         }
         setVisibleModal(false);
     };
-    
+
     const handleOtpVarification = async () => {
         setVisibleModal(true);
         try {
@@ -81,28 +81,28 @@ const EmailVarificationScreen = ({ navigation, route }) => {
                 body: JSON.stringify({ email, otp }),
             });
             const data = await response.json();
-            
-            
-            if (data.status === true) {
-                Toast.show('Congrats! You are varified user', { type: 'success',style: { width: 500 }});
-                console.log('otp verification data', data.data.token);
-    
-               await AsyncStorage.setItem("token", data.data.token);
-               setToken(data.data.token);
-                navigation.dispatch(
-                CommonActions.reset({
-                    index: 1,
-                    routes: [
-                        { name: 'HomeScreen' },
-                        {
-                            name: 'DashBoardScreen',
-                        }
 
-                    ],
-                })
-            );
+
+            if (data.status === true) {
+                Toast.show('Congrats! You are varified user', { type: 'success', style: { width: 500 } });
+                console.log('otp verification data', data.data.token);
+
+                await AsyncStorage.setItem("token", data.data.token);
+                setToken(data.data.token);
+                navigation.dispatch(
+                    CommonActions.reset({
+                        index: 1,
+                        routes: [
+                            { name: 'HomeScreen' },
+                            {
+                                name: 'DashBoardScreen',
+                            }
+
+                        ],
+                    })
+                );
             } else {
-                Toast.show(data.error, { type: 'warning',style: { width: 500 }});
+                Toast.show(data.error, { type: 'warning', style: { width: 500 } });
             }
         } catch (error) {
             console.log(error);
@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         fontSize: 16,
         paddingVertical: 5
-        
+
     },
     inputGroup: {
         alignItems: 'center',
@@ -182,7 +182,8 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderColor: '#ccc',
         paddingBottom: 5,
-        paddingLeft: 18
+        paddingLeft: 18,
+        marginHorizontal: 'auto',
     },
     inputGroupOtp: {
         alignItems: 'center', display: 'flex',
