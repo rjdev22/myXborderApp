@@ -8,7 +8,8 @@ import {
   Dimensions,
   TouchableOpacity,
   FlatList,
-  Modal
+  Modal,
+  Linking
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { imageUrl, homeApi, referralAmountApi } from '../services/apiServices';
@@ -27,6 +28,7 @@ const HomeScreen = ({ navigation, route }) => {
   const [offers, setOffers] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [link, setLink] = useState('');
 
   const getHomeContent = async () => {
     setIsLoading(true)
@@ -35,6 +37,7 @@ const HomeScreen = ({ navigation, route }) => {
       const data = await response.json();
       setServices(data.data.services?.data || []);
       setOffers(data.data.offers?.data || []);
+      console.log('home data', offers);
       setIsLoading(false)
     } catch (error) {
       console.error('Error fetching home content:', error);
@@ -64,73 +67,94 @@ const HomeScreen = ({ navigation, route }) => {
   return (
     <Layout>
       <View>
-      
+
         <ScrollView
           style={styles.scrollContainer}
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}>
-         
+
           <Image
             source={require('../assets/DxxfKrd9IwwMnBrA.jpg')}
             style={styles.backgroundImage}
           />
           <View style={styles.content}>
-          
+
 
             <View style={styles.referralCard}>
               <Text style={styles.bonusTitle} >Referral Bonus</Text>
               <Text style={styles.amount}>{referralAmount} INR</Text>
             </View>
 
-           
+
             <Text style={styles.sectionTitle} >Exciting Deals</Text>
-          
-          {
-          isLoading ? (
-            <View>
-              {[...Array(1)].map((_, index) => (
+
+            {
+              isLoading ? (
+                <View>
+                  {[...Array(1)].map((_, index) => (
+                    <FlatList
+                      key={index}
+                      data={['1', '2', '3']} // Empty data array
+                      horizontal
+                      showsHorizontalScrollIndicator={false}
+                      keyExtractor={(item, idx) => idx.toString()}
+                      renderItem={({ item }) => (
+                        <ShimmerPlaceholder visible={!isLoading} style={styles.offerCardplaceholder}>
+
+                          <TouchableOpacity
+                            style={styles.offerCard}>
+
+                          </TouchableOpacity>
+                        </ShimmerPlaceholder>
+
+                      )}
+                    />
+
+                  ))}
+                </View>
+              ) : (
+
                 <FlatList
-                  key={index}
-                  data={['1','2','3']} // Empty data array
+                  data={offers}
                   horizontal
                   showsHorizontalScrollIndicator={false}
-                  keyExtractor={(item, idx) => idx.toString()}
+                  keyExtractor={(item, index) => index.toString()}
                   renderItem={({ item }) => (
-                    <ShimmerPlaceholder visible={!isLoading} style={styles.offerCardplaceholder}>
-                    
-                    <TouchableOpacity 
-                    style={styles.offerCard}>
+                    <TouchableOpacity
+                      style={styles.offerCard}
+                      onPress={() => {
+                        const linkMap = {
+                          '1Amazon India': 'https://myxborder.com/offer/best-sellers/details',
+                          'Flipkart Deals': 'https://myxborder.com/offer/flipkart-deals/details',
+                          'NYKAA Deals': 'https://myxborder.com/offer/best-sellers/details',
+                          'Sparkling Sale!': 'https://myxborder.com/offer/sparkling-sale/details',
+                          'MYNTRA offers': 'https://myxborder.com/offer/myntra-offers/details',
+                          'Firstcry Online Sale': 'https://myxborder.com/offer/firstcry-online-sale/details',
+                          'Snapdeal offers': 'https://myxborder.com/offer/snapdeal-offers/details',
+                          'PayTm online Mall!': 'https://myxborder.com/offer/best-sellers/details'
+                        };
+
+                        const selectedLink = linkMap[item.name];
+
+                        if (selectedLink) {
+                          setLink(selectedLink);
+                          Linking.openURL(selectedLink); // Use the selected link directly
+                        }
+                      }}
+                    >
+
+                      {/* <ShimmerPlaceholder visible={!isLoading} style={styles.offerCardplaceholder}> */}
+                      <Image
+                        source={{ uri: imageUrl + '/' + item.image }}
+                        style={styles.offerImage}
+                      />
+                      <Text style={styles.offerTitle}>{item.name}</Text>
+                      <Text style={styles.offerSubtitle}>{item.off}</Text>
 
                     </TouchableOpacity>
-                </ShimmerPlaceholder>
-                   
                   )}
                 />
-                
-              ))}
-            </View>
-          ):(
-
-            <FlatList
-              data={offers}
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={({ item }) => (
-                <TouchableOpacity style={styles.offerCard}>
-
-                  {/* <ShimmerPlaceholder visible={!isLoading} style={styles.offerCardplaceholder}> */}
-                  <Image
-                    source={{ uri: imageUrl + '/' + item.image }}
-                    style={styles.offerImage}
-                  />
-                  <Text style={styles.offerTitle}>{item.name}</Text>
-                  <Text style={styles.offerSubtitle}>{item.off}</Text>
-
-                </TouchableOpacity>
               )}
-            />
-            )}
 
             <Text style={styles.sectionTitle}>Services</Text>
             {services.map((service, index) => (
@@ -215,7 +239,7 @@ const styles = StyleSheet.create({
   bonusTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: 'goldenrod', 
+    color: 'goldenrod',
   },
   amount: {
     fontSize: 24,
@@ -232,7 +256,7 @@ const styles = StyleSheet.create({
   },
   serviceImage: {
     width: '100%',
-    height: 210, 
+    height: 210,
     borderRadius: 10,
     resizeMode: 'cover', // Ensures image fits well
   },

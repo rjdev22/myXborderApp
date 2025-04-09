@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { PermissionsAndroid } from 'react-native';
 import {
     View,
     Text,
@@ -15,8 +16,8 @@ import DropDown from '../Components/Common/DropDown';
 import { get_courier_types, get_order_types } from '../services/apiServices';
 import { Checkbox } from 'react-native-paper';
 import MedicalItemWarningModal from '../Components/Modals/MedicalItemWarningModal';
-
-
+// import DocumentPicker from '@react-native-documents/picker';
+import DocumentPicker from '@react-native-documents/picker';
 const AddInternationalShipmentScreen = ({ navigation, route }) => {
     const token = route?.params?.token;
     const [errors, setErrors] = useState({});
@@ -27,6 +28,8 @@ const AddInternationalShipmentScreen = ({ navigation, route }) => {
     const [clientOrderId, setClientOrderId] = useState('');
     const [checked, setChecked] = useState(false);
     const [isMedicalItem, setIsMedicalItem] = useState(false);
+    const [file1, setFile1] = useState(null);
+    const [file2, setFile2] = useState(null);
 
 
     const openModal = () => {
@@ -35,6 +38,64 @@ const AddInternationalShipmentScreen = ({ navigation, route }) => {
     const closeModal = () => {
         setIsMedicalItem(false);
     }
+
+
+
+    const requestStoragePermission = async () => {
+        try {
+          const granted = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+            {
+              title: "Storage Permission",
+              message: "App needs access to your storage to pick files.",
+              buttonNeutral: "Ask Me Later",
+              buttonNegative: "Cancel",
+              buttonPositive: "OK"
+            }
+          );
+          return granted === PermissionsAndroid.RESULTS.GRANTED;
+        } catch (err) {
+          console.error("Permission error:", err);
+          return false;
+        }
+      };
+
+    const pickDocument1 = async () => {
+        const hasPermission = await requestStoragePermission();
+        if (!hasPermission) {
+          Alert.alert("Permission denied", "Cannot access files without permission.");
+          return;
+        }
+        try {
+            console.log("[DEBUG] Attempting to open document picker...");
+            const result = await DocumentPicker.pick({ type: ["*/*"] });
+            console.log("[DEBUG] Picker result:", result);
+            setFile1(result[0]);
+          } catch (err) {
+            console.error("[DEBUG] Picker error:", err, JSON.stringify(err)); // Detailed error
+            if (DocumentPicker.isCancel(err)) {
+              console.log("User cancelled picker");
+            } else {
+              Alert.alert("Error", "Failed to open document picker: " + err.message);
+            }
+          }
+    };
+    const pickDocument2 = async () => {
+        try {
+            const result = await DocumentPicker.pick({
+                type: [DocumentPicker.types.allFiles], // Allow all file types
+            });
+            console.log('Picked file/:', result);
+            setFile2(result[0]);
+            console.log('file/', file2); // Store the selected file
+        } catch (err) {
+            if (DocumentPicker.isCancel(err)) {
+                console.log('User cancelled document picker');
+            } else {
+                console.error('Error picking document:', err);
+            }
+        }
+    };
 
 
 
@@ -92,7 +153,8 @@ const AddInternationalShipmentScreen = ({ navigation, route }) => {
                 courierTypeNumber,
                 OrderTypeNumber,
                 clientOrderId,
-                token
+                token,
+
             });
 
         }
@@ -168,25 +230,39 @@ const AddInternationalShipmentScreen = ({ navigation, route }) => {
                     <View>
                         <View style={styles.inputGroup}>
                             <Text style={styles.label}>Upload Indian Prescription</Text>
-                            <TextInput
-                                style={styles.input}
-                                placeholder="Enter Client Order ID"
-                                value={clientOrderId}
-                                onChangeText={setClientOrderId}
-                            />
-                        </View>
+
+                            <View style={{ flexDirection: 'row', alignItems: 'center', borderBottomColor: '#dedede', borderBottomWidth: 0.5 }}>
+                                <View>
+                                    <TouchableOpacity onPress={pickDocument1}>
+                                        <Text>Choose file</Text>
+                                    </TouchableOpacity>
+                                </View>
+                                <Text>{file1 ? file1.name : "No file chosen"}</Text>
+                                {
+                                    file1 &&
+                                    <TouchableOpacity onPress={() => setFile1(null)}><Text style={{ color: 'red' }}>*</Text></TouchableOpacity>
+                                }
+
+                            </View>
+
+                        </View >
                         <View style={styles.inputGroup}>
                             <Text style={styles.label}>Upload Indian Bill</Text>
-                            <TextInput
-                                style={styles.input}
-                                placeholder="Enter Client Order ID"
-                                value={clientOrderId}
-                                onChangeText={setClientOrderId}
-                            />
+
+                            <View style={{ flexDirection: 'row', alignItems: 'center', borderBottomColor: '#dedede', borderBottomWidth: 0.5 }}>
+                                <TouchableOpacity onPress={pickDocument2}>
+                                    <Text>Choose file</Text>
+                                </TouchableOpacity>
+                                <Text>{file2 ? file2.name : "No file chosen"}</Text>
+                               {
+                                 file2 &&
+                                 <TouchableOpacity onPress={() => setFile2(null)}><Text style={{ color: 'red' }}>*</Text></TouchableOpacity>
+                               }
+                               
+
+                            </View>
                         </View>
                     </View>
-
-
                 }
 
                 <View style={styles.buttonContainer}>
@@ -197,16 +273,16 @@ const AddInternationalShipmentScreen = ({ navigation, route }) => {
                     </TouchableOpacity>
                 </View>
 
-            
-                    <MedicalItemWarningModal onClose={closeModal}  visible={isMedicalItem} />
-               
+
+                <MedicalItemWarningModal onClose={closeModal} visible={isMedicalItem} />
+
             </ScrollView>
         </Layout>
     );
 };
 
 const styles = StyleSheet.create({
-    content: { paddingHorizontal: 15, backgroundColor: 'white',paddingBottom: 50 },
+    content: { paddingHorizontal: 15, backgroundColor: 'white', paddingBottom: 50 },
     header: { marginBottom: 30, marginTop: 20 },
     headerText: { fontSize: 16, fontWeight: 'bold', borderColor: "#ccc", borderBottomWidth: 0.5 },
     inputGroup: { marginBottom: 15 },

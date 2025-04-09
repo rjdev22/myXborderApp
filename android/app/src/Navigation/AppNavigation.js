@@ -34,6 +34,7 @@ import UserProfileScreen from '../Screens/UserProfileScreen';
 import CouponsScreen from '../Screens/CouponsScreen';
 import SplashScreen from '../Screens/SplashScreen';
 import NotificationScreen from '../Screens/NotificationScreen';
+import PaymentNotificationScreen from '../Screens/PaymentNotificationScreen';
 import WalletHistory from '../Screens/WalletHistory';
 import VarifyOtpScreen from '../Screens/VarifyOtpScreen';
 import ShopNshipShipmentAddress from '../Screens/ShopNShipShippingAddress';
@@ -189,6 +190,7 @@ function StackNavigator() {
       <Stack.Screen name="AddAssistedShopNShipScreen" component={AddAssistedShopNShipScreen} />
       <Stack.Screen name="AddInternationalShipmentScreen" component={AddInternationalShipmentScreen} />
       <Stack.Screen name="NotificationScreen" component={NotificationScreen} />
+      <Stack.Screen name="PaymentNotificationScreen" component={PaymentNotificationScreen} />
       <Stack.Screen name="WalletHistory" component={WalletHistory} />
       <Stack.Screen name="EmailVarificationScreen" component={EmailVarificationScreen} />
       <Stack.Screen name="VarifyOtpScreen" component={VarifyOtpScreen} />

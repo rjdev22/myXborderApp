@@ -14,7 +14,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import LinearGradient from 'react-native-linear-gradient';
 import Layout from '../Components/Common/Layout';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
-import { ShopNShipOrders, get_item_types, orderDetails } from '../services/apiServices';
+import { ShopNShipOrders, get_item_types, orderDetails,searchshopnshipOrder} from '../services/apiServices';
 import { useContext } from 'react';
 import { AuthContext } from '../Context/authContext';
 import DropDown from '../Components/Common/DropDown';
@@ -60,7 +60,7 @@ const ShopNshipScreen = ({ navigation }) => {
         }
 
         setSelectedOption(option);
-        console.log('newEndPoint', newEndPoint);
+      //  console.log('newEndPoint', newEndPoint);
         //setEndPoint(newEndPoint);
 
         try {
@@ -84,28 +84,30 @@ const ShopNshipScreen = ({ navigation }) => {
     }
 
 
-    const handleSearch = async () => {
-        console.log('query', query);
-        try {
-            const response = fetch(orderDetails + `/${query}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-            })
-            const data = await response.json();
-            console.log('order details', data);
+    // const handleSearch = async () => {
+    //     console.log('query', query);
+    //     console.log('token', token);
+    //     try {
+    //         const response = await fetch(searchshopnshipOrder + `/${query}` , {
+    //             method: 'GET',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //                 'Authorization': `Bearer ${token}`
+    //             },
+    //         })
+    //         const data = await response.json();
+    //         console.log('search details', data);
+    //         setOrderData(data.data);
 
-        } catch (error) {
-            console.log("error in order details", error);
+    //     } catch (error) {
+    //         console.log("error in order search", error);
 
-        }
-    }
+    //     }
+    // }
 
-    useEffect(() => {
-        handleSearch();
-    }, [query]);
+    // useEffect(() => {
+    //     handleSearch();
+    // }, [query]);
 
 
     useEffect(() => {
@@ -186,7 +188,7 @@ const ShopNshipScreen = ({ navigation }) => {
                         />
                     </View>
                 </View>}
-                <Modal transparent={true} visible={modalVisible} animationType="fade">
+                <Modal transparent={true} visible={modalVisible} animationType="fade" style={styles.modal}>
                     <TouchableOpacity style={styles.modalOverlay} onPress={() => setModalVisible(false)}>
                         <View style={styles.modalContent}>
                             {options.map((item, index) => (
@@ -205,7 +207,7 @@ const ShopNshipScreen = ({ navigation }) => {
                                         <Icon
                                             name={selectedOption === item.label ? "dot-circle-o" : "circle-o"}
                                             size={20}
-                                            color={selectedOption === item.label ? "#008000" : "#000"}
+                                            color={selectedOption === item.label ? "blue" : "#ccc"}
                                             style={styles.radioIcon}
                                         />
 
@@ -517,9 +519,9 @@ const styles = StyleSheet.create({
         backgroundColor: "rgba(0,0,0,0.5)",
     },
     modalContent: {
-        width: 300,
+        width: 380  ,
+        borderRadius: 15,
         backgroundColor: "#fff",
-
         padding: 10,
         elevation: 5,
     },
@@ -534,6 +536,12 @@ const styles = StyleSheet.create({
     },
     radioIcon: {
         alignItems: 'flex-end'
+    },
+    modal:{
+        flex: 1,
+        justifyContent: 'bottom',   
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
     }
 
 });

@@ -20,6 +20,7 @@ const items = {
 const ViewOrderDetailScreen = ({route}) => {
   console.log('route/////', route?.params);
   const item = route?.params.item;
+  console.log('item', item);
     return (
         <OrderDetailsLayout>
             <View style={styles.container}>

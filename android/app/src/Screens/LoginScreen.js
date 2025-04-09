@@ -11,7 +11,7 @@ import Recaptcha, { RecaptchaRef } from 'react-native-recaptcha-that-works';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useContext } from 'react';
-import { AuthContext } from '../Context/authContext'
+import { AuthContext } from '../Context/authContext';
 
 
 const LoginScreen = ({ navigation }) => {
@@ -88,9 +88,11 @@ const { setToken } = useContext(AuthContext);
                     setVisibleModal(false);
                     return
                 }else{
-                    
-                    await AsyncStorage.setItem("token", data?.data?.token);
-                    setToken(data.data.token);
+                    if(data?.data?.token){
+
+                        await AsyncStorage.setItem("token", data?.data?.token);
+                        setToken(data.data.token);
+                    }
                     
                     navigation.dispatch(
                         CommonActions.reset({

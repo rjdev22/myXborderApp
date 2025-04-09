@@ -28,6 +28,7 @@ const ShopNshipShipmentAddress = ({ navigation, route }) => {
     const [courierType, setCourierType] = useState([]);
 
   //  console.log("0000000000", courierType, token);
+ 
 
     useEffect(() => {
 
@@ -119,10 +120,10 @@ const ShopNshipShipmentAddress = ({ navigation, route }) => {
                     orderSubType: selectedOrderType,
                     courierType: selectedCourierType,
                     addressId: address,
-                    remark: "Urgent delivery",
+                    remark: route?.params?.remark,
                     chat: "Please deliver fast",
                     assestedPrice: 3000,
-                    additems: route.params.additems
+                    additems: route?.params?.additems
                 })
             })
             const data = await response.json();
@@ -164,7 +165,20 @@ const ShopNshipShipmentAddress = ({ navigation, route }) => {
                             <ExistaddressList navigation={navigation} handleCreateOrder={handleCreateOrder} />
                         ) :
                             creteAddress ? (
-                                <CreateNewAddress navigation={navigation} />
+                                <CreateNewAddress
+                                 navigation={navigation} 
+                                 orderUrl={order_url}
+                                 orderSubType={selectedOrderType}
+                                 courierType={selectedCourierType}
+                                 remark={route?.params?.remark}
+                                 additems={route?.params?.additems}
+                                 
+                                 
+                                 
+                                 
+                                 
+                                 
+                                 />
                             )
                                 : (
                                     <View>

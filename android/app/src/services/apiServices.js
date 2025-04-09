@@ -1,8 +1,13 @@
-const API_DOMAIN = 'https://uat.myxborder.com' 
-const baseUrl = `${API_DOMAIN}/api/v1`;
+// import {RAZORPAY_SECRET_KEY,RAZORPAY_API_KEY,APP_DOMAIN  } from '@env';
+//const {RAZORPAY_SECRET_KEY,RAZORPAY_API_KEY,APP_DOMAIN  } = process.env;
+const APP_DOMAIN = process.env.APP_DOMAIN;
+console.log('env variables',APP_DOMAIN);
+const baseUrl = `${APP_DOMAIN}/api/v1`;
+
+
 
 //auth url
-export const imageUrl = `${API_DOMAIN}`;
+export const imageUrl = `${APP_DOMAIN}`;
 export const registerApi = `${baseUrl}/register`;
 export const loginApi = `${baseUrl}/login`;
 export const homeApi = `${baseUrl}/home`;
@@ -22,7 +27,12 @@ export const createShopNShipOrder = `${baseUrl}/order/create/shopnship`;
 export const createAssistedSopNShipOrder = `${baseUrl}/order/create/assistedshopnship`;
 export const createInternationalShipmentOrder = `${baseUrl}/order/create/international`;
 export const AddItemToOrder=`${baseUrl}/order/add_item`;
-export const orderDetails=`${baseUrl}/order/details`;
+export const orderDetails=`${baseUrl}/order_detail`;
+export const searchshopnshipOrder=`${baseUrl}/list/orders/shopnship`;
+export const searchAssistedOrder=`${baseUrl}/list/orders/assistedshopnship`;
+export const searchInternationalOrder=`${baseUrl}/list/orders/internationalShipment`;
+
+
 
 
 //address url
@@ -37,4 +47,11 @@ export const get_order_types=`${baseUrl}/get_order_types`;
 export const get_courier_types=`${baseUrl}/get_courier_types`;
 export const get_all_country=`${baseUrl}/get_all_country`;
 export const get_order_notification=`${baseUrl}/notification/order_notifications`;
+export const get_payment_notification=`${baseUrl}/notification/payment_notifications`;
 export const get_wallet_history=`${baseUrl}/wallet/history`;
+
+
+//razorpay api
+
+export const craete_order_id='https://api.razorpay.com/v1/orders';
+

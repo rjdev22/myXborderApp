@@ -49,7 +49,9 @@ const AddressBookScreen = ({ navigation, }) => {
     useEffect(() => {
         async function fetchData() {
             try {
-                setIsLoading(true);
+                if (!pageRefresh) {
+                    setIsLoading(true); 
+                }
                 const response = await fetch(getExistAddressList, {
 
                     headers: {
@@ -75,7 +77,7 @@ const AddressBookScreen = ({ navigation, }) => {
 
 
         console.log('address id', id)
-        setIsLoading(true);
+        //setIsLoading(true);
         try {
             const response = await fetch(DeleteAddressURl + `${id}`, {
 
@@ -87,15 +89,15 @@ const AddressBookScreen = ({ navigation, }) => {
             console.log('delete address response data', data);
             if (data.status === true) {
                 Toast.show('Address Deleted Successfully', { type: 'success', style: { width: 500 } })
+                setAddressListData(prevList => prevList.filter(address => address.id !== id));
+                setPageRefresh(prev => !prev);
             }
-            setPageRefresh(true);
-            setIsLoading(false);
+          
 
         } catch (error) {
             console.log(error);
             Toast.show('something went wrong, please try again', { type: 'success', style: { width: 500 } })
-            setIsLoading(false);
-            // setPageRefresh(false);
+           
         }
     }
 

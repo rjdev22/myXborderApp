@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { View, Text, FlatList, StyleSheet, Image, Touchable, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Layout from '../Components/Common/Layout';
@@ -6,18 +6,34 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
 import { get_order_notification } from '../services/apiServices';
+import { AuthContext } from '../Context/authContext';
 
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
 export const NotificationScreen = () => {
+    const { token } = useContext(AuthContext);
+
+
+
     const [isLoading, setIsLoading] = useState(true);
     const [notificationData, setNotificationData] = useState([]);
+    console.log('notifications', notificationData)
+    console.log('length',notificationData.length)
+
+
+
+    const latestOrder = notificationData?.length
+        ? notificationData.reduce((latest, item) => (new Date(item.createdAt) > new Date(latest.createdAt) ? item : latest), notificationData[0])
+        : null;
+
+
     useEffect(() => {
         const get_notification = async () => {
+
             try {
-                const token = await AsyncStorage.getItem('token');
-                setAccessToken(token);
+
+                // setAccessToken(token);
                 const response = await fetch(get_order_notification, {
 
                     headers: {
@@ -27,7 +43,9 @@ export const NotificationScreen = () => {
 
                 })
                 const data = await response.json();
-                setNotificationData(data.data);
+
+                console.log('notification api response', data);
+                setNotificationData(data.data.data);
 
 
             }
@@ -81,7 +99,7 @@ export const NotificationScreen = () => {
 
                             notificationData.length === 0 ? (
                                 <View style={styles.emptyCard}>
-                                    <Text>No notifications <Text style={{color: '#008000'}}>(Available:0)</Text> at tha moment</Text>
+                                    <Text>No notifications <Text style={{ color: '#008000' }}>(Available:0)</Text> at tha moment</Text>
                                 </View>
                             ) :
                                 <FlatList
@@ -90,23 +108,24 @@ export const NotificationScreen = () => {
                                     renderItem={({ item }) => (
                                         <TouchableOpacity>
                                             <View style={styles.notificationItem}>
-                                                <Icon name="bell" size={24} color="black" style={styles.icon} />
+                                                <Image source={require('../assets/bell.png')} style={styles.icon} />
                                                 <View style={styles.textContainer}>
-                                                    <Text style={styles.title}>{item.type}</Text>
-                                                    <Text style={styles.message}>{item.message}</Text>
-                                                    <Text style={styles.timestamp}>{item.timestamp}</Text>
+                                                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                                                    <Text style={styles.title}>{item.title}</Text>
+                                                    {latestOrder && latestOrder.id === item.id && (
+                                                        <TouchableOpacity style={styles.latestButton} onPress={() => console.log("Latest Order Clicked")}>
+                                                            <Text style={styles.buttonText}>New</Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    </View>
+                                                    <Text style={styles.message}>{item.description}</Text>
+                                                    <Text style={styles.timestamp}>{item.createdAt.split("T")[0]}</Text>
                                                 </View>
                                             </View>
                                         </TouchableOpacity>
                                     )}
                                 />
-
-
-
                         )
-
-
-
                 }
             </View>
         </Layout>
@@ -116,7 +135,6 @@ export const NotificationScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        //backgroundColor: '#f5f5f5',
         padding: 10,
     },
     notificationItem: {
@@ -134,6 +152,8 @@ const styles = StyleSheet.create({
     },
     icon: {
         marginRight: 10,
+        height: 30,
+        width: 30
     },
     textContainer: {
         flex: 1,
@@ -146,13 +166,13 @@ const styles = StyleSheet.create({
     message: {
         fontSize: 14,
         color: '#555',
-        fontWeight: 'bold',
+        // fontWeight: 'bold',
         marginVertical: 2,
     },
     timestamp: {
         fontSize: 14,
         color: '#555',
-        fontWeight: 'bold',
+        // fontWeight: 'bold',
     },
     iconPlaceholder: {
         height: 40,
@@ -165,15 +185,26 @@ const styles = StyleSheet.create({
     },
 
     emptyCard: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    //margin: 10,
-    padding: 15,
-    backgroundColor: 'white',
-    
-    borderRadius: 5,
-    elevation: 3
-},
+        justifyContent: 'center',
+        alignItems: 'center',
+        //margin: 10,
+        padding: 15,
+        backgroundColor: 'white',
+
+        borderRadius: 5,
+        elevation: 3
+    },
+    latestButton: {
+        backgroundColor: "#ff9800",
+        paddingVertical: 2,
+        paddingHorizontal: 6,
+        borderRadius: 15,
+    },
+    buttonText: {
+        color: "#fff",
+        fontSize: 12,
+        fontWeight: "bold",
+    },
 
 
 });

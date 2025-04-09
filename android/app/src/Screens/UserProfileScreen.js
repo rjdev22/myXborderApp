@@ -54,7 +54,8 @@ const UserProfileScreen = () => {
         }
 
         fetchUserProfile();
-        console.log('user data', userData);
+        console.log('user data', userData.whatsappStatus);
+
     }, [pageRefresh]);
 
 
@@ -66,8 +67,49 @@ const UserProfileScreen = () => {
         setOpenEditModal(false);
     };
 
-    const handleNotificationOff = () => {
-        Alert.alert('Notification off');
+    const handleNotification = () => {
+
+        if (userData.whatsappStatus === 'Off'){
+
+            Alert.alert(
+                       "Alert",
+                       "Are you sure you want to On your whatsapp notification?",
+                       [
+                           {
+                           text: "CANCEL",
+                               style: "cancel",
+                           },
+                           {
+                               text: "YES",
+                               
+                           },
+                       ],
+                       { cancelable: true }
+                   );
+        } else{
+            Alert.alert(
+                "Alert",
+                "Are you sure you want to Off your whatsapp notification?",
+                [
+                    {
+                    text: "CANCEL",
+                        style: "cancel",
+                    },
+                    {
+                        text: "YES",
+                        
+                    },
+                ],
+                { cancelable: true }
+            );
+        }
+
+
+
+
+
+
+
     };
 
     return (
@@ -214,7 +256,7 @@ const UserProfileScreen = () => {
 
                             <TouchableOpacity
                                 style={styles.button}
-                                onPress={handleNotificationOff}
+                                onPress={handleNotification}
                             >
                                 <LinearGradient
                                     start={{ x: 0, y: 0 }}
@@ -222,7 +264,8 @@ const UserProfileScreen = () => {
                                     colors={['#d81397', '#0d5cc2']}
                                     style={styles.gradientButton}
                                 >
-                                    <Text style={styles.buttonText}>Notification off</Text>
+                                    
+                                    <Text style={styles.buttonText}>{userData.whatsappStatus === 'Off' ? 'Notification On' : 'Notification off'}</Text>
                                 </LinearGradient>
                             </TouchableOpacity>
                         </View>

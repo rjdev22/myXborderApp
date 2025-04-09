@@ -105,9 +105,6 @@ const ExistaddressList = ({ navigation, handleCreateOrder }) => {
             )}
         </View>
 
-
-
-
     );
 };
 

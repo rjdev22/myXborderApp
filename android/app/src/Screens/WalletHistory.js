@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { View, Text, FlatList, StyleSheet, Image, Touchable, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Layout from '../Components/Common/Layout';
@@ -6,17 +6,24 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
 import { get_wallet_history } from '../services/apiServices';
+import { AuthContext } from '../Context/authContext';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
 export const WalletHistory = () => {
+
+
+    const { token } = useContext(AuthContext)
     const [isLoading, setIsLoading] = useState(true);
     const [walletData, setWalletData] = useState([]);
+    const [walletBalance,setWalletBalance] = useState('');
+
+    console.log('walletData', walletData);
     useEffect(() => {
         const get_notification = async () => {
             try {
-                const token = await AsyncStorage.getItem('token');
-                setAccessToken(token);
+
+
                 const response = await fetch(get_wallet_history, {
 
                     headers: {
@@ -26,7 +33,8 @@ export const WalletHistory = () => {
 
                 })
                 const data = await response.json();
-                setWalletData(data.data);
+                setWalletData(data.data.data);
+                setWalletBalance(data.data.walletBalance)
             }
             catch {
                 console.log(error);
@@ -53,7 +61,7 @@ export const WalletHistory = () => {
                             renderItem={({ item }) => (
                                 <TouchableOpacity>
                                     <View style={styles.notificationItem}>
-                        
+
                                         <View style={styles.textContainer}>
                                             <ShimmerPlaceholder visible={!isLoading} style={styles.textPlaceholder}>
 
@@ -72,30 +80,35 @@ export const WalletHistory = () => {
                                     </View>
                                 </TouchableOpacity>
                             )}
-                        />) : (
-                            walletData.length === 0 ? (
-                                <View style={styles.emptyCard}>
-                                    <Text>You Have<Text style={{ color: '#008000' }}>(Available:0)</Text>Wallet Transaction list</Text>
-                                </View>
-                            ) :
+                        />) :
+
+
+
+                        (
+
+                                <View>
+                                    <View style={styles.emptyCard}>
+                                        <Text>You Have <Text style={{ color: '#008000' }}>(Available:{walletBalance})</Text> Wallet Transaction list</Text>
+                                    </View>
+                                
                                 <FlatList
-                                    data={notificationData}
+                                    data={walletData}
                                     keyExtractor={(item) => item.id}
                                     renderItem={({ item }) => (
                                         <TouchableOpacity>
                                             <View style={styles.notificationItem}>
-                                                <Icon name="bell" size={24} color="black" style={styles.icon} />
+
                                                 <View style={styles.textContainer}>
                                                     <Text style={styles.title}>{item.type}</Text>
-                                                    <Text style={styles.message}>{item.message}</Text>
-                                                    <Text style={styles.timestamp}>{item.timestamp}</Text>
+                                                    <Text style={styles.message}>{item.amount}</Text>
+                                                    <Text style={styles.timestamp}>{item.created_at.split("T")[0]}</Text>
                                                 </View>
                                             </View>
                                         </TouchableOpacity>
                                     )}
                                 />
+                                </View>
                         )
-
                 }
             </View>
         </Layout>
@@ -105,7 +118,7 @@ export const WalletHistory = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-       // backgroundColor: '#f5f5f5',
+        // backgroundColor: '#f5f5f5',
         padding: 10,
     },
     notificationItem: {
@@ -151,18 +164,22 @@ const styles = StyleSheet.create({
     },
     textPlaceholder: {
         marginBottom: 8,
-        width:280,
+        width: 280,
     },
 
     emptyCard: {
-        justifyContent: 'center',
+        flexDirection: 'row',
         alignItems: 'center',
-        //margin: 10,
+        backgroundColor: '#fff',
+        justifyContent: 'center',
         padding: 15,
-        backgroundColor: 'white',
-
+        marginVertical: 5,
         borderRadius: 5,
-        elevation: 3
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 2,
     },
 
 

@@ -13,7 +13,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import LinearGradient from 'react-native-linear-gradient';
 import Layout from '../Components/Common/Layout';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
-import { AssistedShopNShipOrders, get_item_types } from '../services/apiServices';
+import { AssistedShopNShipOrders, get_item_types,searchAssistedOrder } from '../services/apiServices';
 import { useContext } from 'react';
 import { AuthContext } from '../Context/authContext';
 
@@ -72,6 +72,31 @@ const handleFilterData = async (option) => {
         }
 
     }
+
+    // const handleSearch = async () => {
+    //     console.log('query', query);
+    //     console.log('token', token);
+    //     try {
+    //         const response = await fetch(searchAssistedOrder + `/${query}` , {
+    //             method: 'GET',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //                 'Authorization': `Bearer ${token}`
+    //             },
+    //         })
+    //         const data = await response.json();
+    //         console.log('search details', data);
+    //         setOrderData(data.data);
+
+    //     } catch (error) {
+    //         console.log("error in order search", error);
+
+    //     }
+    // }
+
+    // useEffect(() => {
+    //     handleSearch();
+    // }, [query]);
 
 
 
@@ -175,7 +200,7 @@ const handleFilterData = async (option) => {
                                         <Icon
                                             name={selectedOption === item.label ? "dot-circle-o" : "circle-o"}
                                             size={20}
-                                            color={selectedOption === item.label ? "#008000" : "#000"}
+                                            color={selectedOption === item.label ? "blue" : "#ccc"}
                                             style={styles.radioIcon}
                                         />
                                         </View>
@@ -476,7 +501,8 @@ const styles = StyleSheet.create({
         backgroundColor: "rgba(0,0,0,0.5)",
     },
     modalContent: {
-        width: 300,
+        width: 380  ,
+        borderRadius: 15,
         backgroundColor: "#fff",
 
         padding: 10,

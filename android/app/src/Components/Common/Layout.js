@@ -175,7 +175,7 @@ const Layout = ({ children }) => {
                   
                       <TouchableOpacity style={styles.modalItem} onPress={() => {
                         setModalVisible(false);
-                        navigation.navigate('NotificationScreen');
+                        navigation.navigate('Home', { screen: 'PaymentNotificationScreen'});
                       }}>
                         <View style={styles.modalTextRow}>
                           <View style={{ width: 30 }}>

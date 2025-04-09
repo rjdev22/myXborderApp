@@ -1,4 +1,4 @@
-import React, { useEffect, useState,useContext } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import {
     View,
     Text,
@@ -19,14 +19,15 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Clipboard from '@react-native-clipboard/clipboard';
 import EditProfileModal from '../Components/Modals/EditProfileModal';
 import { AuthContext } from '../Context/authContext';
+import VirtualAddressInfo from '../Components/Modals/VirtualAddressInfo';
 
 
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const DashBoardScreen = ({ navigation }) => {
 
-    const{token,pageRefresh,setPageRefresh}=useContext(AuthContext);
-
+    const { token, pageRefresh, setPageRefresh } = useContext(AuthContext);
+    console.log('token', token);
 
     const [userData, setUserData] = useState({});
     const [isLoading, setIsLoading] = useState(true);
@@ -35,6 +36,17 @@ const DashBoardScreen = ({ navigation }) => {
     const [orderData, setOrderData] = useState({});
     const [accessToken, setAccessToken] = useState(null);
     const [openEditModal, setOpenEditModal] = useState(false);
+    const [openInfoModal, setOpenInfoModal] = useState(false);
+    
+
+const openModal = () => {
+    setOpenInfoModal(true);
+}
+const closeModal = () => {
+    setOpenInfoModal(false);
+}
+
+
 
     const get_all_item = async () => {
         try {
@@ -59,7 +71,7 @@ const DashBoardScreen = ({ navigation }) => {
         }
     }
 
-    
+
     useEffect(() => {
         const fetchUserData = async () => {
             try {
@@ -76,7 +88,7 @@ const DashBoardScreen = ({ navigation }) => {
                 const data = await response.json();
                 console.log('user data', data);
                 setUserData(data.data);
-                if (!data.data.first_name&&!data.data.last_name) {
+                if (!data.data.first_name && !data.data.last_name) {
                     setOpenEditModal(true);
                 }
                 // setPageRefresh(false);
@@ -111,7 +123,7 @@ const DashBoardScreen = ({ navigation }) => {
 
     const copy = (text) => {
         Clipboard.setString(text);
-        Toast.show("Copied to clipboard", { type: 'success',style: { width:500}});
+        Toast.show("Copied to clipboard", { type: 'success', style: { width: 500 } });
         //alert("Copied to clipboard!");
     };
 
@@ -173,11 +185,11 @@ const DashBoardScreen = ({ navigation }) => {
                         </TouchableOpacity>
                         {
                             !isLoading &&
-                        <TouchableOpacity onPress={() => navigation.navigate('Home', { screen: 'AddShopNShipScreen', params: { itemData: itemData, orderData: orderData, courierData: courierData } })}>
-                            <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} colors={['#d81397', '#0d5cc2']} style={styles.orderButton}>
-                                <Text style={styles.orderButtonText}>Create Order</Text>
-                            </LinearGradient>
-                        </TouchableOpacity>}
+                            <TouchableOpacity onPress={() => navigation.navigate('Home', { screen: 'AddShopNShipScreen', params: { itemData: itemData, orderData: orderData, courierData: courierData } })}>
+                                <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} colors={['#d81397', '#0d5cc2']} style={styles.orderButton}>
+                                    <Text style={styles.orderButtonText}>Create Order</Text>
+                                </LinearGradient>
+                            </TouchableOpacity>}
                     </View>
 
                     <View style={styles.orderRow}>
@@ -193,11 +205,11 @@ const DashBoardScreen = ({ navigation }) => {
                         </TouchableOpacity>
                         {
                             !isLoading &&
-                        <TouchableOpacity onPress={() => navigation.navigate('Home', { screen: 'AddAssistedShopNShipScreen' })}>
-                            <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} colors={['#d81397', '#0d5cc2']} style={styles.orderButton}>
-                                <Text style={styles.orderButtonText}>Create Order</Text>
-                            </LinearGradient>
-                        </TouchableOpacity>}
+                            <TouchableOpacity onPress={() => navigation.navigate('Home', { screen: 'AddAssistedShopNShipScreen' })}>
+                                <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} colors={['#d81397', '#0d5cc2']} style={styles.orderButton}>
+                                    <Text style={styles.orderButtonText}>Create Order</Text>
+                                </LinearGradient>
+                            </TouchableOpacity>}
                     </View>
 
                     <View style={styles.orderRowlast}>
@@ -212,18 +224,25 @@ const DashBoardScreen = ({ navigation }) => {
                         </TouchableOpacity>
                         {
                             !isLoading &&
-                        <TouchableOpacity onPress={() => navigation.navigate('Home', { screen: 'AddInternationalShipmentScreen' })}>
-                            <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} colors={['#d81397', '#0d5cc2']} style={styles.orderButton}>
-                                <Text style={styles.orderButtonText}>Create Order</Text>
-                            </LinearGradient>
-                        </TouchableOpacity>
+                            <TouchableOpacity onPress={() => navigation.navigate('Home', { screen: 'AddInternationalShipmentScreen' })}>
+                                <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} colors={['#d81397', '#0d5cc2']} style={styles.orderButton}>
+                                    <Text style={styles.orderButtonText}>Create Order</Text>
+                                </LinearGradient>
+                            </TouchableOpacity>
 
                         }
                     </View>
                 </View>
 
                 <View style={styles.addressCard}>
-                    <Text style={styles.headerText}>Your Virtual Address</Text>
+                    <View style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                    }}>
+                        <Text style={styles.headerText}>Your Virtual Address</Text>
+                        <TouchableOpacity onPress={openModal} > <Icon name="info-circle" size={14} color="#d81397" style={styles.icon} /></TouchableOpacity>
+                     
+                    </View>
 
                     {Object.entries(addressData).map(([key, value]) => (
                         <View key={key} style={styles.addressRow}>
@@ -249,10 +268,10 @@ const DashBoardScreen = ({ navigation }) => {
                         visible={openEditModal}
                         onRequestClose={handleCloseEditModal}
                     >
-                        <EditProfileModal onClose={handleCloseEditModal} userData={userData}  />
+                        <EditProfileModal onClose={handleCloseEditModal} userData={userData} />
                     </Modal>
                 </View>
-
+            <VirtualAddressInfo onClose={closeModal} visible={openInfoModal}  />
             </ScrollView  >
         </Layout>
     );
@@ -353,6 +372,10 @@ const styles = StyleSheet.create({
     copyIcon: {
         fontSize: 12,
         marginLeft: 10,
+    },
+    icon: {
+        marginLeft:0,
+        bottom: 8
     },
     imagePlaceholder: { width: 70, height: 70, borderRadius: 45 },
     textPlaceholder: { width: '100%', marginBottom: 2, marginLeft: 10 },
