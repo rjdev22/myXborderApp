@@ -15,7 +15,7 @@ import { SvgUri } from 'react-native-svg';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Loader from '../Modals/Loader';
 import { useContext } from 'react';
-import { AuthContext } from '../../Context/authContext';
+import { AuthContext } from '../../Context/MainContext';
 import { deleteAccountApi } from '../../services/apiServices';
 import { scaleZetaToMatchClamps } from 'react-native-reanimated/lib/typescript/animation/springUtils';
 

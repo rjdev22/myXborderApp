@@ -4,7 +4,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import DropDown from '../Common/DropDown';
 import Loader from './Loader';
 import { AddItemToOrder } from '../../services/apiServices';
-import { AuthContext } from '../../Context/authContext';
+import { AuthContext } from '../../Context/MainContext';
 import { Toast } from 'react-native-toast-notifications';
 import { set } from 'react-native-reanimated';
 

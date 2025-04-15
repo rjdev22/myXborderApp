@@ -17,7 +17,7 @@ import CreateNewAddress from '../Address/CreateNewAddress';
 import Loader from '../../Components/Modals/Loader';
 import { Toast } from 'react-native-toast-notifications';
 import { get_courier_types, get_order_types } from '../../services/apiServices';
-import { AuthContext } from '../../Context/authContext';
+import { AuthContext } from '../../Context/MainContext';
 import { useContext } from 'react';
 
 const ShopNshipShipmentAddress = ({ navigation, route }) => {

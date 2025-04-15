@@ -11,7 +11,7 @@ import Recaptcha, { RecaptchaRef } from 'react-native-recaptcha-that-works';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useContext } from 'react';
-import { AuthContext } from '../../Context/authContext';
+import { AuthContext } from '../../Context/MainContext';
 
 
 const LoginScreen = ({ navigation }) => {

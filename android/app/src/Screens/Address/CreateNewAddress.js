@@ -5,7 +5,7 @@ import { CreateNewAddressURl } from '../../services/apiServices';
 import Loader from '../../Components/Modals/Loader';
 import { Toast } from 'react-native-toast-notifications';
 import { useNavigation } from '@react-navigation/native';
-import { AuthContext } from '../../Context/authContext';
+import { AuthContext } from '../../Context/MainContext';
 import { set } from 'react-native-reanimated';
 
 

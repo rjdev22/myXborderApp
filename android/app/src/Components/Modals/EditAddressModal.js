@@ -4,7 +4,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import { UpdateAddressURl } from '../..//services/apiServices';
 import { ScrollView } from 'react-native-gesture-handler';
 import Loader from './Loader';
-import { AuthContext } from '../../Context/authContext';
+import { AuthContext } from '../../Context/MainContext';
 import { useContext } from 'react';
 import { Toast } from 'react-native-toast-notifications';
 import { set } from 'react-native-reanimated';

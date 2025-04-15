@@ -3,7 +3,7 @@ import 'react-native-gesture-handler';
 import React, { useEffect } from 'react';
 import AppNavigtion from './android/app/src/Navigation/AppNavigation';
 import Layout from './android/app/src/Components/Common/Layout';
-import { AuthProvider } from './android/app/src/Context/authContext';
+import { AuthProvider } from './android/app/src/Context/MainContext';
 import { StripeProvider } from '@stripe/stripe-react-native';
 //import messaging from '@react-native-firebase/messaging';
 const publishableKey=process.env.STRIPE_PUBLISH_KEY;

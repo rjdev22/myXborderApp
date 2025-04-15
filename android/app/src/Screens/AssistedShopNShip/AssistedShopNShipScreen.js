@@ -15,7 +15,7 @@ import Layout from '../../Components/Common/Layout';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import { AssistedShopNShipOrders, get_item_types,searchAssistedOrder } from '../../services/apiServices';
 import { useContext } from 'react';
-import { AuthContext } from '../../Context/authContext';
+import { AuthContext } from '../../Context/MainContext';
 
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);

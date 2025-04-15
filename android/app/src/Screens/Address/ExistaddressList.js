@@ -13,7 +13,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import Layout from '../../Components/Common/Layout';
 import { getExistAddressList } from '../../services/apiServices';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
-import { AuthContext } from '../../Context/authContext';
+import { AuthContext } from '../../Context/MainContext';
 
 
 

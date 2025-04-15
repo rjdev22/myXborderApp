@@ -16,7 +16,7 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import { useContext } from 'react';
-import { AuthContext } from '../Context/authContext';
+import { AuthContext } from '../Context/MainContext';
 import { Linking } from 'react-native';
 import HomeScreen from '../Screens/HomeScreen';
 import LoginScreen from '../Screens/Auth/LoginScreen';

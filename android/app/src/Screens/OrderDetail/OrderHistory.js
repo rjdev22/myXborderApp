@@ -12,7 +12,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import moment from 'moment';
 
 import { OrderHistoryUrl } from '../../services/apiServices';
-import { AuthContext } from '../../Context/authContext';
+import { AuthContext } from '../../Context/MainContext';
 
 export const OrderHistory = ({orderHistory,backtodetails }) => {
 

@@ -21,7 +21,7 @@ import {
 import BankPaymentModal from '../../Components/Modals/BankPaymentModal';
 
 import { Toast } from 'react-native-toast-notifications';
-import { AuthContext } from '../../Context/authContext';
+import { AuthContext } from '../../Context/MainContext';
 
 import { Picker } from '@react-native-picker/picker';
 import { set } from 'react-native-reanimated';

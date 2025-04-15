@@ -6,7 +6,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
 import { get_order_notification } from '../../services/apiServices';
-import { AuthContext } from '../../Context/authContext';
+import { AuthContext } from '../../Context/MainContext';
 
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);

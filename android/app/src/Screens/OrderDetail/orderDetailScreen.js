@@ -10,7 +10,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import OrderHistory from './OrderHistory';
 import { OrderHistoryUrl } from '../../services/apiServices';
 import Loader from '../../Components/Modals/Loader';
-import { AuthContext } from '../../Context/authContext';
+import { AuthContext } from '../../Context/MainContext';
 
 const items = {
     id: '1',

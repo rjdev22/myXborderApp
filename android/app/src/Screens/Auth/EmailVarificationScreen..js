@@ -9,7 +9,7 @@ import { Toast } from 'react-native-toast-notifications';
 import { CommonActions } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useContext } from 'react';
-import { AuthContext } from '../../Context/authContext';
+import { AuthContext } from '../../Context/MainContext';
 
 
 
