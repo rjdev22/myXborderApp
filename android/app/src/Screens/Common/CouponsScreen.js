@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import Layout from '../Components/Common/Layout';
+import Layout from '../../Components/Common/Layout';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Toast } from 'react-native-toast-notifications';
 import Clipboard from '@react-native-clipboard/clipboard';

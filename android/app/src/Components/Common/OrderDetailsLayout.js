@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center'
     },
-    content: { flex: 1 },
+    content: { flex: 1 ,backgroundColor:"#fff"},
     footer: {
         flexDirection: 'row',
         justifyContent: 'space-around',
@@ -84,6 +84,7 @@ const styles = StyleSheet.create({
         elevation: 3,
         shadowOpacity: 0.5,
         shadowRadius: 5,
+        boxShadow: '0 -2px 4px rgba(0, 0, 0, 0.2)',
     },
     tab: { alignItems: 'center' },
 });

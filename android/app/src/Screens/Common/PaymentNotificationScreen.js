@@ -116,6 +116,7 @@ export const PaymentpaymentNotificationScreen = ({ navigation }) => {
 
             console.log('order details', data);
             const order = data.data;
+            console.log('order', order);
             setLoadingPayment(false);
             navigation.navigate('Home',
                 {
@@ -127,10 +128,6 @@ export const PaymentpaymentNotificationScreen = ({ navigation }) => {
                     }
                 })
         }
-
-
-
-
         catch {
             console.log(error);
             setLoadingPayment(false);
@@ -311,7 +308,7 @@ export const PaymentpaymentNotificationScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 10,
+        paddingVertical:10,
     },
     paymentNotificationItem: {
         flexDirection: 'row',
@@ -319,7 +316,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         padding: 15,
         marginVertical: 5,
-        borderRadius: 5,
+        borderRadius: 0,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,

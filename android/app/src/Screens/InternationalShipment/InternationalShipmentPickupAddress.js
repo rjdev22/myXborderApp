@@ -9,15 +9,15 @@ import {
     TouchableOpacity
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import Layout from '../Components/Common/Layout'
+import Layout from '../../Components/Common/Layout'
 import { Picker } from "@react-native-picker/picker";
-import DropDown from '../Components/Common/DropDown';
-import { createShopNShipOrder, createAssistedSopNShipOrder } from '../services/apiServices';
-import ExistaddressList from './Address/ExistaddressList';
-import CreateNewAddress from './Address/CreateNewAddress';
-import Loader from '../Components/Modals/Loader';
+import DropDown from '../../Components/Common/DropDown';
+import { createShopNShipOrder, createAssistedSopNShipOrder } from '../../services/apiServices';
+import ExistaddressList from '../Address/ExistaddressList';
+import CreateNewAddress from '../Address/CreateNewAddress';
+import Loader from '../../Components/Modals/Loader';
 import { Toast } from 'react-native-toast-notifications';
-import { get_all_country } from '../services/apiServices';
+import { get_all_country } from '../../services/apiServices';
 
 const InternationalShipmentPickupAddress = ({ navigation, route }) => {
 

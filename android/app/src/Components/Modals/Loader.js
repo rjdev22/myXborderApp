@@ -6,7 +6,7 @@ const Loader = ({ visible }) => {
     <Modal transparent={true} animationType="fade" visible={visible}>
       <View style={styles.modalBackground}>
         <View style={styles.container}>
-          <ActivityIndicator size="large" color="#00ff00" />
+          <ActivityIndicator size="large" color="#007bff" />
           <Text style={styles.text}>Please Wait</Text>
         </View>
       </View>

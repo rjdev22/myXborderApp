@@ -147,7 +147,9 @@ const closeModal = () => {
                     </ShimmerPlaceholder>
                     <View>
                         <ShimmerPlaceholder visible={!isLoading} style={styles.textPlaceholder}>
+                            <TouchableOpacity onPress={() => setPageRefresh(true)}>
                             <Text style={styles.profileDetails}>{userData.first_name} {userData.last_name}</Text>
+                            </TouchableOpacity>
                         </ShimmerPlaceholder>
                         <ShimmerPlaceholder visible={!isLoading} style={styles.textPlaceholder}>
                             <Text style={styles.profileDetails}>UniqueId: {userData.user_id}</Text>

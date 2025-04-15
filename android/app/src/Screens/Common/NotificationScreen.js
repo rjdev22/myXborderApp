@@ -1,12 +1,12 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { View, Text, FlatList, StyleSheet, Image, Touchable, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import Layout from '../Components/Common/Layout';
+import Layout from '../../Components/Common/Layout';
 import { ScrollView } from 'react-native-gesture-handler';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
-import { get_order_notification } from '../services/apiServices';
-import { AuthContext } from '../Context/authContext';
+import { get_order_notification } from '../../services/apiServices';
+import { AuthContext } from '../../Context/authContext';
 
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
@@ -135,7 +135,7 @@ export const NotificationScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 10,
+        paddingVertical: 10,
     },
     notificationItem: {
         flexDirection: 'row',
@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         padding: 15,
         marginVertical: 5,
-        borderRadius: 5,
+        borderRadius: 0,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
@@ -191,7 +191,7 @@ const styles = StyleSheet.create({
         padding: 15,
         backgroundColor: 'white',
 
-        borderRadius: 5,
+        borderRadius: 0,
         elevation: 3
     },
     latestButton: {

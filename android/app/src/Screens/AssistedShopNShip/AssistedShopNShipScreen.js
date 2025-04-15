@@ -11,11 +11,11 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import LinearGradient from 'react-native-linear-gradient';
-import Layout from '../Components/Common/Layout';
+import Layout from '../../Components/Common/Layout';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
-import { AssistedShopNShipOrders, get_item_types,searchAssistedOrder } from '../services/apiServices';
+import { AssistedShopNShipOrders, get_item_types,searchAssistedOrder } from '../../services/apiServices';
 import { useContext } from 'react';
-import { AuthContext } from '../Context/authContext';
+import { AuthContext } from '../../Context/authContext';
 
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);

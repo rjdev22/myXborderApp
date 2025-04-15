@@ -1,17 +1,17 @@
 import React, { useState, useCallback, useRef } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Button } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
-import AuthLayout from "../Components/Common/AuthLayout";
-import { loginApi } from "../services/apiServices";
+import AuthLayout from "../../Components/Common/AuthLayout";
+import { loginApi } from "../../services/apiServices";
 import { CommonActions } from "@react-navigation/native";
-import Loader from "../Components/Modals/Loader";
+import Loader from "../../Components/Modals/Loader";
 import { Toast } from 'react-native-toast-notifications';
 import { useToast } from "react-native-toast-notifications";
 import Recaptcha, { RecaptchaRef } from 'react-native-recaptcha-that-works';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useContext } from 'react';
-import { AuthContext } from '../Context/authContext';
+import { AuthContext } from '../../Context/authContext';
 
 
 const LoginScreen = ({ navigation }) => {

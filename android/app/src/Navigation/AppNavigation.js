@@ -19,30 +19,31 @@ import { useContext } from 'react';
 import { AuthContext } from '../Context/authContext';
 import { Linking } from 'react-native';
 import HomeScreen from '../Screens/HomeScreen';
-import LoginScreen from '../Screens/LoginScreen';
+import LoginScreen from '../Screens/Auth/LoginScreen';
 import SignupScreen from '../Screens/SignupScreen';
 import DashBoardScreen from '../Screens/DashBoardScreen';
 import ShopNshipScreen from '../Screens/ShopNshipScreen';
 import HelpAndSupportScreen from '../Screens/Help&SupportScreen';
-import AssistedShopNShipScreen from '../Screens/AssistedShopNShipScreen';
+import AssistedShopNShipScreen from '../Screens/AssistedShopNShip/AssistedShopNShipScreen';
 import InternationalShipmentScreen from '../Screens/InternationalShipmentScreen';
 import AddInternationalShipmentScreen from '../Screens/AddInternationalShipmentScreen';
-import EmailVarificationScreen from '../Screens/EmailVarificationScreen.';
+import EmailVarificationScreen from '../Screens/Auth/EmailVarificationScreen.';
 import AddAssistedShopNShipScreen from '../Screens/AddAssistedShopNShipScreen';
-import AddShopNShipScreen from '../Screens/AddShopNShipScreen';
+import AddShopNShipScreen from '../Screens/ShopNShip/AddShopNShipScreen';
 import UserProfileScreen from '../Screens/UserProfileScreen';
-import CouponsScreen from '../Screens/CouponsScreen';
-import SplashScreen from '../Screens/SplashScreen';
-import NotificationScreen from '../Screens/NotificationScreen';
+import CouponsScreen from '../Screens/Common/CouponsScreen';
+import SplashScreen from '../Screens/Common/SplashScreen';
+import NotificationScreen from '../Screens/Common/NotificationScreen';
+import ChargesSummary from '../Screens/Common/ChargesSummaryScreen';
 import PaymentNotificationScreen from '../Screens/PaymentNotificationScreen';
 import WalletHistory from '../Screens/WalletHistory';
 import VarifyOtpScreen from '../Screens/VarifyOtpScreen';
-import ShopNshipShipmentAddress from '../Screens/ShopNShipShippingAddress';
+import ShopNshipShipmentAddress from '../Screens/Common/ShippingAddress';
 import AddressBookScreen from '../Screens/AddressBookSreen';
 import orderDetailsScreen from '../Screens/OrderDetail/orderDetailScreen';
 import ViewOrderDetailScreen from '../Screens/OrderDetail/ViewOrderDetailScreen';
-import InternationalShipmentPickupAddress from '../Screens/InternationalShipmentPickupAddress';
-import InternationalShipmentDestinationAddress from '../Screens/InternationalShipmentDestinationAddress';
+import InternationalShipmentPickupAddress from '../Screens/InternationalShipment/InternationalShipmentPickupAddress';
+import InternationalShipmentDestinationAddress from '../Screens/InternationalShipment/InternationalShipmentDestinationAddress';
 import InternationalShipmentPackageInformation from '../Screens/InternationalShipmentPackageInformation';
 
 const Stack = createStackNavigator();
@@ -198,6 +199,7 @@ function StackNavigator() {
       <Stack.Screen name="AddressBookScreen" component={AddressBookScreen} />
       <Stack.Screen name="orderDetailsScreen" component={orderDetailsScreen} />
       <Stack.Screen name="ViewOrderDetailScreen" component={ViewOrderDetailScreen} />
+      <Stack.Screen name="ChargesSummary" component={ChargesSummary} />
       <Stack.Screen name="InternationalShipmentPickupAddress" component={InternationalShipmentPickupAddress} />
       <Stack.Screen name="InternationalShipmentPackageInformation" component={InternationalShipmentPackageInformation} />
       <Stack.Screen name="InternationalShipmentDestinationAddress" component={InternationalShipmentDestinationAddress} />

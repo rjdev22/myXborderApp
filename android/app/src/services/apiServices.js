@@ -1,9 +1,6 @@
-// import {RAZORPAY_SECRET_KEY,RAZORPAY_API_KEY,APP_DOMAIN  } from '@env';
-//const {RAZORPAY_SECRET_KEY,RAZORPAY_API_KEY,APP_DOMAIN  } = process.env;
 const APP_DOMAIN = process.env.APP_DOMAIN;
 console.log('env variables',APP_DOMAIN);
 const baseUrl = `${APP_DOMAIN}/api/v1`;
-
 
 
 //auth url
@@ -31,6 +28,7 @@ export const orderDetails=`${baseUrl}/order_detail`;
 export const searchshopnshipOrder=`${baseUrl}/list/orders/shopnship`;
 export const searchAssistedOrder=`${baseUrl}/list/orders/assistedshopnship`;
 export const searchInternationalOrder=`${baseUrl}/list/orders/internationalShipment`;
+export const OrderHistoryUrl=`${baseUrl}/order/history`;
 
 
 
@@ -49,9 +47,11 @@ export const get_all_country=`${baseUrl}/get_all_country`;
 export const get_order_notification=`${baseUrl}/notification/order_notifications`;
 export const get_payment_notification=`${baseUrl}/notification/payment_notifications`;
 export const get_wallet_history=`${baseUrl}/wallet/history`;
+export const get_Bank_detail=`${baseUrl}/bank_detail`;
 
 
-//razorpay api
 
-export const craete_order_id='https://api.razorpay.com/v1/orders';
+//STRIPE PAYMENT
+
+export const create_payment_intent=`${baseUrl}/shipping/stripe`;
 

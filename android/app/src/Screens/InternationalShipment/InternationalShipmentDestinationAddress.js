@@ -9,11 +9,11 @@ import {
     TouchableOpacity
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import Layout from '../Components/Common/Layout'
-import DropDown from '../Components/Common/DropDown';
-import { createInternationalShipmentOrder } from '../services/apiServices';
+import Layout from '../../Components/Common/Layout'
+import DropDown from '../../Components/Common/DropDown';
+import { createInternationalShipmentOrder } from '../../services/apiServices';
 
-import Loader from '../Components/Modals/Loader';
+import Loader from '../../Components/Modals/Loader';
 import { Toast } from 'react-native-toast-notifications';
 
 
