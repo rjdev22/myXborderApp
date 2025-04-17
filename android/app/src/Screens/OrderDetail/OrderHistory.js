@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import moment from 'moment';
-
 import { OrderHistoryUrl } from '../../services/apiServices';
 import { AuthContext } from '../../Context/MainContext';
 
@@ -52,6 +51,7 @@ export const OrderHistory = ({orderHistory,backtodetails }) => {
         keyExtractor={(item) => item.id.toString()}
         renderItem={renderItem}
         contentContainerStyle={{ paddingVertical: 16 }}
+        
         //ListEmptyComponent={<Text>Loading...</Text>}
       />
     </SafeAreaView>

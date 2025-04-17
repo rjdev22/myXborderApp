@@ -1,12 +1,12 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { View, Text, FlatList, StyleSheet, Image, Touchable, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import Layout from '../Components/Common/Layout';
+import Layout from '../../Components/Common/Layout';
 import { ScrollView } from 'react-native-gesture-handler';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
 import { get_wallet_history } from '../services/apiServices';
-import { AuthContext } from '../Context/authContext';
+import { AuthContext } from '../../Context/MainContext';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 

@@ -30,7 +30,7 @@ const VirtualAddressInfo = ({ visible, onClose, }) => {
 
 
 
-                            <Text style={{ fontSize: 16, marginTop: 10 }}> This is your Indian Shipping Address, which you can use as a delivery address to shop from ANY Indian online Store.</Text>
+                            <Text style={{ fontSize: 16, marginTop: 10 }}>This is your Indian Shipping Address, which you can use as a delivery address to shop from ANY Indian online Store.</Text>
                             <Text style={{ fontSize: 16, marginTop: 10, fontWeight: 'bold' }}>Why do I need this address?</Text>
 
                             <Text style={{ fontSize: 16, marginTop: 10 }}>This is needed when you want to shop from Indian Stores & get it shipped to your doorstep abroad(outside India). Most Online Indian stores accept only Indian Addresses for delivering their goods. In such cases you can use this address with the unique locker number as your delivery address.</Text>
@@ -90,16 +90,17 @@ const styles = StyleSheet.create({
     },
     buttonContainer: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        justifyContent: 'flex-end',
         marginTop: 20,
         marginBottom: 30
     },
     button: {
         flex: 1,
-        padding: 16,
+        padding: 10,
         borderRadius: 5,
         alignItems: 'center',
-        marginHorizontal: 5,
+        
+       /// marginHorizontal: 5,
     },
     saveButton: {
         backgroundColor: '#6a11cb',

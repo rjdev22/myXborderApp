@@ -10,16 +10,16 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import LinearGradient from 'react-native-linear-gradient';
-import Layout from '../Components/Common/Layout';
+import Layout from '../../Components/Common/Layout';
 import { Toast } from 'react-native-toast-notifications';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import { SvgUri } from 'react-native-svg';
-import { getUserProfile, get_item_types } from '../services/apiServices';
+import { getUserProfile, get_item_types } from '../../services/apiServices';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Clipboard from '@react-native-clipboard/clipboard';
-import EditProfileModal from '../Components/Modals/EditProfileModal';
-import { AuthContext } from '../Context/authContext';
-import VirtualAddressInfo from '../Components/Modals/VirtualAddressInfo';
+import EditProfileModal from '../../Components/Modals/EditProfileModal';
+import { AuthContext } from '../../Context/MainContext';
+import VirtualAddressInfo from '../../Components/Modals/VirtualAddressInfo';
 
 
 

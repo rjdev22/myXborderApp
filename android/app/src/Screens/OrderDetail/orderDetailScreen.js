@@ -97,7 +97,6 @@ const OrderDetailsScreen = ({ navigation, route }) => {
     }
 
 
-
     const handleTabPress = (tab) => {
         setActiveTab(tab);
         if (tab === 'Address') {
@@ -114,8 +113,6 @@ const OrderDetailsScreen = ({ navigation, route }) => {
             setShowMessage(false);
         }
     };
-
-
 
     return (
         <OrderDetailsLayout>

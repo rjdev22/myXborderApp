@@ -9,8 +9,8 @@ import {
     TouchableOpacity
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import Layout from '../Components/Common/Layout';
-import DropDown from '../Components/Common/DropDown';
+import Layout from '../../Components/Common/Layout';
+import DropDown from '../../Components/Common/DropDown';
 
 const AddAssistedShopNShipScreen = ({ navigation, route }) => {
     const itemData=route?.params?.itemData || [];

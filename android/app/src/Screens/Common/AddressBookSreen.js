@@ -11,15 +11,15 @@ import {
     Alert
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import { getExistAddressList } from '../services/apiServices';
+import { getExistAddressList,DeleteAddressURl } from '../../services/apiServices';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
-import { AuthContext } from '../Context/authContext';
-import Layout from '../Components/Common/Layout';
+import { AuthContext } from '../../Context/MainContext';
+import Layout from '../../Components/Common/Layout';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { DeleteAddressURl } from '../services/apiServices';
-import Loader from '../Components/Modals/Loader';
+//import { DeleteAddressURl } from '../../services/apiServices';
+
 import { Toast } from 'react-native-toast-notifications';
-import EditAddressModal from '../Components/Modals/EditAddressModal';
+import EditAddressModal from '../../Components/Modals/EditAddressModal';
 import { set } from 'react-native-reanimated';
 
 
@@ -88,19 +88,17 @@ const AddressBookScreen = ({ navigation, }) => {
             const data = await response.json();
             console.log('delete address response data', data);
             if (data.status === true) {
-                Toast.show('Address Deleted Successfully', { type: 'success', style: { width: 500 } })
+                Toast.show('Address Deleted from your address book', { type: 'success', style: { width: 500 } })
                 setAddressListData(prevList => prevList.filter(address => address.id !== id));
-                setPageRefresh(prev => !prev);
+                setPageRefresh(true);
             }
           
-
         } catch (error) {
             console.log(error);
             Toast.show('something went wrong, please try again', { type: 'success', style: { width: 500 } })
            
         }
     }
-
 
     function DeleteAddress(id) {
         Alert.alert(
@@ -175,7 +173,7 @@ const AddressBookScreen = ({ navigation, }) => {
 
                 ) : (
                     <View style={styles.noDataContainer}>
-                        <Image source={require('../assets/home-address.png')} style={styles.noDataImage} />
+                        <Image source={require('../../assets/home-address.png')} style={styles.noDataImage} />
                         <Text style={styles.noDataText}>No Existing Address</Text>
                     </View>
                 )}

@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react'
 import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import { CreateNewAddressURl } from '../../services/apiServices';
+import { CreateNewAddressURl, basUrl } from '../../services/apiServices';
 import Loader from '../../Components/Modals/Loader';
 import { Toast } from 'react-native-toast-notifications';
 import { useNavigation } from '@react-navigation/native';
@@ -11,7 +11,7 @@ import { set } from 'react-native-reanimated';
 
 
 
-const CreateNewAddress = ({ orderUrl,orderSubType,courierType,remark,additems }) => {
+const CreateNewAddress = ({ orderUrl, orderSubType, courierType, remark, additems }) => {
 
     const navigation = useNavigation();
     const { token } = useContext(AuthContext);
@@ -32,6 +32,22 @@ const CreateNewAddress = ({ orderUrl,orderSubType,courierType,remark,additems })
         pin: '',
     });
     const [errors, setErrors] = useState({});
+
+
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [areaCode, setAreaCode] = useState('');
+    const [gateCode, setGateCode] = useState('');
+    const [streetAddress, setStreetAddress] = useState('');
+
+
+    const [primaryPhone, setPrimaryPhone] = useState('');
+    const [city, setCity] = useState('');
+    const [state, setState] = useState('');
+    const [country, setCountry] = useState('');
+    const [pin, setPin] = useState('');
+
+
     const validateForm = () => {
         let tempErrors = {};
         Object.keys(formData).forEach((key) => {
@@ -49,41 +65,52 @@ const CreateNewAddress = ({ orderUrl,orderSubType,courierType,remark,additems })
 
 
     const handleSaveButton = async () => {
-       // if (!validateForm()) return;
-        console.log('formdata', formData)
+        // if (!validateForm()) return;
+        console.log('address url', CreateNewAddressURl)
+        console.log('formdata', firstName, lastName, areaCode, gateCode, streetAddress, primaryPhone, city, state, country, pin)
         console.log('token', token)
-       setIsLoading(true);
+        console.log('order url', basUrl)
+        setIsLoading(true);
         try {
-            const response = await fetch(CreateNewAddressURl, {
+            const response = await fetch('https://uat.myxborder.com/api/v1/address/create', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'multipart/form-data',
+                    'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
-                body: formData
-                
+                body: JSON.stringify({
+                    firstName,
+                    lastName,
+                    areaCode,
+                    gateCode,
+                    streetAddress,
+                    primaryPhone,
+                    city,
+                    state,
+                    country,
+                    pin
+
+                })
+
+
             });
 
 
-            // if (!response.ok) {
-            //     // API returned an error, log it
-            //     const errorText = await response.text();
-            //     throw new Error(`HTTP Error ${response.status}: ${errorText}`);
-            // }
-
-       console.log("response....",response)     
-       setIsLoading(false)
-            return
             const data = await response.json();
             console.log('Create address response:', data);
             if (data.status === true) {
                 // setIsLoading(false)
-                setId(data.data.id)
-                console.log('address id', id)
+                console.log('address id', data?.data?.id)
+                //return
+               // setId(data?.data?.id)
+                
+              //  console.log('address id', id)
 
                 try {
                     setIsLoading(true);
-                    const response = await fetch(orderUrl, {
+                    console.log('address id', data?.data?.id,orderUrl)
+                    
+                    const res = await fetch(orderUrl, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -92,18 +119,18 @@ const CreateNewAddress = ({ orderUrl,orderSubType,courierType,remark,additems })
                         body: JSON.stringify({
                             orderSubType: orderSubType,
                             courierType: courierType,
-                            addressId: id,
+                            addressId: data?.data?.id,
                             remark: remark,
                             chat: "Please deliver fast",
                             assestedPrice: 3000,
                             additems: additems
                         })
                     });
-                    const data = await response.json();
-                    console.log('Create order response:', data);
+                    const Data = await res.json();
+                    console.log('Create order response:', Data);
                     if (data.status === true)
                         navigation.navigate('DashBoardScreen')
-                    Toast.show(data.message, { type: 'success', style: { width: 500 } });
+                    Toast.show(Data.message, { type: 'success', style: { width: 500 } });
                     setIsLoading(false)
 
                 } catch (error) {
@@ -128,108 +155,153 @@ const CreateNewAddress = ({ orderUrl,orderSubType,courierType,remark,additems })
     return (
         <View style={styles.container}>
             <View style={styles.itemContainer}>
-        
-    <View style={styles.inputGroup}>
-        <Text style={styles.label}>First Name*</Text>
-        <TextInput
-            style={styles.input}
-            placeholder="Enter First Name"
-            value={formData.firstName}
-            onChangeText={(value) => handleInputChange('firstName', value)}
-        />
-    </View>
-         {errors.firstName && <Text style={styles.errorText}>{errors.firstName}</Text>}
-    
-    <View style={styles.inputGroup}>
-        <Text style={styles.label}>Last Name*</Text>
-        <TextInput
-            style={styles.input}
-            placeholder="Enter Last Name"
-            value={formData.lastName}
-            onChangeText={(value) => handleInputChange('lastName', value)}
-        />
-    </View>
-    {errors.lastName && <Text style={styles.errorText}>{errors.lastName}</Text>}
 
-   
+                <View style={styles.inputGroup}>
+                    <Text style={styles.label}>First Name*</Text>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Enter First Name"
+                        value={formData.firstName}
+                        onChangeText={(value) => {
+                            handleInputChange('firstName', value)
+                            setFirstName(value)
+                        }
+                        }
+                    />
+                </View>
+                {errors.firstName && <Text style={styles.errorText}>{errors.firstName}</Text>}
 
-    <View style={styles.inputGroup}>
-        <Text style={styles.label}> Apt., Suite,Gate Code(optional)</Text>
-        <TextInput
-            style={styles.input}
-            placeholder="Enter Gate Code"
-            value={formData.gateCode}
-            onChangeText={(value) => handleInputChange('gateCode', value)}
-        />
-    </View>
-   
+                <View style={styles.inputGroup}>
+                    <Text style={styles.label}>Last Name*</Text>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Enter Last Name"
+                        value={formData.lastName}
+                        onChangeText={(value) => {
+                            handleInputChange('lastName', value)
+                            setLastName(value)
+                        }
+                        }
+                    />
+                </View>
+                {errors.lastName && <Text style={styles.errorText}>{errors.lastName}</Text>}
 
-    <View style={styles.inputGroup}>
-        <Text style={styles.label}>Street Address*</Text>
-        <TextInput
-            style={styles.input}
-            placeholder="Enter Street Address"
-            value={formData.streetAddress}
-            onChangeText={(value) => handleInputChange('streetAddress', value)}
-        />
-    </View>
-    {errors.streetAddress && <Text style={styles.errorText}>{errors.streetAddress}</Text>}
 
-    <View style={styles.inputGroup}>
-        <Text style={styles.label}>Primary Phone*</Text>
-        <TextInput
-            style={styles.input}
-            placeholder="Enter Primary Phone"
-            value={formData.primaryPhone}
-            onChangeText={(value) => handleInputChange('primaryPhone', value)}
-        />
-    </View>
-        {errors.primaryPhone && <Text style={styles.errorText}>{errors.primaryPhone}</Text>}
 
-    <View style={styles.inputGroup}>
-        <Text style={styles.label}>City*</Text>
-        <TextInput
-            style={styles.input}
-            placeholder="Enter City"
-            value={formData.city}
-            onChangeText={(value) => handleInputChange('city', value)}
-        />
-    </View>
-    {errors.city&& <Text style={styles.errorText}>{errors.city}</Text>}
+                <View style={styles.inputGroup}>
+                    <Text style={styles.label}> Apt., Suite,Gate Code(optional)</Text>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Enter Gate Code"
+                        value={formData.gateCode}
+                        onChangeText={(value) => {
+                            handleInputChange('gateCode', value)
+                            setGateCode(value)
+                        }
+                        }
+                    />
+                </View>
 
-    <View style={styles.inputGroup}>
-        <Text style={styles.label}>State*</Text>
-        <TextInput
-            style={styles.input}
-            placeholder="Enter State"
-            value={formData.state}
-            onChangeText={(value) => handleInputChange('state', value)}
-        />
-    </View>
-    {errors.state && <Text style={styles.errorText}>{errors.state}</Text>}
+                <View style={styles.inputGroup}>
+                    <Text style={styles.label}> Area Code*</Text>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Enter Gate Code"
+                        value={formData.areaCode}
+                        onChangeText={(value) => {
+                            handleInputChange('areaCode', value)
+                            setAreaCode(value)
+                        }
+                        }
+                    />
+                </View>
 
-    <View style={styles.inputGroup}>
-        <Text style={styles.label}>Country*</Text>
-        <TextInput
-            style={styles.input}
-            placeholder="Enter Country"
-            value={formData.country}
-            onChangeText={(value) => handleInputChange('country', value)}
-        />
-    </View>
-    {errors.country&& <Text style={styles.errorText}>{errors.country}</Text>}
 
-    <View style={styles.inputGroup}>
-        <Text style={styles.label}>Zip Code*</Text>
-        <TextInput
-            style={styles.input}
-            placeholder="Enter Pin Code"
-            value={formData.pin}
-            onChangeText={(value) => handleInputChange('pin', value)}
-        />
+                <View style={styles.inputGroup}>
+                    <Text style={styles.label}>Street Address*</Text>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Enter Street Address"
+                        value={formData.streetAddress}
+                        onChangeText={(value) => {
+                            handleInputChange('streetAddress', value)
+                            setStreetAddress(value)
+                        }}
+                    />
+                </View>
+                {errors.streetAddress && <Text style={styles.errorText}>{errors.streetAddress}</Text>}
 
-</View>
-{errors.pin && <Text style={styles.errorText}>{errors.pin}</Text>}
+                <View style={styles.inputGroup}>
+                    <Text style={styles.label}>Primary Phone*</Text>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Enter Primary Phone"
+                        value={formData.primaryPhone}
+                        onChangeText={(value) => {
+                            handleInputChange('primaryPhone', value)
+                            setPrimaryPhone(value)
+                        }}
+                    />
+                </View>
+                {errors.primaryPhone && <Text style={styles.errorText}>{errors.primaryPhone}</Text>}
+
+                <View style={styles.inputGroup}>
+                    <Text style={styles.label}>City*</Text>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Enter City"
+                        value={formData.city}
+                        onChangeText={(value) => {
+                            handleInputChange('city', value)
+                            setCity(value)
+                        }
+                        }
+                    />
+                </View>
+                {errors.city && <Text style={styles.errorText}>{errors.city}</Text>}
+
+                <View style={styles.inputGroup}>
+                    <Text style={styles.label}>State*</Text>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Enter State"
+                        value={formData.state}
+                        onChangeText={(value) => {
+                            handleInputChange('state', value)
+                            setState(value)
+                        }}
+                    />
+                </View>
+                {errors.state && <Text style={styles.errorText}>{errors.state}</Text>}
+
+                <View style={styles.inputGroup}>
+                    <Text style={styles.label}>Country*</Text>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Enter Country"
+                        value={formData.country}
+                        onChangeText={(value) => {
+                            handleInputChange('country', value)
+                            setCountry(value)
+                        }}
+                    />
+                </View>
+                {errors.country && <Text style={styles.errorText}>{errors.country}</Text>}
+
+                <View style={styles.inputGroup}>
+                    <Text style={styles.label}>Zip Code*</Text>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Enter Pin Code"
+                        value={formData.pin}
+                        onChangeText={(value) => {
+                            handleInputChange('pin', value)
+                            setPin(value)
+                        }}
+                    />
+
+                </View>
+                {errors.pin && <Text style={styles.errorText}>{errors.pin}</Text>}
             </View>
             <View style={styles.footer}>
 

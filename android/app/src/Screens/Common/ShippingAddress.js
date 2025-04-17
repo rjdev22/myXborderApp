@@ -155,7 +155,7 @@ const ShopNshipShipmentAddress = ({ navigation, route }) => {
                     <View style={styles.topHeader}>
                         <Text style={{ fontSize: 16, fontWeight: 'bold', }}>Shipping Address</Text>
                         <TouchableOpacity onPress={goAddress ? () => setGoAddress(false) : creteAddress ? () => setCreateAddress(false) : () => navigation.goBack()}>
-                            <Image source={require('../assets/back.png')} style={{ width: 20, height: 20 }} />
+                            <Image source={require('../../assets/back.png')} style={{ width: 20, height: 20 }} />
                         </TouchableOpacity>
 
                     </View>

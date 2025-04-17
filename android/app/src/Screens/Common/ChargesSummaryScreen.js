@@ -6,14 +6,16 @@ import {
   StyleSheet,
   ScrollView,
   ActivityIndicator,
-  Alert
+  Alert,
+  Linking
 } from 'react-native';
 import { Checkbox } from 'react-native-paper';
 import OrderDetailsLayout from '../../Components/Common/OrderDetailsLayout';
 import LinearGradient from 'react-native-linear-gradient';
+
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { CommonActions } from '@react-navigation/native';
-import { get_Bank_detail, create_payment_intent } from '../../services/apiServices';
+import { get_Bank_detail, create_payment_intent, paypalCheckoutSession } from '../../services/apiServices';
 import {
   initPaymentSheet,
   presentPaymentSheet,
@@ -24,8 +26,7 @@ import { Toast } from 'react-native-toast-notifications';
 import { AuthContext } from '../../Context/MainContext';
 
 import { Picker } from '@react-native-picker/picker';
-import { set } from 'react-native-reanimated';
-import { Screen } from 'react-native-screens';
+
 
 
 const ChargesSummary = ({ route, navigation }) => {
@@ -47,13 +48,13 @@ const ChargesSummary = ({ route, navigation }) => {
   const [giftWrapChecked, setGiftWrapChecked] = useState(false);
   const [consolidationChecked, setConsolidationChecked] = useState(false);
   const [convertedAmount, setConvertedAmount] = useState(0);
-  const [currency, setCurrency] = useState('AOA');
+  const [currency, setCurrency] = useState('USD');
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
   const [currencyList, setCurrencyList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [openBackPaymentModal, setOpenBackPaymentModal] = useState(false);
   const [bankData, setBankData] = useState([]);
- 
+
 
 
   console.log('payment method', selectedPaymentMethod);
@@ -68,23 +69,59 @@ const ChargesSummary = ({ route, navigation }) => {
 
 
   const handleMakePayment = async () => {
-   // setLoading(true);
+    // setLoading(true);
     // Handle payment logic here
     console.log('Payment method:', selectedPaymentMethod);
     if (selectedPaymentMethod === 'bank') {
       setOpenBackPaymentModal(true);
-     // setLoading(false);
+      // setLoading(false);
       return
     }
     if (selectedPaymentMethod === 'card') {
       payWithStripe();
-     // setLoading(false);
+      // setLoading(false);
       return
     }
+    if (selectedPaymentMethod === 'paypal')
+      createPayPalSession();
+    return
 
   };
 
+  const createPayPalSession = async () => {
+    console.log('nughuhiknu');
+    setLoading(true)
+    try {
+      const response = await fetch(paypalCheckoutSession, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          // Add auth if required:
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          id: orderId,
+          type: orderType,
+          currency: currency,
+          amount: convertedAmount,
+          conversionRate: 1,
+        }),
+      });
 
+      const data = await response.json();
+      console.log('PayPal session data:', data.redirectUrl);
+
+      if (data?.status && data?.redirectUrl) {
+        // ✅ Open PayPal checkout in browser
+        Linking.openURL(data.redirectUrl);
+      } else {
+        Alert.alert('Payment Error', data?.error || 'Unable to create PayPal session.');
+      }
+    } catch (err) {
+      console.error('PayPal Error:', err);
+      Alert.alert('Error', 'Something went wrong while creating the PayPal session.');
+    }
+  };
 
 
   useEffect(() => {
@@ -109,7 +146,6 @@ const ChargesSummary = ({ route, navigation }) => {
 
       }
     }
-
     chnage_currency_rate();
   }, [currency, walletChecked, packageMaterialChecked, shippingBoxesChecked, giftWrapChecked, consolidationChecked]);
 
@@ -136,6 +172,7 @@ const ChargesSummary = ({ route, navigation }) => {
     if (shippingBoxesChecked) total += Number(boxCharge);
     if (giftWrapChecked) total += Number(giftWrapCharge);
     if (consolidationChecked) total += Number(consolidationCharge);
+
 
     if (walletChecked) total -= walletBalance;
 
@@ -200,9 +237,6 @@ const ChargesSummary = ({ route, navigation }) => {
 
 
 
-
-
-
   console.log('token', token);
   console.log('convertedAmount', convertedAmount);
   console.log('currency', currency);
@@ -226,45 +260,45 @@ const ChargesSummary = ({ route, navigation }) => {
           wallet: "No"
         }),
       });
-  
+
       const result = await response.json();
       console.log('🔐 Stripe data:', result);
-  
+
       const secret = result?.response?.paymentIntent;
       const customer = result?.response?.customer;
-  
+
       if (!secret || !customer) {
         Alert.alert('Missing Stripe data', 'Make sure all required keys are returned from the server.');
         return;
       }
-  
+
       const init = await initPaymentSheet({
         merchantDisplayName: 'My XBorder',
         paymentIntentClientSecret: secret,
         customerId: customer,
         allowsDelayedPaymentMethods: true,
       });
-  
+
       console.log('📦 initPaymentSheet result:', init);
-  
+
       if (init.error) {
         console.error('❌ initPaymentSheet error:', init.error.message);
         Alert.alert('Stripe Init Error', init.error.message);
         setLoading(false);
         return;
       }
-  
+
       // ✅ Keep loading true while opening payment sheet
       const paymentResult = await presentPaymentSheet();
       console.log('💰 Payment result:', paymentResult);
-  
+
       if (paymentResult.error) {
         console.error('❌ Payment failed:', paymentResult.error.message);
         Alert.alert('Payment failed', paymentResult.error.message);
       } else {
         console.log('✅ Payment successful!');
         Toast.show('Your payment is confirmed!', { type: 'success', style: { width: 500 } });
-  
+
         navigation.dispatch(
           CommonActions.reset({
             index: 1,
@@ -283,7 +317,7 @@ const ChargesSummary = ({ route, navigation }) => {
       setLoading(false);
     }
   };
-  
+
 
   return (
 
@@ -331,6 +365,7 @@ const ChargesSummary = ({ route, navigation }) => {
             />
             <Text>Add extra packing material 200 Rs.</Text>
           </View>
+          
 
           <View style={styles.rowInline}>
             <Checkbox
@@ -341,6 +376,7 @@ const ChargesSummary = ({ route, navigation }) => {
 
               }}
               color="#1e90ff"
+
             />
             <Text>Ship in original shipping boxes 200 Rs.</Text>
           </View>

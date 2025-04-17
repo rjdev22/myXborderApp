@@ -134,7 +134,7 @@ const InternationalShipmentPickupAddress = ({ navigation, route }) => {
                     <View style={styles.topHeader}>
                         <Text style={{ fontSize: 16, fontWeight: 'bold', }}>Indian Pick Up Address</Text>
                         <TouchableOpacity onPress={() => navigation.goBack()}>
-                            <Image source={require('../assets/back.png')} style={{ width: 20, height: 20 }} />
+                            <Image source={require('../../assets/back.png')} style={{ width: 20, height: 20 }} />
                         </TouchableOpacity>
                     </View>
 

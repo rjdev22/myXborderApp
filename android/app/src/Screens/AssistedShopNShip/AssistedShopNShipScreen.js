@@ -13,7 +13,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import LinearGradient from 'react-native-linear-gradient';
 import Layout from '../../Components/Common/Layout';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
-import { AssistedShopNShipOrders, get_item_types,searchAssistedOrder } from '../../services/apiServices';
+import { AssistedShopNShipOrders, get_item_types, searchAssistedOrder } from '../../services/apiServices';
 import { useContext } from 'react';
 import { AuthContext } from '../../Context/MainContext';
 
@@ -29,6 +29,13 @@ const AssistedShopNshipScreen = ({ navigation }) => {
     const [modalVisible, setModalVisible] = useState(false);
     const [itemType, setItemType] = useState([]);
 
+    const [totalOrders, setTotalOrders] = useState(0);
+    const [isLoadMore, setIsLoadMore] = useState(false);
+    const [page, setPage] = useState(1);
+    const [hasMore, setHasMore] = useState(true);
+    const [isFetchingMore, setIsFetchingMore] = useState(false);
+
+
     const options = [
         { label: "All orders" },
         { label: "Order in progress" },
@@ -36,7 +43,7 @@ const AssistedShopNshipScreen = ({ navigation }) => {
         { label: "Order completed" }
     ];
 
-const handleFilterData = async (option) => {
+    const handleFilterData = async (option) => {
         // setSelectedOption(option);
         console.log('option selected:', option);
 
@@ -103,9 +110,9 @@ const handleFilterData = async (option) => {
 
 
     useEffect(() => {
-        async function fetchData() {
+        async function fetchData(pageNumber = 1) {
             try {
-                const response = await fetch(AssistedShopNShipOrders, {
+                const response = await fetch(`${AssistedShopNShipOrders}?page=${pageNumber}`, {
                     method: 'POST',
                     headers: {
                         'authorization': `Bearer ${token}`
@@ -113,11 +120,27 @@ const handleFilterData = async (option) => {
                 })
                 const data = await response.json();
                 console.log(' assisted shop n ship data', data.data.data);
-                setOrderData(data.data.data);
+                const newOrders = data.data.data;
+                setTotalOrders(data.data.pagination.total);
+
+                if (isLoadMore) {
+                    setOrderData(prev => [...prev, ...newOrders]);
+                } else {
+                    setOrderData(newOrders);
+                }
+
+                // If no more orders to load
+                if (newOrders.length === 0 || newOrders.length < 10) {
+                    setHasMore(false);
+                }
+
+                setIsFetchingMore(false);
                 setIsLoading(false);
+
 
             } catch (error) {
                 console.log(error);
+                setIsFetchingMore
                 setIsLoading(false);
             }
 
@@ -145,8 +168,8 @@ const handleFilterData = async (option) => {
             }
         }
         get_all_item();
-        fetchData();
-    }, []);
+        fetchData(page);
+    }, [page, isLoadMore]);
 
 
 
@@ -161,41 +184,41 @@ const handleFilterData = async (option) => {
 
 
                 {
-                    !isLoading&&<View style={styles.searchContainer}>
-                    <TouchableOpacity style={styles.dropdown} onPress={() => setModalVisible(true)}>
-                        <Text>{selectedOption}</Text>
-                        {
-                            modalVisible ?
-                                <Icon name="angle-up" size={20} color="gray" style={styles.searchIcon} />
-                                :
-                                <Icon name="angle-down" size={20} color="gray" style={styles.searchIcon} />
+                    !isLoading && <View style={styles.searchContainer}>
+                        <TouchableOpacity style={styles.dropdown} onPress={() => setModalVisible(true)}>
+                            <Text>{selectedOption}</Text>
+                            {
+                                modalVisible ?
+                                    <Icon name="angle-up" size={20} color="gray" style={styles.searchIcon} />
+                                    :
+                                    <Icon name="angle-down" size={20} color="gray" style={styles.searchIcon} />
                             }
-                    </TouchableOpacity>
-                    <View style={styles.inputContainer}>
-                        <Icon name="search" size={20} color="gray" style={styles.searchIcon} />
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Search"
-                            value={query}
-                            onChangeText={setQuery}
-                        />
-                    </View>
-                </View>}
+                        </TouchableOpacity>
+                        <View style={styles.inputContainer}>
+                            <Icon name="search" size={20} color="gray" style={styles.searchIcon} />
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Search"
+                                value={query}
+                                onChangeText={setQuery}
+                            />
+                        </View>
+                    </View>}
 
-                    <Modal transparent={true} visible={modalVisible} animationType="fade">
-                        <TouchableOpacity style={styles.modalOverlay} onPress={() => setModalVisible(false)}>
-                            <View style={styles.modalContent}>
-                                {options.map((item, index) => (
-                                    <TouchableOpacity
-                                        key={index}
-                                        style={styles.option}
-                                        onPress={() => {
-                                            setSelectedOption(item.label);
-                                            handleFilterData(item.label);
-                                            setModalVisible(false);
-                                        }}
-                                    >
-                                        <View style={{ desplay: 'flex', justifyContent: 'space-between', flexDirection: 'row', alignItems: 'flex-end', paddingHorizontal: 5, paddingVertical: 5 }} >
+                <Modal transparent={true} visible={modalVisible} animationType="fade">
+                    <TouchableOpacity style={styles.modalOverlay} onPress={() => setModalVisible(false)}>
+                        <View style={styles.modalContent}>
+                            {options.map((item, index) => (
+                                <TouchableOpacity
+                                    key={index}
+                                    style={styles.option}
+                                    onPress={() => {
+                                        setSelectedOption(item.label);
+                                        handleFilterData(item.label);
+                                        setModalVisible(false);
+                                    }}
+                                >
+                                    <View style={{ desplay: 'flex', justifyContent: 'space-between', flexDirection: 'row', alignItems: 'flex-end', paddingHorizontal: 5, paddingVertical: 5 }} >
                                         <Text style={styles.optionText}>{item.label}</Text>
                                         <Icon
                                             name={selectedOption === item.label ? "dot-circle-o" : "circle-o"}
@@ -203,38 +226,38 @@ const handleFilterData = async (option) => {
                                             color={selectedOption === item.label ? "blue" : "#ccc"}
                                             style={styles.radioIcon}
                                         />
-                                        </View>
-                                    </TouchableOpacity>
-                                ))}
-                            </View>
-                        </TouchableOpacity>
-                    </Modal>
+                                    </View>
+                                </TouchableOpacity>
+                            ))}
+                        </View>
+                    </TouchableOpacity>
+                </Modal>
 
 
 
                 <View style={styles.orderContainer}>
                     <View style={styles.orderHeader}>
                         <ShimmerPlaceholder visible={!isLoading} style={{ height: 20 }}  >
-                            <Text style={styles.orderCount}>No. of Orders: <Text style={{ color: 'red' }}>({orderData.length})</Text></Text>
+                            <Text style={styles.orderCount}>No. of Orders: <Text style={{ color: 'red' }}>({totalOrders})</Text></Text>
                         </ShimmerPlaceholder>
                         {
-                            !isLoading &&   
-                        <TouchableOpacity onPress={() => navigation.navigate('Home', {
-                            screen: 'AddAssistedShopNShipScreen',
-                            params: {
-                                token: token,
-                                itemData: itemType
-                            }
-                        })
-                        }>
-                            <LinearGradient
-                                start={{ x: 0, y: 0 }}
-                                end={{ x: 1, y: 0 }}
-                                colors={['#d81397', '#0d5cc2']}
-                                style={styles.createOrderButton}>
-                                <Text style={styles.createOrderText}>+ Create Order</Text>
-                            </LinearGradient>
-                        </TouchableOpacity>}
+                            !isLoading &&
+                            <TouchableOpacity onPress={() => navigation.navigate('Home', {
+                                screen: 'AddAssistedShopNShipScreen',
+                                params: {
+                                    token: token,
+                                    itemData: itemType
+                                }
+                            })
+                            }>
+                                <LinearGradient
+                                    start={{ x: 0, y: 0 }}
+                                    end={{ x: 1, y: 0 }}
+                                    colors={['#d81397', '#0d5cc2']}
+                                    style={styles.createOrderButton}>
+                                    <Text style={styles.createOrderText}>+ Create Order</Text>
+                                </LinearGradient>
+                            </TouchableOpacity>}
                     </View>
                 </View>
                 <View>
@@ -293,10 +316,38 @@ const handleFilterData = async (option) => {
                         ))
                     ) : (
                         <View style={styles.noDataContainer}>
-                            <Image source={require('../assets/empty_box.png')} style={styles.noDataImage} />
+                            <Image source={require('../../assets/empty_box.png')} style={styles.noDataImage} />
                             <Text style={styles.noDataText}>No Orders Available</Text>
                         </View>
                     )}
+                    {
+                        hasMore && !isFetchingMore && (
+                            <TouchableOpacity
+                                onPress={() => {
+                                    setIsLoadMore(true);
+                                    setPage(prevPage => prevPage + 1);
+                                    setIsFetchingMore(true);
+                                }}
+                                activeOpacity={0.7}
+                                style={styles.loadMoreButton}
+                            >
+                                <Image
+                                    source={require('../../assets/down.png')}
+                                    style={{ width: 50, height: 25 }}
+                                    resizeMode="contain"
+                                />
+                            </TouchableOpacity>
+                        )
+                    }
+
+                    {
+                        isFetchingMore && (
+                            <View style={styles.loadingContainer}>
+                                <ActivityIndicator size="small" color="#007bff" />
+                            </View>
+                        )
+                    }
+
                 </View>
             </ScrollView>
         </Layout>
@@ -501,7 +552,7 @@ const styles = StyleSheet.create({
         backgroundColor: "rgba(0,0,0,0.5)",
     },
     modalContent: {
-        width: 380  ,
+        width: 380,
         borderRadius: 15,
         backgroundColor: "#fff",
 

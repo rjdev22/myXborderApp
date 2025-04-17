@@ -8,23 +8,24 @@ import {
     TouchableOpacity,
     copyToClipboard,
     TextInput,
-    Modal
+    Modal,
+    ActivityIndicator
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import LinearGradient from 'react-native-linear-gradient';
-import Layout from '../Components/Common/Layout';
+import Layout from '../../Components/Common/Layout';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
-import { ShopNShipOrders, get_item_types, orderDetails,searchshopnshipOrder} from '../services/apiServices';
+import { ShopNShipOrders, get_item_types, orderDetails, searchshopnshipOrder } from '../../services/apiServices';
 import { useContext } from 'react';
-import { AuthContext } from '../Context/authContext';
-import DropDown from '../Components/Common/DropDown';
+import { AuthContext } from '../../Context/MainContext';
+
 import { set } from 'react-native-reanimated';
 
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const ShopNshipScreen = ({ navigation }) => {
 
-    const { token,pageRefresh } = useContext(AuthContext);
+    const { token, pageRefresh } = useContext(AuthContext);
     console.log('token', token);
 
     const [modalVisible, setModalVisible] = useState(false);
@@ -33,7 +34,11 @@ const ShopNshipScreen = ({ navigation }) => {
     const [isLoading, setIsLoading] = useState(true);
     const [orderData, setOrderData] = useState([]);
     const [itemType, setItemType] = useState([]);
-
+    const [totalOrders, setTotalOrders] = useState(0);
+    const [isLoadMore, setIsLoadMore] = useState(false);
+    const [page, setPage] = useState(1);
+    const [hasMore, setHasMore] = useState(true);
+    const [isFetchingMore, setIsFetchingMore] = useState(false);
 
     console.log('itemType', itemType);
 
@@ -60,7 +65,7 @@ const ShopNshipScreen = ({ navigation }) => {
         }
 
         setSelectedOption(option);
-      //  console.log('newEndPoint', newEndPoint);
+        //  console.log('newEndPoint', newEndPoint);
         //setEndPoint(newEndPoint);
 
         try {
@@ -110,25 +115,44 @@ const ShopNshipScreen = ({ navigation }) => {
     // }, [query]);
 
 
-    useEffect(() => {
-        async function fetchData() {
-            try {
-                const response = await fetch(ShopNShipOrders, {
-                    method: 'POST',
-                    headers: {
-                        'authorization': `Bearer ${token}`
-                    },
-                })
-                const data = await response.json();
-                console.log('shop n ship data', data.data.data);
-                setOrderData(data.data.data);
-                setIsLoading(false);
 
-            } catch (error) {
-                console.log(error);
-                setIsLoading(false);
+
+    const fetchData = async (pageNumber = 1,) => {
+        try {
+            const response = await fetch(`${ShopNShipOrders}?page=${pageNumber}`, {
+                method: 'POST',
+                headers: {
+                    'authorization': `Bearer ${token}`
+                },
+            });
+            const data = await response.json();
+
+            const newOrders = data.data.data;
+            setTotalOrders(data.data.pagination.total);
+
+            if (isLoadMore) {
+                setOrderData(prev => [...prev, ...newOrders]);
+            } else {
+                setOrderData(newOrders);
             }
+
+            // If no more orders to load
+            if (newOrders.length === 0 || newOrders.length < 10) {
+                setHasMore(false);
+            }
+
+            setIsFetchingMore(false);
+            setIsLoading(false);
+
+        } catch (error) {
+            console.log(error);
+            setIsFetchingMore(false);
+            setIsLoading(false);
         }
+    };
+
+    useEffect(() => {
+
         const get_all_item = async () => {
             try {
 
@@ -151,8 +175,8 @@ const ShopNshipScreen = ({ navigation }) => {
             }
         }
         get_all_item();
-        fetchData();
-    }, [pageRefresh]);
+        fetchData(page);
+    }, [pageRefresh, page]);
 
     const copy = (text) => {
         copyToClipboard(text);
@@ -165,29 +189,40 @@ const ShopNshipScreen = ({ navigation }) => {
             <ScrollView
                 showsVerticalScrollIndicator={false}
                 showsHorizontalScrollIndicator={false}
-                style={styles.content}>
-                {
-                    !isLoading&&<View style={styles.searchContainer}>
-                    <TouchableOpacity style={styles.dropdown} onPress={() => setModalVisible(true)}>
-                        <Text>{selectedOption}</Text>
-                        {
-                            modalVisible ?
-                                <Icon name="angle-up" size={20} color="gray" style={styles.searchIcon} />
-                                :
-                                <Icon name="angle-down" size={20} color="gray" style={styles.searchIcon} />
-                        }
-                    </TouchableOpacity>
+                style={styles.content}
+            // onScroll={({ nativeEvent }) => {
+            //     const { layoutMeasurement, contentOffset, contentSize } = nativeEvent;
+            //     const isCloseToBottom = layoutMeasurement.height + contentOffset.y >= contentSize.height - 50;
 
-                    <View style={styles.inputContainer}>
-                        <Icon name="search" size={20} color="gray" style={styles.searchIcon} />
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Search"
-                            value={query}
-                            onChangeText={setQuery}
-                        />
-                    </View>
-                </View>}
+            //     if (isCloseToBottom && hasMore && !isFetchingMore) {
+            //         setIsFetchingMore(true);
+            //         setPage(prev => prev + 1); // only update page, let useEffect handle fetch
+            //     }
+            // }}
+            // scrollEventThrottle={100}
+            >
+                {
+                    !isLoading && <View style={styles.searchContainer}>
+                        <TouchableOpacity style={styles.dropdown} onPress={() => setModalVisible(true)}>
+                            <Text>{selectedOption}</Text>
+                            {
+                                modalVisible ?
+                                    <Icon name="angle-up" size={20} color="gray" style={styles.searchIcon} />
+                                    :
+                                    <Icon name="angle-down" size={20} color="gray" style={styles.searchIcon} />
+                            }
+                        </TouchableOpacity>
+
+                        <View style={styles.inputContainer}>
+                            <Icon name="search" size={20} color="gray" style={styles.searchIcon} />
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Search"
+                                value={query}
+                                onChangeText={setQuery}
+                            />
+                        </View>
+                    </View>}
                 <Modal transparent={true} visible={modalVisible} animationType="fade" style={styles.modal}>
                     <TouchableOpacity style={styles.modalOverlay} onPress={() => setModalVisible(false)}>
                         <View style={styles.modalContent}>
@@ -220,7 +255,7 @@ const ShopNshipScreen = ({ navigation }) => {
                 <View style={styles.orderContainer}>
                     <View style={styles.orderHeader}>
                         <ShimmerPlaceholder visible={!isLoading} style={{ height: 20 }}  >
-                            <Text style={styles.orderCount}>No. of Orders: <Text style={{ color: '#d81397' }}>({orderData.length})</Text></Text>
+                            <Text style={styles.orderCount}>No. of Orders: <Text style={{ color: '#d81397' }}>({totalOrders})</Text></Text>
                         </ShimmerPlaceholder>
                         {
                             !isLoading &&
@@ -301,16 +336,51 @@ const ShopNshipScreen = ({ navigation }) => {
                                         <Text style={styles.detailsButtonText}>Details</Text>
                                     </LinearGradient>
                                 </TouchableOpacity>
+
+
                             </View>
+
+
+
                         ))
 
                     ) : (
                         <View style={styles.noDataContainer}>
-                            <Image source={require('../assets/empty_box.png')} style={styles.noDataImage} />
+                            <Image source={require('../../assets/empty_box.png')} style={styles.noDataImage} />
                             <Text style={styles.noDataText}>No Orders Available</Text>
                         </View>
                     )}
+                    {
+                        hasMore && !isFetchingMore && (
+                            <TouchableOpacity
+                                onPress={() => {
+                                    setIsLoadMore(true);
+                                    setPage(prevPage => prevPage + 1);
+                                    setIsFetchingMore(true);
+                                }}
+                                activeOpacity={0.7} 
+                                style={styles.loadMoreButton}
+                            >
+                                <Image
+                                    source={require('../../assets/down.png')}
+                                    style={{ width: 50, height: 25 }}
+                                    resizeMode="contain" 
+                                />
+                            </TouchableOpacity>
+                        )
+                    }
+
+                    {
+                        isFetchingMore && (
+                            <View style={styles.loadingContainer}>
+                                <ActivityIndicator size="small" color="#007bff" />
+                            </View>
+                        )
+                    }
+
+
                 </View>
+
             </ScrollView>
         </Layout>
     );
@@ -519,7 +589,7 @@ const styles = StyleSheet.create({
         backgroundColor: "rgba(0,0,0,0.5)",
     },
     modalContent: {
-        width: 380  ,
+        width: 380,
         borderRadius: 15,
         backgroundColor: "#fff",
         padding: 10,
@@ -537,12 +607,21 @@ const styles = StyleSheet.create({
     radioIcon: {
         alignItems: 'flex-end'
     },
-    modal:{
+    modal: {
         flex: 1,
-        justifyContent: 'bottom',   
+        justifyContent: 'bottom',
         alignItems: 'center',
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    }
+    },
+    loadMoreButton: {
+        padding: 5,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        backgroundColor: '#f5f5f5',
+        borderRadius: 50,
+        width: 33
+        //marginTop: 0,
+    },
 
 });
 

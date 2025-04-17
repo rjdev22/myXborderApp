@@ -1,28 +1,29 @@
-import React, { createContext, useState,useEffect } from 'react';
+import React, { createContext, useState, useEffect } from 'react';
 
 export const AuthContext = createContext();
-//import { AsyncStorage } from 'react-native';
 
 export const AuthProvider = ({ children }) => {
-    const[userData,setUserData]=useState(null);
+  const [userData, setUserData] = useState(null);
 
-const [token, setToken] = useState(null);
-const[pageRefresh,setPageRefresh]=useState(false);
+  const [token, setToken] = useState(null);
+  const [pageRefresh, setPageRefresh] = useState(false);
+  const [homeData, setHomeData] = useState(null);
 
-useEffect(() => {
-  const getToken = async () => {
-    const storedToken = await AsyncStorage.getItem('token');
-    setToken(storedToken);
-  };
-  getToken();
-}, []);
-       
+  // useEffect(() => {
+  //   const getToken = async () => {
+  //     const storedToken = await AsyncStorage.getItem('token');
+  //     setToken(storedToken);
+  //   };
+  //   getToken();
+  // }, []);
+
   return (
     <AuthContext.Provider value={{
-      userData,setUserData 
-      ,token,setToken
-      ,pageRefresh,setPageRefresh
-      }}>
+      userData, setUserData
+      , token, setToken
+      , pageRefresh, setPageRefresh
+      , homeData, setHomeData
+    }}>
       {children}
     </AuthContext.Provider>
   );

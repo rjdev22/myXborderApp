@@ -108,7 +108,7 @@ export const NotificationScreen = () => {
                                     renderItem={({ item }) => (
                                         <TouchableOpacity>
                                             <View style={styles.notificationItem}>
-                                                <Image source={require('../assets/bell.png')} style={styles.icon} />
+                                                <Image source={require('../../assets/bell.png')} style={styles.icon} />
                                                 <View style={styles.textContainer}>
                                                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                                                     <Text style={styles.title}>{item.title}</Text>

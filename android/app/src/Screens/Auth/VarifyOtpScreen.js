@@ -1,9 +1,9 @@
 import React from 'react'
-import EmailVarificationLayout from '../Components/Common/EmailVarificationLayout'
+import EmailVarificationLayout from '../../Components/Common/EmailVarificationLayout'
 import { Text, View, StyleSheet, TextInput, TouchableOpacity } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient';
 import { varifyOtpApi } from '../services/apiServices';
-import Loader from '../Components/Modals/Loader';
+import Loader from '../../Components/Modals/Loader';
 import { useRoute } from '@react-navigation/native';
 import { Toast } from 'react-native-toast-notifications';
 import { OtpInput } from "react-native-otp-entry";

@@ -11,11 +11,11 @@ import {
     Modal
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import Layout from '../Components/Common/Layout';
-import DropDown from '../Components/Common/DropDown';
+import Layout from '../../Components/Common/Layout';
+import DropDown from '../../Components/Common/DropDown';
 import { get_courier_types, get_order_types } from '../services/apiServices';
 import { Checkbox } from 'react-native-paper';
-import MedicalItemWarningModal from '../Components/Modals/MedicalItemWarningModal';
+import MedicalItemWarningModal from '../../Components/Modals/MedicalItemWarningModal';
 // import DocumentPicker from '@react-native-documents/picker';
 import DocumentPicker from '@react-native-documents/picker';
 const AddInternationalShipmentScreen = ({ navigation, route }) => {

@@ -10,12 +10,12 @@ import {
     Alert
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import EditProfileModal from '../Components/Modals/EditProfileModal';
+import EditProfileModal from '../../Components/Modals/EditProfileModal';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
-import Layout from '../Components/Common/Layout';
-import { getUserProfile } from '../services/apiServices';
-import { AuthContext } from '../Context/authContext';
+import Layout from '../../Components/Common/Layout';
+import { getUserProfile } from '../../services/apiServices';
+import { AuthContext } from '../../Context/MainContext';
 
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
@@ -298,7 +298,8 @@ const styles = StyleSheet.create({
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.2,
-        shadowRadius: 4
+        shadowRadius: 4,
+        height: 300
     },
     name: {
         fontSize: 18,

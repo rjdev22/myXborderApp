@@ -1,17 +1,38 @@
-import React, { useEffect } from 'react'
+import React, { useEffect ,useContext} from 'react'
 import { View, Image, StyleSheet } from 'react-native'
+import { homeApi } from '../../services/apiServices'
+import { AuthContext } from '../../Context/MainContext'
+import { set } from 'react-native-reanimated'
 const SplashScreen = ({ navigation }) => {
+
+
+const{setHomeData}=useContext(AuthContext)
+
+
   useEffect(() => {
-    setTimeout(() => {
-      navigation.replace('HomeScreen')
-    }, 3000)
+    const getHomeContent = async () => {
+
+      try {
+        const response = await fetch(homeApi);
+        const data = await response.json();
+        navigation.replace('HomeScreen', { data })
+        setHomeData(data.data)
+       
+      } catch (error) {
+        console.error('Error fetching home content:', error);
+
+        
+      }
+    };
+
+    getHomeContent()
   }, [])
 
 
   return (
     <View style={styles.container}>
       <View>
-        <Image style={{ width: 300, height: 300 }} source={require('../assets/splash.png')} />
+        <Image style={{ width: 300, height: 300 }} source={require('../../assets/splash.png')} />
       </View>
     </View>
   )

@@ -1,16 +1,14 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { View, Text, FlatList, StyleSheet, Image, Touchable, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import Layout from '../Components/Common/Layout';
+import Layout from '../../Components/Common/Layout';
 import { ScrollView } from 'react-native-gesture-handler';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
-import { get_payment_notification, craete_order_id, orderDetails,get_item_types } from '../services/apiServices';
-import { AuthContext } from '../Context/authContext';
+import { get_payment_notification, craete_order_id, orderDetails,get_item_types } from '../../services/apiServices';
+import { AuthContext } from '../../Context/MainContext';
 import RazorpayCheckout from 'react-native-razorpay';
-import { Toast } from 'react-native-toast-notifications';
-import { set } from 'react-native-reanimated';
-import Loader from '../Components/Modals/Loader';
+import Loader from '../../Components/Modals/Loader';
 
 
 const RAZORPAY_API_KEY = process.env.RAZORPAY_API_KEY;
@@ -279,7 +277,7 @@ export const PaymentpaymentNotificationScreen = ({ navigation }) => {
                                         // }}
                                         >
                                             <View style={styles.paymentNotificationItem}>
-                                                <Image source={require('../assets/atm-card.png')} style={styles.icon} />
+                                                <Image source={require('../../assets/atm-card.png')} style={styles.icon} />
                                                 <View style={styles.textContainer}>
                                                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                                                         <Text style={styles.title}>{item.title}</Text>

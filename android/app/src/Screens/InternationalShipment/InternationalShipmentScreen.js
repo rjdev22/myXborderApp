@@ -12,12 +12,12 @@ import {
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 import LinearGradient from 'react-native-linear-gradient';
-import Layout from '../Components/Common/Layout';
+import Layout from '../../Components/Common/Layout';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
-import { InternationalOrders ,searchInternationalOrder} from '../services/apiServices';
+import { InternationalOrders, searchInternationalOrder } from '../../services/apiServices';
 import { Picker } from '@react-native-picker/picker';
 import { useContext } from 'react';
-import { AuthContext } from '../Context/authContext';
+import { AuthContext } from '../../Context/MainContext';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const InternationalShipmentScreen = ({ navigation }) => {
@@ -27,6 +27,12 @@ const InternationalShipmentScreen = ({ navigation }) => {
     const [orderData, setOrderData] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedOption, setSelectedOption] = useState("All orders");
+
+    const [totalOrders, setTotalOrders] = useState(0);
+    const [isLoadMore, setIsLoadMore] = useState(false);
+    const [page, setPage] = useState(1);
+    const [hasMore, setHasMore] = useState(true);
+    const [isFetchingMore, setIsFetchingMore] = useState(false);
 
     const { token } = useContext(AuthContext);
     const options = [
@@ -73,7 +79,7 @@ const InternationalShipmentScreen = ({ navigation }) => {
 
     }
 
-// const handleSearch = async () => {
+    // const handleSearch = async () => {
     //     console.log('query', query);
     //     console.log('token', token);
     //     try {
@@ -101,9 +107,9 @@ const InternationalShipmentScreen = ({ navigation }) => {
 
 
     useEffect(() => {
-        async function fetchData() {
+        async function fetchData(pageNumber = 1) {
             try {
-                const response = await fetch(InternationalOrders, {
+                const response = await fetch(`${InternationalOrders}?page=${pageNumber}`, {
                     method: 'POST',
                     headers: {
                         'authorization': `Bearer ${token}`
@@ -111,17 +117,32 @@ const InternationalShipmentScreen = ({ navigation }) => {
                 })
                 const data = await response.json();
                 console.log(' assisted shop n ship data', data.data.data);
-                setOrderData(data.data.data);
-                setIsLoading(false);
 
+                const newOrders = data.data.data;
+                setTotalOrders(data.data.pagination.total);
+
+                if (isLoadMore) {
+                    setOrderData(prev => [...prev, ...newOrders]);
+                } else {
+                    setOrderData(newOrders);
+                }
+
+                // If no more orders to load
+                if (newOrders.length === 0 || newOrders.length < 10) {
+                    setHasMore(false);
+                }
+
+                setIsFetchingMore(false);
+                setIsLoading(false);
             } catch (error) {
                 console.log(error);
+                setIsFetchingMore(false);
                 setIsLoading(false);
             }
 
         }
-        fetchData();
-    }, []);
+        fetchData(page);
+    }, [page]);
 
 
     return (
@@ -135,39 +156,39 @@ const InternationalShipmentScreen = ({ navigation }) => {
                 {
                     !isLoading &&
                     <View style={styles.searchContainer}>
-                    <TouchableOpacity style={styles.dropdown} onPress={() => setModalVisible(true)}>
-                        <Text>{selectedOption}</Text>
-                        {
-                            modalVisible ?
-                                <Icon name="angle-up" size={20} color="gray" style={styles.searchIcon} />
-                                :
-                                <Icon name="angle-down" size={20} color="gray" style={styles.searchIcon} />
-                        }
-                    </TouchableOpacity>
-                    <View style={styles.inputContainer}>
-                        <Icon name="search" size={20} color="gray" style={styles.searchIcon} />
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Search"
-                            value={query}
-                            onChangeText={setQuery}
-                        />
-                    </View>
-                </View>}
-                    <Modal transparent={true} visible={modalVisible} animationType="fade">
-                        <TouchableOpacity style={styles.modalOverlay} onPress={() => setModalVisible(false)}>
-                            <View style={styles.modalContent}>
-                                {options.map((item, index) => (
-                                    <TouchableOpacity
-                                        key={index}
-                                        style={styles.option}
-                                        onPress={() => {
-                                            setSelectedOption(item.label);
-                                            handleFilterData(item.label);
-                                            setModalVisible(false);
-                                        }}
-                                    >
-                                         <View style={{ desplay: 'flex', justifyContent: 'space-between', flexDirection: 'row', alignItems: 'flex-end', paddingHorizontal: 5, paddingVertical: 5 }}>
+                        <TouchableOpacity style={styles.dropdown} onPress={() => setModalVisible(true)}>
+                            <Text>{selectedOption}</Text>
+                            {
+                                modalVisible ?
+                                    <Icon name="angle-up" size={20} color="gray" style={styles.searchIcon} />
+                                    :
+                                    <Icon name="angle-down" size={20} color="gray" style={styles.searchIcon} />
+                            }
+                        </TouchableOpacity>
+                        <View style={styles.inputContainer}>
+                            <Icon name="search" size={20} color="gray" style={styles.searchIcon} />
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Search"
+                                value={query}
+                                onChangeText={setQuery}
+                            />
+                        </View>
+                    </View>}
+                <Modal transparent={true} visible={modalVisible} animationType="fade">
+                    <TouchableOpacity style={styles.modalOverlay} onPress={() => setModalVisible(false)}>
+                        <View style={styles.modalContent}>
+                            {options.map((item, index) => (
+                                <TouchableOpacity
+                                    key={index}
+                                    style={styles.option}
+                                    onPress={() => {
+                                        setSelectedOption(item.label);
+                                        handleFilterData(item.label);
+                                        setModalVisible(false);
+                                    }}
+                                >
+                                    <View style={{ desplay: 'flex', justifyContent: 'space-between', flexDirection: 'row', alignItems: 'flex-end', paddingHorizontal: 5, paddingVertical: 5 }}>
                                         <Text style={styles.optionText}>{item.label}</Text>
                                         <Icon
                                             name={selectedOption === item.label ? "dot-circle-o" : "circle-o"}
@@ -175,28 +196,28 @@ const InternationalShipmentScreen = ({ navigation }) => {
                                             color={selectedOption === item.label ? "blue" : "#ccc"}
                                             style={styles.radioIcon}
                                         />
-                                        </View>
-                                    </TouchableOpacity>
-                                ))}
-                            </View>
-                        </TouchableOpacity>
-                    </Modal>
+                                    </View>
+                                </TouchableOpacity>
+                            ))}
+                        </View>
+                    </TouchableOpacity>
+                </Modal>
                 <View style={styles.orderContainer}>
                     <View style={styles.orderHeader}>
                         <ShimmerPlaceholder visible={!isLoading} style={{ height: 20 }}  >
-                            <Text style={styles.orderCount}>No. of Orders: <Text style={{ color: 'red' }}>({orderData.length})</Text></Text>
+                            <Text style={styles.orderCount}>No. of Orders: <Text style={{ color: 'red' }}>({totalOrders})</Text></Text>
                         </ShimmerPlaceholder>
 
                         {!isLoading &&
-                        <TouchableOpacity onPress={() => navigation.navigate('Home', { screen: 'AddInternationalShipmentScreen', params: { token: token } })}>
-                            <LinearGradient
-                                start={{ x: 0, y: 0 }}
-                                end={{ x: 1, y: 0 }}
-                                colors={['#d81397', '#0d5cc2']}
-                                style={styles.createOrderButton}>
-                                <Text style={styles.createOrderText}>+ Create Order</Text>
-                            </LinearGradient>
-                        </TouchableOpacity>}
+                            <TouchableOpacity onPress={() => navigation.navigate('Home', { screen: 'AddInternationalShipmentScreen', params: { token: token } })}>
+                                <LinearGradient
+                                    start={{ x: 0, y: 0 }}
+                                    end={{ x: 1, y: 0 }}
+                                    colors={['#d81397', '#0d5cc2']}
+                                    style={styles.createOrderButton}>
+                                    <Text style={styles.createOrderText}>+ Create Order</Text>
+                                </LinearGradient>
+                            </TouchableOpacity>}
                     </View>
                 </View>
                 <View>
@@ -250,10 +271,38 @@ const InternationalShipmentScreen = ({ navigation }) => {
                         ))
                     ) : (
                         <View style={styles.noDataContainer}>
-                            <Image source={require('../assets/empty_box.png')} style={styles.noDataImage} />
+                            <Image source={require('../../assets/empty_box.png')} style={styles.noDataImage} />
                             <Text style={styles.noDataText}>No Orders Available</Text>
                         </View>
                     )}
+                    {
+                        hasMore && !isFetchingMore && (
+                            <TouchableOpacity
+                                onPress={() => {
+                                    setIsLoadMore(true);
+                                    setPage(prevPage => prevPage + 1);
+                                    setIsFetchingMore(true);
+                                }}
+                                activeOpacity={0.7}
+                                style={styles.loadMoreButton}
+                            >
+                                <Image
+                                    source={require('../../assets/down.png')}
+                                    style={{ width: 50, height: 25 }}
+                                    resizeMode="contain"
+                                />
+                            </TouchableOpacity>
+                        )
+                    }
+
+                    {
+                        isFetchingMore && (
+                            <View style={styles.loadingContainer}>
+                                <ActivityIndicator size="small" color="#007bff" />
+                            </View>
+                        )
+                    }
+
                 </View>
             </ScrollView>
         </Layout>
@@ -479,7 +528,7 @@ const styles = StyleSheet.create({
         backgroundColor: "rgba(0,0,0,0.5)",
     },
     modalContent: {
-        width: 380  ,
+        width: 380,
         borderRadius: 15,
         backgroundColor: "#fff",
 

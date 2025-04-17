@@ -2,7 +2,9 @@ const APP_DOMAIN = process.env.APP_DOMAIN;
 console.log('env variables',APP_DOMAIN);
 const baseUrl = `${APP_DOMAIN}/api/v1`;
 
+console.log('base url',baseUrl);
 
+export const basUrl = baseUrl;
 //auth url
 export const imageUrl = `${APP_DOMAIN}`;
 export const registerApi = `${baseUrl}/register`;
@@ -39,6 +41,7 @@ export const CreateNewAddressURl=`${baseUrl}/address/create`;
 export const UpdateAddressURl=`${baseUrl}/order/update_delivery_address`;
 export const DeleteAddressURl=`${baseUrl}/address/delete/`;
 
+
 //common url
 export const get_item_types=`${baseUrl}/get_all_item`;
 export const get_order_types=`${baseUrl}/get_order_types`;
@@ -54,4 +57,9 @@ export const get_Bank_detail=`${baseUrl}/bank_detail`;
 //STRIPE PAYMENT
 
 export const create_payment_intent=`${baseUrl}/shipping/stripe`;
+
+//paypal payment
+
+
+export const paypalCheckoutSession = `${baseUrl}/paypal/create_checkout_session`;
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, Image,StyleSheet } from 'react-native';
-import Layout from '../Components/Common/Layout';
+import Layout from '../../Components/Common/Layout';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Linking } from 'react-native';
 
@@ -39,7 +39,7 @@ Linking.openURL(url);
     <Layout>
       <View style={{ alignItems: 'center', padding: 20}}>
         <Image 
-        source={require('../assets/customer_support.png')}
+        source={require('../../assets/customer_support.png')}
           style={{ width: 140, height: 140, marginBottom: 20 }} 
         />
         <Text style={{ fontSize: 20, fontWeight: 'bold', textAlign: 'center' }}>

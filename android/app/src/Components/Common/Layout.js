@@ -23,8 +23,9 @@ import { scaleZetaToMatchClamps } from 'react-native-reanimated/lib/typescript/a
 const Layout = ({ children }) => {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
-  const { token, setToken } = useContext(AuthContext);
+  const { token, setToken ,setHomeData} = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(false);
+
 
 
 
@@ -33,6 +34,7 @@ const Layout = ({ children }) => {
       setIsLoading(true);
       await AsyncStorage.removeItem('token');
       setToken(null);
+     // setHomeData(null);
       setTimeout(() => {
         navigation.reset({
           index: 0,

@@ -7,16 +7,17 @@ import { CommonActions } from "@react-navigation/native";
 import Loader from "../../Components/Modals/Loader";
 import { Toast } from 'react-native-toast-notifications';
 import { useToast } from "react-native-toast-notifications";
-import Recaptcha, { RecaptchaRef } from 'react-native-recaptcha-that-works';
+
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useContext } from 'react';
 import { AuthContext } from '../../Context/MainContext';
+import ReCaptcha from 'react-native-recaptcha-that-works';
 
 
 const LoginScreen = ({ navigation }) => {
-
-const { setToken } = useContext(AuthContext);
+    const recaptchaRef = useRef(null);
+    const { setToken } = useContext(AuthContext);
 
     const toast = useToast();
     const [email, setEmail] = useState("");
@@ -31,18 +32,11 @@ const { setToken } = useContext(AuthContext);
 
 
     const size = 'invisible';
- 
 
-    const $recaptcha = useRef < RecaptchaRef | null > (null);
 
-    const handleOpenPress = useCallback(() => {
 
-        $recaptcha.current?.open();
-    }, []);
 
-    const handleClosePress = useCallback(() => {
-        $recaptcha.current?.close();
-    }, []);
+
 
     const validateEmail = (email) => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -84,16 +78,16 @@ const { setToken } = useContext(AuthContext);
                 console.log('data', data);
 
                 if (data.status === false) {
-                    Toast.show(data.exception, { type: 'success', style: { width: 500 } });
+                    Toast.show(data.exception, { type: 'warning', style: { width: 500 } });
                     setVisibleModal(false);
                     return
-                }else{
-                    if(data?.data?.token){
+                } else {
+                    if (data?.data?.token) {
 
                         await AsyncStorage.setItem("token", data?.data?.token);
                         setToken(data.data.token);
                     }
-                    
+
                     navigation.dispatch(
                         CommonActions.reset({
                             index: 1,
@@ -110,10 +104,15 @@ const { setToken } = useContext(AuthContext);
 
             } catch (error) {
                 console.error("Error logging in user:", error);
-                Toast.show('Something went wrong,try again', {type:'danger',style:{width:500}});
+                Toast.show('Something went wrong,try again', { type: 'danger', style: { width: 500 } });
                 setVisibleModal(false);
             }
         }
+    };
+
+    const onVerify = (token) => {
+        console.log('reCAPTCHA token:', token);
+        // You can now send this token along with your sign in request
     };
 
     return (
@@ -155,48 +154,16 @@ const { setToken } = useContext(AuthContext);
                 </View>
 
                 {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
-
-                {/* <View style={styles.container}>
-                    <Button onPress={handleOpenPress} title="Open" />
-                    {/* <Text>Token: {token}</Text>
-                    <Text>Size: {size}</Text> 
-                </View> */}
-                <Recaptcha
-                    //ref={$recaptcha}
-                    lang="pt"
-                    headerComponent={
-                        <Button title="Close modal" onPress={handleClosePress} />
-                    }
-                    footerComponent={<Text>Footer here</Text>}
-                    siteKey="6Ldq6uEqAAAAABlCFfggMUqDhHYKCtV89vtv2AFz"
-                    baseUrl="https://uat.myxborder.com"
-                    size={size}
-                    theme="dark"
-                    onLoad={() => Alert.alert('onLoad event')}
-                    onClose={() => Alert.alert('onClose event')}
-                    onError={(err) => {
-                        Alert.alert('onError event');
-                        console.warn(err);
-                    }}
-                    onExpire={() => Alert.alert('onExpire event')}
-                    onVerify={(token) => {
-                        Alert.alert('onVerify event');
-                        setToken(token);
-                    }}
-                    enterprise={false}
-                    hideBadge={false}
+                {/* <Button title="Verify Recaptcha" onPress={() => recaptchaRef.current.open()} /> */}
+                <ReCaptcha
+                    ref={recaptchaRef}
+                    siteKey='6LcS-NsaAAAAAGMZqUK4vhfUUdhV-2KYXbOtFXMF'
+                    baseUrl='https://uat.myxborder.com/'
+                    onVerify={onVerify}
+                    size="invisible" // this makes it background automatic if you want
                 />
 
-                {/* reCAPTCHA Checkbox */}
-                {/* <TouchableOpacity style={styles.checkboxContainer} onPress={() => setIsChecked(!isChecked)}>
-                <Icon name={isChecked ? "check-square" : "square-o"} size={24} color="black" />
-                <Text style={styles.checkboxText}>I'm not a robot</Text>
-            </TouchableOpacity> */}
 
-                {/* Sign In Button */}
-                {/* <LinearGradient colors={["#a500ff", "#d81397"]} style={styles.button}>
-        <Text style={styles.buttonText}>Sign In</Text>
-      </LinearGradient> */}
                 <TouchableOpacity onPress={handleLogin}>
                     <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} colors={['#d81397', '#0d5cc2']} style={styles.button}>
                         <Text style={styles.buttonText}>
@@ -205,7 +172,6 @@ const { setToken } = useContext(AuthContext);
                     </LinearGradient>
                 </TouchableOpacity>
 
-
                 {/* Sign Up Link */}
                 <Text style={styles.signUpText}>
                     Don't have an account? <Text style={styles.signUpLink} onPress={() => navigation.navigate("SignUpScreen")}>Sign Up</Text>
@@ -213,12 +179,12 @@ const { setToken } = useContext(AuthContext);
 
                 {/* Social Login Buttons */}
                 <TouchableOpacity style={styles.socialButton}>
-                    <Image source={require("../assets/google.png")} style={{ width: 30, height: 30 }} />
+                    <Image source={require("../../assets/google.png")} style={{ width: 30, height: 30 }} />
                     <Text style={styles.socialText}> Sign Up With Google</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.socialButton}>
-                    <Image source={require("../assets/facebook.webp")} style={{ width: 30, height: 30 }} />
+                    <Image source={require("../../assets/facebook.webp")} style={{ width: 30, height: 30 }} />
                     <Text style={styles.socialText}> Sign Up With Facebook</Text>
                 </TouchableOpacity>
                 <Loader visible={visibleModal} />

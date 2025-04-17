@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState,useContext} from 'react';
 import {
   View,
   Text,
@@ -12,39 +12,31 @@ import {
   Linking
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { imageUrl, homeApi, referralAmountApi } from '../services/apiServices';
+import { imageUrl, homeApi, referralAmountApi } from '../../services/apiServices';
 import { SvgUri } from 'react-native-svg';
-import Layout from '../Components/Common/Layout';
+import Layout from '../../Components/Common/Layout';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
+import { AuthContext } from '../../Context/MainContext';
 
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const HomeScreen = ({ navigation, route }) => {
 
-  console.log('route data', route)
-  const [referralAmount, setReferralAmount] = useState(0);
-  const [services, setServices] = useState([]);
-  const [offers, setOffers] = useState([]);
+  const {homeData}=useContext(AuthContext);
+
+ // console.log('route data', route?.params?.data.data);
+  //const homeData = route?.params?.data.data;
+
+
+ const [referralAmount, setReferralAmount] = useState(0);
+ const services= homeData?.services?.data || [];
+
+const offers= homeData?.offers?.data || [];
+
   const [modalVisible, setModalVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [link, setLink] = useState('');
-
-  const getHomeContent = async () => {
-    setIsLoading(true)
-    try {
-      const response = await fetch(homeApi);
-      const data = await response.json();
-      setServices(data.data.services?.data || []);
-      setOffers(data.data.offers?.data || []);
-      console.log('home data', offers);
-      setIsLoading(false)
-    } catch (error) {
-      console.error('Error fetching home content:', error);
-
-      setIsLoading(false)
-    }
-  };
 
   const getReferral = async () => {
     try {
@@ -57,12 +49,9 @@ const HomeScreen = ({ navigation, route }) => {
   };
 
   useEffect(() => {
-    getHomeContent();
     getReferral();
+   
   }, []);
-
-  const goToHome = () => navigation.navigate('Home');
-  const goToProfile = () => setModalVisible(true);
 
   return (
     <Layout>
@@ -74,7 +63,7 @@ const HomeScreen = ({ navigation, route }) => {
           showsHorizontalScrollIndicator={false}>
 
           <Image
-            source={require('../assets/DxxfKrd9IwwMnBrA.jpg')}
+            source={require('../../assets/DxxfKrd9IwwMnBrA.jpg')}
             style={styles.backgroundImage}
           />
           <View style={styles.content}>

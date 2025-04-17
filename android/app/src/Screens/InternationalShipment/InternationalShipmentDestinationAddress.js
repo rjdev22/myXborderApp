@@ -158,7 +158,7 @@ const InternationalShipmentDestinationAddress = ({ navigation, route }) => {
                     <View style={styles.topHeader}>
                         <Text style={{ fontSize: 16, fontWeight: 'bold', }}>Destination Address</Text>
                         <TouchableOpacity onPress={() => navigation.goBack()}>
-                            <Image source={require('../assets/back.png')} style={{ width: 20, height: 20 }} />
+                            <Image source={require('../../assets/back.png')} style={{ width: 20, height: 20 }} />
                         </TouchableOpacity>
                     </View>
 

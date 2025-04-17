@@ -9,8 +9,8 @@ import {
     TouchableOpacity
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import Layout from '../Components/Common/Layout';
-import DropDown from '../Components/Common/DropDown';
+import Layout from '../../Components/Common/Layout';
+import DropDown from '../../Components/Common/DropDown';
 import { get_item_types } from '../services/apiServices';
 
 
@@ -170,7 +170,7 @@ const InternationalShipmentPackageInformation = ({ navigation, route }) => {
                     </View> */}  <View style={styles.topHeader}>
                         <Text style={{ fontSize: 16, fontWeight: 'bold', }}>Package Information</Text>
                         <TouchableOpacity onPress={() => navigation.goBack()}>
-                            <Image source={require('../assets/back.png')} style={{ width: 20, height: 20 }} />
+                            <Image source={require('../../assets/back.png')} style={{ width: 20, height: 20 }} />
                         </TouchableOpacity>
                     </View>
 

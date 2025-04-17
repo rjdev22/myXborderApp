@@ -1,16 +1,17 @@
 import React, { useState, useRef, useEffect } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
-import AuthLayout from "../Components/Common/AuthLayout";
+import AuthLayout from "../../Components/Common/AuthLayout";
 import { registerApi, get_all_country } from "../services/apiServices";
-import Loader from "../Components/Modals/Loader";
+import Loader from "../../Components/Modals/Loader";
 import { CommonActions } from '@react-navigation/native'
 import { ReCaptchaV3 } from '@haskkor/react-native-recaptchav3';
 import { Picker } from "@react-native-picker/picker";
 import { Toast } from 'react-native-toast-notifications';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { ScrollView } from "react-native-gesture-handler";
-import { set } from "react-native-reanimated";
+
+
 
 const SignupScreen = ({ navigation }) => {
 
@@ -245,12 +246,12 @@ const SignupScreen = ({ navigation }) => {
                     Already have an account? <Text style={styles.signUpLink} onPress={() => navigation.navigate("LoginScreen")}>Sign In</Text>
                 </Text>
                 <TouchableOpacity style={styles.socialButton}>
-                    <Image source={require("../assets/google.png")} style={{ width: 30, height: 30 }} />
+                    <Image source={require("../../assets/google.png")} style={{ width: 30, height: 30 }} />
                     <Text style={styles.socialText}> Sign Up With Google</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.socialButton}>
-                    <Image source={require("../assets/facebook.webp")} style={{ width: 30, height: 30 }} />
+                    <Image source={require("../../assets/facebook.webp")} style={{ width: 30, height: 30 }} />
                     <Text style={styles.socialText}> Sign Up With Facebook</Text>
                 </TouchableOpacity>
 
