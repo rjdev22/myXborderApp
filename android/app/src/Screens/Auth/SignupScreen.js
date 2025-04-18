@@ -2,18 +2,20 @@ import React, { useState, useRef, useEffect } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import AuthLayout from "../../Components/Common/AuthLayout";
-import { registerApi, get_all_country } from "../services/apiServices";
+import { registerApi, get_all_country } from "../../services/apiServices";
 import Loader from "../../Components/Modals/Loader";
 import { CommonActions } from '@react-navigation/native'
-import { ReCaptchaV3 } from '@haskkor/react-native-recaptchav3';
+
 import { Picker } from "@react-native-picker/picker";
 import { Toast } from 'react-native-toast-notifications';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { ScrollView } from "react-native-gesture-handler";
+import ReCaptcha from 'react-native-recaptcha-that-works';
 
-
-
+const ReCaptchaKey=process.env.RECHAPCHA__SITE_KEY;
+const app_url=process.env.APP_DOMAIN;
 const SignupScreen = ({ navigation }) => {
+    const recaptchaRef = useRef(null);
 
     const [countryList, setCountryList] = useState([]);
     const [emailError, setEmailError] = useState("");
@@ -23,14 +25,17 @@ const SignupScreen = ({ navigation }) => {
     const [email, setEmail] = useState("");
     const [phone, setPhone] = useState("");
     const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState(""); 
+    const [confirmPassword, setConfirmPassword] = useState("");
     const [securePasswordEntry, setSecurePasswordEntry] = useState(true);
     const [secureConfirmPasswordEntry, setSecureConfirmPasswordEntry] = useState(true);
     const [visibleModal, setVisibleModal] = useState(false);
-    const [recaptcha, setRecaptcha] = useState('');
-    const [selectedCountry, setSelectedCountry] = useState({code: 'AF', code2: 'AFG', phone_code: '+93'});
+    // const [recaptcha, setRecaptcha] = useState('');
+    const [selectedCountry, setSelectedCountry] = useState({ code: 'AF', code2: 'AFG', phone_code: '+93' });
 
+    const [chapchaToken, setChapchaToken] = useState('');
+    const [checkBoxError, setCheckBoxError] = useState(false);
 
+    const [checked, setChecked] = useState(false);
 
     useEffect(() => {
         const getCountryies = async () => {
@@ -57,12 +62,16 @@ const SignupScreen = ({ navigation }) => {
     const validateEmail = (email) => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(email);
-        
+
     };
     const handleSignup = async () => {
         console.log('selected country', selectedCountry.phone_code);
         if (!phone) {
             setPhoneError("Phone field is required");
+        }
+        if (!checked) {
+            setCheckBoxError(true);
+
         }
         if (!password) {
             setPasswordError("Password field is required");
@@ -97,12 +106,12 @@ const SignupScreen = ({ navigation }) => {
                 const data = await response.json();
                 console.log("register user data", data);
 
-               // const emailVerification = data?.data?.emailVerification;
+                // const emailVerification = data?.data?.emailVerification;
                 const userEmail = data?.data?.email;
 
-                if(data.status === false){  
+                if (data.status === false) {
 
-                    Toast.show(data.error, { type:'danger', style: { width: 500 } });
+                    Toast.show(data.error, { type: 'danger', style: { width: 500 } });
                     setVisibleModal(false);
                     return;
                 }
@@ -128,19 +137,21 @@ const SignupScreen = ({ navigation }) => {
         }
     };
 
+    const onVerify = (token) => {
+        console.log('reCAPTCHA token:', token);
+        setChapchaToken(token);
+        setCheckBoxError(false);
+        // You can now send this token along with your sign in request
+    };
+
     const handleCountryChange = (itemValue) => {
         const country = countryList.find((c) => c.code === itemValue);
         setSelectedCountry(country);
         console.log('country', selectedCountry);
         // setPhone(country.phone_code); // Update phone input with selected country code
     };
-    const onMessage = (event) => {
-        const token = event.nativeEvent.data;
-        if (token) {
-            setCaptchaVerified(true);
-            setCaptchaToken(token);
-        }
-    }; const getFlagEmoji = (countryCode) => {
+
+    const getFlagEmoji = (countryCode) => {
         return countryCode
             .toUpperCase()
             .split('')
@@ -151,116 +162,141 @@ const SignupScreen = ({ navigation }) => {
     return (
         <AuthLayout>
             <ScrollView showsVerticalScrollIndicator={false}  >
-            <View style={styles.container}>
-                <Text style={styles.title}>Sign Up</Text>
-                <Text style={styles.label}>Phone</Text>
-                <View style={styles.phoneContainer}>
-                    <Picker
-                        selectedValue={selectedCountry}
-                        style={styles.picker}
-                        onValueChange={handleCountryChange}
-                    >
-                        {countryList.map((country) => (
-                            <Picker.Item
-                                key={country.phone_code}
-                                label={`${getFlagEmoji(country.code)} ${country.phone_code} ${country.name}`}
-                                value={country.code}
-                            />
-                        ))}
-                    </Picker>
-                    <View style={styles.divider} />
-                    <TextInput
-                        // style={styles.input}
-                        placeholder="1234567890"
-                        keyboardType="numeric"
-                        value={phone}
-                        onChangeText={setPhone}
-                    />
-                </View>
-                {phoneError ? <Text style={styles.errorText}>{phoneError}</Text> : null}
+                <View style={styles.container}>
+                    <Text style={styles.title}>Sign Up</Text>
+                    <Text style={styles.label}>Phone</Text>
+                    <View style={styles.phoneContainer}>
+                        <Picker
+                            selectedValue={selectedCountry}
+                            style={styles.picker}
+                            onValueChange={handleCountryChange}
+                        >
+                            {countryList.map((country) => (
+                                <Picker.Item
+                                    key={country.phone_code}
+                                    label={`${getFlagEmoji(country.code)} ${country.phone_code} ${country.name}`}
+                                    value={country.code}
+                                />
+                            ))}
+                        </Picker>
+                        <View style={styles.divider} />
+                        <TextInput
+                            // style={styles.input}
+                            placeholder="1234567890"
+                            keyboardType="numeric"
+                            value={phone}
+                            onChangeText={setPhone}
+                        />
+                    </View>
+                    {phoneError ? <Text style={styles.errorText}>{phoneError}</Text> : null}
 
-                <Text style={styles.label}>Email</Text>
-                <TextInput
-                    style={styles.input}
-                    placeholder="dev@dev.com"
-                    keyboardType="email-address"
-                    value={email}
-                    onChangeText={(text) => {
-                        setEmail(text);
-                        if (text) setEmailError(""); // Clear error on typing
-                    }}
-                />
-                {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
-                <Text style={styles.label}>Password</Text>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                    <Text style={styles.label}>Email</Text>
                     <TextInput
                         style={styles.input}
-                        placeholder="**********"
-                        keyboardType="password"
-                        value={password}
+                        placeholder="dev@dev.com"
+                        keyboardType="email-address"
+                        value={email}
                         onChangeText={(text) => {
-                            setPassword(text);
-                            if (text) setPasswordError(""); // Clear error on typing
+                            setEmail(text);
+                            if (text) setEmailError(""); // Clear error on typing
                         }}
-                        secureTextEntry={securePasswordEntry}
                     />
-                    <TouchableOpacity style={{ position: 'absolute', right: 20, top: 10 }} onPress={() => setSecurePasswordEntry(!securePasswordEntry)}>
-                        <Icon name={securePasswordEntry ? "eye-slash" : "eye"} size={20} color="gray" />
+                    {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
+                    <Text style={styles.label}>Password</Text>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="**********"
+                            keyboardType="password"
+                            value={password}
+                            onChangeText={(text) => {
+                                setPassword(text);
+                                if (text) setPasswordError(""); // Clear error on typing
+                            }}
+                            secureTextEntry={securePasswordEntry}
+                        />
+                        <TouchableOpacity style={{ position: 'absolute', right: 20, top: 10 }} onPress={() => setSecurePasswordEntry(!securePasswordEntry)}>
+                            <Icon name={securePasswordEntry ? "eye-slash" : "eye"} size={20} color="gray" />
+                        </TouchableOpacity>
+                    </View>
+                    <Text style={styles.label}>Confirm Password</Text>
+                    {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="**********"
+                            keyboardType="password"
+                            value={confirmPassword}
+                            onChangeText={(text) => {
+                                setConfirmPassword(text);
+                                if (text) setConfirmPasswordError(""); // Clear error on typing
+                            }}
+                            secureTextEntry={secureConfirmPasswordEntry}
+                        />
+                        <TouchableOpacity style={{ position: 'absolute', right: 20, top: 10 }} onPress={() => setSecureConfirmPasswordEntry(!secureConfirmPasswordEntry)}>
+                            <Icon name={secureConfirmPasswordEntry ? "eye-slash" : "eye"} size={20} color="gray" />
+                        </TouchableOpacity>
+                    </View>
+                    {confirmPasswordError ? <Text style={styles.errorText}>{confirmPasswordError}</Text> : null}
+
+
+
+                    <View style={styles.captchaBox}>
+                        <TouchableOpacity
+                            style={styles.checkbox}
+                            onPress={() => {
+                                setChecked(true);
+                                checked && recaptchaRef.current.open()
+
+                            }}
+                        >
+                            {chapchaToken && <View style={styles.checked} />}
+                        </TouchableOpacity>
+                        <Text style={styles.text}>I'm not a robot</Text>
+
+
+                    </View>
+                    {
+                        checkBoxError &&
+                        <Text style={styles.errorText}>recaptcha is required</Text>
+                    }
+
+
+
+                    <ReCaptcha
+                        ref={recaptchaRef}
+                        siteKey={ReCaptchaKey}
+                        baseUrl={app_url}
+                        onVerify={onVerify}
+                        size="normal"  // <-- change to "normal"
+                        theme="light" // this makes it background automatic if you want
+                    />
+
+                    <TouchableOpacity onPress={handleSignup}>
+                        <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} colors={["#d81397", "#0d5cc2"]} style={styles.button}>
+                            <Text style={styles.buttonText}>Sign Up</Text>
+                        </LinearGradient>
                     </TouchableOpacity>
-                </View>
-                <Text style={styles.label}>Confirm Password</Text>
-                {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="**********"
-                        keyboardType="password"
-                        value={confirmPassword}
-                        onChangeText={(text) => {
-                            setConfirmPassword(text);
-                            if (text) setConfirmPasswordError(""); // Clear error on typing
-                        }}
-                        secureTextEntry={secureConfirmPasswordEntry}
-                    />
-                    <TouchableOpacity style={{ position: 'absolute', right: 20, top: 10 }} onPress={() => setSecureConfirmPasswordEntry(!secureConfirmPasswordEntry)}>
-                        <Icon name={secureConfirmPasswordEntry ? "eye-slash" : "eye"} size={20} color="gray" />
+
+                    <Text style={styles.signUpText}>
+                        Already have an account? <Text style={styles.signUpLink} onPress={() => navigation.navigate("LoginScreen")}>Sign In</Text>
+                    </Text>
+                    <TouchableOpacity style={styles.socialButton}>
+                        <Image source={require("../../assets/google.png")} style={{ width: 30, height: 30 }} />
+                        <Text style={styles.socialText}> Sign Up With Google</Text>
                     </TouchableOpacity>
+
+                    <TouchableOpacity style={styles.socialButton}>
+                        <Image source={require("../../assets/facebook.webp")} style={{ width: 30, height: 30 }} />
+                        <Text style={styles.socialText}> Sign Up With Facebook</Text>
+                    </TouchableOpacity>
+
+
+
+
+
+                    <Loader visible={visibleModal} />
                 </View>
-                {confirmPasswordError ? <Text style={styles.errorText}>{confirmPasswordError}</Text> : null}
-
-
-                {/* <WebView>
-                    <ReCaptchaV3
-                        captchaDomain={'https://yourdomain.com'}
-                        siteKey={'YourSiteKey'}
-                        onReceiveToken={(token) => setRecaptcha(token)}
-                    />
-                </WebView> */}
-                <TouchableOpacity onPress={handleSignup}>
-                    <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} colors={["#d81397", "#0d5cc2"]} style={styles.button}>
-                        <Text style={styles.buttonText}>Sign Up</Text>
-                    </LinearGradient>
-                </TouchableOpacity>
-
-                <Text style={styles.signUpText}>
-                    Already have an account? <Text style={styles.signUpLink} onPress={() => navigation.navigate("LoginScreen")}>Sign In</Text>
-                </Text>
-                <TouchableOpacity style={styles.socialButton}>
-                    <Image source={require("../../assets/google.png")} style={{ width: 30, height: 30 }} />
-                    <Text style={styles.socialText}> Sign Up With Google</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.socialButton}>
-                    <Image source={require("../../assets/facebook.webp")} style={{ width: 30, height: 30 }} />
-                    <Text style={styles.socialText}> Sign Up With Facebook</Text>
-                </TouchableOpacity>
-
-
-
-
-
-                <Loader visible={visibleModal} />
-            </View>
             </ScrollView>
         </AuthLayout>
     );
@@ -356,6 +392,35 @@ const styles = StyleSheet.create({
     },
     picker: {
         width: 150, // Adjust the width as needed0,
+    },
+    captchaBox: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#f9f9f9',
+        borderWidth: 1,
+        borderColor: '#ccc',
+        padding: 15,
+        borderRadius: 4,
+        width: 300,
+        marginBottom: 10
+    },
+    checkbox: {
+        width: 24,
+        height: 24,
+        borderWidth: 2,
+        borderColor: '#555',
+        marginRight: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    checked: {
+        width: 12,
+        height: 12,
+        backgroundColor: '#555',
+    },
+    text: {
+        fontSize: 14,
+        flex: 1,
     },
 
 });

@@ -3,7 +3,7 @@ console.log('env variables',APP_DOMAIN);
 const baseUrl = `${APP_DOMAIN}/api/v1`;
 
 console.log('base url',baseUrl);
-
+export const APP_DOMAIN_URL = APP_DOMAIN;
 export const basUrl = baseUrl;
 //auth url
 export const imageUrl = `${APP_DOMAIN}`;

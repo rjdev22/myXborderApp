@@ -14,7 +14,8 @@ import { useContext } from 'react';
 import { AuthContext } from '../../Context/MainContext';
 import ReCaptcha from 'react-native-recaptcha-that-works';
 
-
+const ReCaptchaKey=process.env.RECHAPCHA__SITE_KEY;
+const app_url=process.env.APP_DOMAIN;
 const LoginScreen = ({ navigation }) => {
     const recaptchaRef = useRef(null);
     const { setToken } = useContext(AuthContext);
@@ -28,8 +29,10 @@ const LoginScreen = ({ navigation }) => {
     const [emailError, setEmailError] = useState("");
     const [passwordError, setPasswordError] = useState("");
     const [securePasswordEntry, setSecurePasswordEntry] = useState(true);
+    const [chapchaToken, setChapchaToken] = useState('');
+    const [checkBoxError, setCheckBoxError] = useState(false);
 
-
+    const [checked, setChecked] = useState(false);
 
     const size = 'invisible';
 
@@ -52,8 +55,12 @@ const LoginScreen = ({ navigation }) => {
         if (!password) {
             setPasswordError("Password field is required");
         }
+        // if (!checked) {
+        //     setCheckBoxError(true);
 
-        else if (!validateEmail(email)) {
+        // }
+
+        if (!validateEmail(email)) {
             setEmailError("Please enter a valid email address");
             // return;
         }
@@ -112,6 +119,8 @@ const LoginScreen = ({ navigation }) => {
 
     const onVerify = (token) => {
         console.log('reCAPTCHA token:', token);
+        setChapchaToken(token);
+        setCheckBoxError(false);
         // You can now send this token along with your sign in request
     };
 
@@ -155,12 +164,39 @@ const LoginScreen = ({ navigation }) => {
 
                 {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
                 {/* <Button title="Verify Recaptcha" onPress={() => recaptchaRef.current.open()} /> */}
+
+                <View style={styles.captchaBox}>
+                    <TouchableOpacity
+                        style={styles.checkbox}
+                        onPress={() => {
+                            setChecked(true);
+                            checked && recaptchaRef.current.open()
+
+                        }}
+                    >
+                        {chapchaToken && <View style={styles.checked} />}
+                    </TouchableOpacity>
+                    <Text style={styles.text}>I'm not a robot</Text>
+
+                    {/* <Image
+                        source={{ uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/RecaptchaLogo.svg/1280px-RecaptchaLogo.svg.png' }}
+                        style={styles.logo}
+                        resizeMode="contain"
+                        /> */}
+                </View>
+                {
+                    checkBoxError &&
+                    <Text style={styles.errorText}>recaptcha is required</Text>
+                }
+
+
                 <ReCaptcha
                     ref={recaptchaRef}
-                    siteKey='6LcS-NsaAAAAAGMZqUK4vhfUUdhV-2KYXbOtFXMF'
-                    baseUrl='https://uat.myxborder.com/'
+                    siteKey={ReCaptchaKey}
+                    baseUrl={app_url}
                     onVerify={onVerify}
-                    size="invisible" // this makes it background automatic if you want
+                    size="normal"  // <-- change to "normal"
+                    theme="light" // this makes it background automatic if you want
                 />
 
 
@@ -275,6 +311,48 @@ const styles = StyleSheet.create({
         marginTop: 5,
         marginBottom: 5,
         paddingTop: 0
+    },
+
+    captchaBox: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#f9f9f9',
+        borderWidth: 1,
+        borderColor: '#ccc',
+        padding: 15,
+        borderRadius: 4,
+        width: 300,
+        marginBottom: 10
+    },
+    checkbox: {
+        width: 24,
+        height: 24,
+        borderWidth: 2,
+        borderColor: '#555',
+        marginRight: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    checked: {
+        width: 12,
+        height: 12,
+        backgroundColor: '#555',
+    },
+    text: {
+        fontSize: 14,
+        flex: 1,
+    },
+    logo: {
+        width: 40,
+        height: 40,
+        marginLeft: 10,
+    },
+    privacyContainer: {
+        marginTop: 5,
+    },
+    privacyText: {
+        fontSize: 10,
+        color: '#888',
     },
 });
 
