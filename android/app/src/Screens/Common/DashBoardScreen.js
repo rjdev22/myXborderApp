@@ -30,7 +30,7 @@ const DashBoardScreen = ({ navigation }) => {
     console.log('token', token);
 
     const [userData, setUserData] = useState({});
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
     const [itemData, setItemData] = useState({});
     const [courierData, setCourierData] = useState({});
     const [orderData, setOrderData] = useState({});
@@ -74,6 +74,11 @@ const closeModal = () => {
 
     useEffect(() => {
         const fetchUserData = async () => {
+
+            {
+                !pageRefresh && setIsLoading(true);
+            }
+          
             try {
                 const token = await AsyncStorage.getItem('token');
                 const response = await fetch(getUserProfile,
@@ -274,7 +279,7 @@ const closeModal = () => {
                     </Modal>
                 </View>
             <VirtualAddressInfo onClose={closeModal} visible={openInfoModal}  />
-            </ScrollView  >
+            </ScrollView>
         </Layout>
     );
 };

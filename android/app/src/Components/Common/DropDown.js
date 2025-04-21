@@ -24,7 +24,7 @@ const DropDown = ({ items, initialValue, onChange,label }) => {
         onValueChange={handleValueChange}
         style={styles.picker}
       >
-        <Picker.Item label={label} value={null} color="#808080" />
+        <Picker.Item label={label} value={null} color="#ccc" />
         {Object.entries(items).map(([value, label], index) => (
           <Picker.Item
             key={index}
@@ -40,7 +40,7 @@ const DropDown = ({ items, initialValue, onChange,label }) => {
 
 const styles = StyleSheet.create({
   picker: {
-    width: '80%',
+    width: 'auto',
     fontSize: 14,
     color: '#333333',
     fontWeight: 'bold',

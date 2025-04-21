@@ -6,48 +6,55 @@ import Loader from '../../Components/Modals/Loader';
 import { Toast } from 'react-native-toast-notifications';
 import { useNavigation } from '@react-navigation/native';
 import { AuthContext } from '../../Context/MainContext';
+import DropDown from '../../Components/Common/DropDown';
+import { Picker } from "@react-native-picker/picker";
 import { set } from 'react-native-reanimated';
 
 
 
 
-const CreateNewAddress = ({ orderUrl, orderSubType, courierType, remark, additems }) => {
+
+const CreateNewAddress = ({ orderUrl, orderSubType, courierType, remark, additems, countryList }) => {
 
     const navigation = useNavigation();
     const { token } = useContext(AuthContext);
     const [id, setId] = useState('');
     console.log('create address url', CreateNewAddressURl)
-
+    console.log('countryList', countryList);
+    
+    //  console.log('countryListData', countryListData)
+    
     const [isLoading, setIsLoading] = useState(false);
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
         areaCode: '',
-        gateCode: '',
+        //gateCode: '',
         streetAddress: '',
         primaryPhone: '',
         city: '',
         state: '',
-        country: '',
+        //country: '',
         pin: '',
     });
     const [errors, setErrors] = useState({});
-
-
+    
+    
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [areaCode, setAreaCode] = useState('');
     const [gateCode, setGateCode] = useState('');
     const [streetAddress, setStreetAddress] = useState('');
-
-
+    const [selectedCountry, setSelectedCountry] = useState({});
+    
     const [primaryPhone, setPrimaryPhone] = useState('');
     const [city, setCity] = useState('');
     const [state, setState] = useState('');
-    const [country, setCountry] = useState('');
+    //const [country, setCountry] = useState('');
     const [pin, setPin] = useState('');
-
-
+    
+    
+    console.log('selectedCountry', selectedCountry.name);
     const validateForm = () => {
         let tempErrors = {};
         Object.keys(formData).forEach((key) => {
@@ -66,13 +73,14 @@ const CreateNewAddress = ({ orderUrl, orderSubType, courierType, remark, additem
 
     const handleSaveButton = async () => {
         // if (!validateForm()) return;
-        console.log('address url', CreateNewAddressURl)
-        console.log('formdata', firstName, lastName, areaCode, gateCode, streetAddress, primaryPhone, city, state, country, pin)
+       // console.log('address url////', CreateNewAddressURl)
+        console.log('formdata', firstName, lastName, areaCode, gateCode, streetAddress, primaryPhone, city, state, pin)
         console.log('token', token)
         console.log('order url', basUrl)
+        if (!validateForm()) return;
         setIsLoading(true);
         try {
-            const response = await fetch('https://uat.myxborder.com/api/v1/address/create', {
+            const response = await fetch(CreateNewAddressURl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -87,29 +95,33 @@ const CreateNewAddress = ({ orderUrl, orderSubType, courierType, remark, additem
                     primaryPhone,
                     city,
                     state,
-                    country,
+                    country:selectedCountry.name,
                     pin
 
                 })
 
-
             });
-
 
             const data = await response.json();
             console.log('Create address response:', data);
+
+            if(data.status === false){
+                console.log('err', data.message)
+                setIsLoading(false)
+                
+            }
             if (data.status === true) {
                 // setIsLoading(false)
                 console.log('address id', data?.data?.id)
                 //return
-               // setId(data?.data?.id)
-                
-              //  console.log('address id', id)
+                // setId(data?.data?.id)
+
+                //  console.log('address id', id)
 
                 try {
                     setIsLoading(true);
-                    console.log('address id', data?.data?.id,orderUrl)
-                    
+                    console.log('address id', data?.data?.id, orderUrl)
+
                     const res = await fetch(orderUrl, {
                         method: 'POST',
                         headers: {
@@ -146,11 +158,15 @@ const CreateNewAddress = ({ orderUrl, orderSubType, courierType, remark, additem
         }
     };
 
-
-
-
-
-
+    const handleCountryChange = (itemValue) => {
+        const country = countryList.find((c) => c.name === itemValue);
+        //setSelectedCountry(country.name);
+        console.log('country', country);
+       // console.log('selectedCountry', country.name);
+        
+        setSelectedCountry(country);
+     
+    };
 
     return (
         <View style={styles.container}>
@@ -215,7 +231,7 @@ const CreateNewAddress = ({ orderUrl, orderSubType, courierType, remark, additem
                         }
                     />
                 </View>
-
+                {errors.areaCode && <Text style={styles.errorText}>{errors.areaCode}</Text>}
 
                 <View style={styles.inputGroup}>
                     <Text style={styles.label}>Street Address*</Text>
@@ -276,15 +292,28 @@ const CreateNewAddress = ({ orderUrl, orderSubType, courierType, remark, additem
 
                 <View style={styles.inputGroup}>
                     <Text style={styles.label}>Country*</Text>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Enter Country"
-                        value={formData.country}
-                        onChangeText={(value) => {
-                            handleInputChange('country', value)
-                            setCountry(value)
-                        }}
-                    />
+
+                    {/* <DropDown
+                        items={countryList.map((country) => country.name)}
+                        label="Please Select Country"
+                        initialValue={selectedCountry}
+                        onChange={handleCountryChange}
+                    /> */}
+
+
+                    <Picker
+                        selectedValue={selectedCountry}
+                        style={styles.picker}
+                        onValueChange={handleCountryChange}
+                    >
+                        {countryList.map((country) => (
+                            <Picker.Item
+                                key={country.id}
+                                label={`${country.name}`}
+                                value={country.name}
+                            />
+                        ))}
+                    </Picker>
                 </View>
                 {errors.country && <Text style={styles.errorText}>{errors.country}</Text>}
 

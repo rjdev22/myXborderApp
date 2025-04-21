@@ -13,7 +13,7 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import Layout from '../../Components/Common/Layout';
 import DropDown from '../../Components/Common/DropDown';
-import { get_courier_types, get_order_types } from '../services/apiServices';
+import { get_courier_types, get_order_types } from '../../services/apiServices';
 import { Checkbox } from 'react-native-paper';
 import MedicalItemWarningModal from '../../Components/Modals/MedicalItemWarningModal';
 // import DocumentPicker from '@react-native-documents/picker';
@@ -168,9 +168,10 @@ const AddInternationalShipmentScreen = ({ navigation, route }) => {
                 </View>
 
 
-                <View style={styles.inputGroup}>
+                <View style={[styles.inputGroup,styles.input]}>
                     <Text style={styles.label}>Order Type*</Text>
                     <DropDown
+                   
                         items={orderType.map(item => item.name)} // Ensure names are used
                         initialValue={orderType.find(item => item.id === selectedOrderType)?.name || ""}
                         label="Please select Order Type"
@@ -185,7 +186,7 @@ const AddInternationalShipmentScreen = ({ navigation, route }) => {
                 {errors.selectedOrderType && <Text style={styles.errorText}>{errors.selectedOrderType}</Text>}
 
 
-                <View style={styles.inputGroup}>
+                <View style={[styles.inputGroup,styles.input]}>
                     <Text style={styles.label}>Courier Type* (Click for rates)</Text>
                     <DropDown
                         items={courierType.map(item => item.name)}
@@ -285,12 +286,12 @@ const styles = StyleSheet.create({
     content: { paddingHorizontal: 15, backgroundColor: 'white', paddingBottom: 50 },
     header: { marginBottom: 30, marginTop: 20 },
     headerText: { fontSize: 16, fontWeight: 'bold', borderColor: "#ccc", borderBottomWidth: 0.5 },
-    inputGroup: { marginBottom: 15 },
+    inputGroup: { marginBottom: 15, },
     label: { fontSize: 12, color: "#000", marginBottom: 5 },
     input: {
         borderColor: "#ccc",
         borderRadius: 8,
-        padding: 10,
+        //padding: 10,
         fontSize: 16,
         borderBottomWidth: 0.5
     },

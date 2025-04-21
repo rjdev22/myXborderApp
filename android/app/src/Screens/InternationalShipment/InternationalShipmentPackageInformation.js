@@ -11,7 +11,7 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import Layout from '../../Components/Common/Layout';
 import DropDown from '../../Components/Common/DropDown';
-import { get_item_types } from '../services/apiServices';
+import { get_item_types } from '../../services/apiServices';
 
 
 const InternationalShipmentPackageInformation = ({ navigation, route }) => {

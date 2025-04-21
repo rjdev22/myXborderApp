@@ -1,19 +1,25 @@
 import React, { useState, useRef, useEffect } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from "react-native";
+import {
+    View,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    StyleSheet,
+    Image
+} from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import AuthLayout from "../../Components/Common/AuthLayout";
 import { registerApi, get_all_country } from "../../services/apiServices";
 import Loader from "../../Components/Modals/Loader";
-import { CommonActions } from '@react-navigation/native'
-
+import { CommonActions } from '@react-navigation/native';
 import { Picker } from "@react-native-picker/picker";
 import { Toast } from 'react-native-toast-notifications';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { ScrollView } from "react-native-gesture-handler";
 import ReCaptcha from 'react-native-recaptcha-that-works';
 
-const ReCaptchaKey=process.env.RECHAPCHA__SITE_KEY;
-const app_url=process.env.APP_DOMAIN;
+const ReCaptchaKey = process.env.RECHAPCHA__SITE_KEY;
+const app_url = process.env.APP_DOMAIN;
 const SignupScreen = ({ navigation }) => {
     const recaptchaRef = useRef(null);
 
@@ -29,13 +35,11 @@ const SignupScreen = ({ navigation }) => {
     const [securePasswordEntry, setSecurePasswordEntry] = useState(true);
     const [secureConfirmPasswordEntry, setSecureConfirmPasswordEntry] = useState(true);
     const [visibleModal, setVisibleModal] = useState(false);
-    // const [recaptcha, setRecaptcha] = useState('');
     const [selectedCountry, setSelectedCountry] = useState({ code: 'AF', code2: 'AFG', phone_code: '+93' });
-
     const [chapchaToken, setChapchaToken] = useState('');
     const [checkBoxError, setCheckBoxError] = useState(false);
-
     const [checked, setChecked] = useState(false);
+    
 
     useEffect(() => {
         const getCountryies = async () => {
@@ -71,7 +75,6 @@ const SignupScreen = ({ navigation }) => {
         }
         if (!checked) {
             setCheckBoxError(true);
-
         }
         if (!password) {
             setPasswordError("Password field is required");
@@ -141,14 +144,14 @@ const SignupScreen = ({ navigation }) => {
         console.log('reCAPTCHA token:', token);
         setChapchaToken(token);
         setCheckBoxError(false);
-        // You can now send this token along with your sign in request
+
     };
 
     const handleCountryChange = (itemValue) => {
         const country = countryList.find((c) => c.code === itemValue);
         setSelectedCountry(country);
         console.log('country', selectedCountry);
-        // setPhone(country.phone_code); // Update phone input with selected country code
+        // setPhone(country.phone_code); 
     };
 
     const getFlagEmoji = (countryCode) => {
@@ -250,10 +253,14 @@ const SignupScreen = ({ navigation }) => {
 
                             }}
                         >
-                            {chapchaToken && <View style={styles.checked} />}
+                            {chapchaToken && <Image source={require('../../assets/check.png')} style={styles.checkboxImage} />}
                         </TouchableOpacity>
                         <Text style={styles.text}>I'm not a robot</Text>
-
+                        <Image
+                            source={{ uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/RecaptchaLogo.svg/1280px-RecaptchaLogo.svg.png' }}
+                            style={styles.logo}
+                            resizeMode="contain"
+                        />
 
                     </View>
                     {
@@ -269,7 +276,7 @@ const SignupScreen = ({ navigation }) => {
                         baseUrl={app_url}
                         onVerify={onVerify}
                         size="normal"  // <-- change to "normal"
-                        theme="light" // this makes it background automatic if you want
+                        theme="light"
                     />
 
                     <TouchableOpacity onPress={handleSignup}>
@@ -407,11 +414,15 @@ const styles = StyleSheet.create({
     checkbox: {
         width: 24,
         height: 24,
-        borderWidth: 2,
+        borderWidth: 1,
         borderColor: '#555',
         marginRight: 10,
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    checkboxImage: {
+        width: 24,
+        height: 24,
     },
     checked: {
         width: 12,
@@ -422,6 +433,11 @@ const styles = StyleSheet.create({
         fontSize: 14,
         flex: 1,
     },
+    logo: {
+        width: 40,
+        height: 40,
+        marginLeft: 10,
+    }
 
 });
 

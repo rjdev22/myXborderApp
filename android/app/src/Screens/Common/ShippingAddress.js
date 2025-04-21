@@ -11,7 +11,7 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import Layout from '../../Components/Common/Layout'
 import DropDown from '../../Components/Common/DropDown';
-import { createShopNShipOrder, createAssistedSopNShipOrder } from '../../services/apiServices';
+import { createShopNShipOrder, createAssistedSopNShipOrder,get_all_country  } from '../../services/apiServices';
 import ExistaddressList from '../Address/ExistaddressList';
 import CreateNewAddress from '../Address/CreateNewAddress';
 import Loader from '../../Components/Modals/Loader';
@@ -26,6 +26,7 @@ const ShopNshipShipmentAddress = ({ navigation, route }) => {
     const { token } = useContext(AuthContext);
     const [orderType, setOrderType] = useState([]);
     const [courierType, setCourierType] = useState([]);
+    const [countryList, setCountryList] = useState([]); 
 
   //  console.log("0000000000", courierType, token);
  
@@ -73,6 +74,25 @@ const ShopNshipShipmentAddress = ({ navigation, route }) => {
 
             }
         }
+   const getCountryies = async () => {
+            try {
+                const response = await fetch(get_all_country, {
+
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
+                const data = await response.json();
+                console.log('country api response', data);
+               
+                setCountryList(data.data);
+            }
+            catch {
+                console.log(error);
+            }
+        }
+        getCountryies()
+
         courier_types();
         order_types();
 
@@ -146,7 +166,6 @@ const ShopNshipShipmentAddress = ({ navigation, route }) => {
     }
 
 
-
     return (
         <Layout>
             <View style={styles.container}>
@@ -172,11 +191,9 @@ const ShopNshipShipmentAddress = ({ navigation, route }) => {
                                  courierType={selectedCourierType}
                                  remark={route?.params?.remark}
                                  additems={route?.params?.additems}
+                                 countryList={countryList}
                                  
-                                 
-                                 
-                                 
-                                 
+                                
                                  
                                  />
                             )

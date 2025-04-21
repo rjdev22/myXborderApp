@@ -1,4 +1,4 @@
-import React, { useEffect, useState,useContext} from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import {
   View,
   Text,
@@ -23,16 +23,16 @@ import { AuthContext } from '../../Context/MainContext';
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const HomeScreen = ({ navigation, route }) => {
 
-  const {homeData}=useContext(AuthContext);
+  const { homeData } = useContext(AuthContext);
 
- // console.log('route data', route?.params?.data.data);
+  // console.log('route data', route?.params?.data.data);
   //const homeData = route?.params?.data.data;
 
 
- const [referralAmount, setReferralAmount] = useState(0);
- const services= homeData?.services?.data || [];
+  const [referralAmount, setReferralAmount] = useState(0);
+  const services = homeData?.services?.data || [];
 
-const offers= homeData?.offers?.data || [];
+  const offers = homeData?.offers?.data || [];
 
   const [modalVisible, setModalVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -50,7 +50,7 @@ const offers= homeData?.offers?.data || [];
 
   useEffect(() => {
     getReferral();
-   
+
   }, []);
 
   return (
@@ -219,10 +219,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     margin: 10,
-    padding: 15,
+    padding: 10,
     backgroundColor: 'white',
     //    backgroundColor: 'linear-gradient(to right, #0d5cc2 #e12d82)',
-    borderRadius: 5,
+    borderRadius: 8,
     elevation: 3
   },
   bonusTitle: {
@@ -238,15 +238,15 @@ const styles = StyleSheet.create({
   sectionTitle: { fontSize: 20, fontWeight: 'bold', marginVertical: 10 },
   serviceCard: {
     backgroundColor: 'white',
-    borderRadius: 5,
-    padding: 10,
+    borderRadius: 8,
+    padding: 5,
     marginBottom: 10,
     elevation: 3,
   },
   serviceImage: {
     width: '100%',
     height: 210,
-    borderRadius: 10,
+    borderRadius: 8,
     resizeMode: 'cover', // Ensures image fits well
   },
   serviceTitle: { fontSize: 18, fontWeight: 'bold' },

@@ -8,6 +8,7 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(null);
   const [pageRefresh, setPageRefresh] = useState(false);
   const [homeData, setHomeData] = useState(null);
+  const [countryListData, setCountryListData] = useState([]);
 
   // useEffect(() => {
   //   const getToken = async () => {

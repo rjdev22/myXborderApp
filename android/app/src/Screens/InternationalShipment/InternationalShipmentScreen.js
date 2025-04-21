@@ -9,7 +9,6 @@ import {
     TextInput,
     Modal
 } from 'react-native';
-
 import Icon from 'react-native-vector-icons/FontAwesome';
 import LinearGradient from 'react-native-linear-gradient';
 import Layout from '../../Components/Common/Layout';
@@ -27,7 +26,6 @@ const InternationalShipmentScreen = ({ navigation }) => {
     const [orderData, setOrderData] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedOption, setSelectedOption] = useState("All orders");
-
     const [totalOrders, setTotalOrders] = useState(0);
     const [isLoadMore, setIsLoadMore] = useState(false);
     const [page, setPage] = useState(1);
@@ -275,25 +273,27 @@ const InternationalShipmentScreen = ({ navigation }) => {
                             <Text style={styles.noDataText}>No Orders Available</Text>
                         </View>
                     )}
-                    {
-                        hasMore && !isFetchingMore && (
-                            <TouchableOpacity
-                                onPress={() => {
-                                    setIsLoadMore(true);
-                                    setPage(prevPage => prevPage + 1);
-                                    setIsFetchingMore(true);
-                                }}
-                                activeOpacity={0.7}
-                                style={styles.loadMoreButton}
-                            >
-                                <Image
-                                    source={require('../../assets/down.png')}
-                                    style={{ width: 50, height: 25 }}
-                                    resizeMode="contain"
-                                />
-                            </TouchableOpacity>
-                        )
-                    }
+                    <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 5 }}>
+                        {
+                            hasMore && !isFetchingMore && (
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        setIsLoadMore(true);
+                                        setPage(prevPage => prevPage + 1);
+                                        setIsFetchingMore(true);
+                                    }}
+                                    activeOpacity={0.7}
+                                    style={styles.loadMoreButton}
+                                >
+                                    <Image
+                                        source={require('../../assets/down.png')}
+                                        style={{ width: 50, height: 25 }}
+                                        resizeMode="contain"
+                                    />
+                                </TouchableOpacity>
+                            )
+                        }
+                    </View>
 
                     {
                         isFetchingMore && (

@@ -33,14 +33,11 @@ export const searchInternationalOrder=`${baseUrl}/list/orders/internationalShipm
 export const OrderHistoryUrl=`${baseUrl}/order/history`;
 
 
-
-
 //address url
 export const getExistAddressList = `${baseUrl}/address/list`;
 export const CreateNewAddressURl=`${baseUrl}/address/create`;
 export const UpdateAddressURl=`${baseUrl}/order/update_delivery_address`;
 export const DeleteAddressURl=`${baseUrl}/address/delete/`;
-
 
 //common url
 export const get_item_types=`${baseUrl}/get_all_item`;
@@ -52,14 +49,9 @@ export const get_payment_notification=`${baseUrl}/notification/payment_notificat
 export const get_wallet_history=`${baseUrl}/wallet/history`;
 export const get_Bank_detail=`${baseUrl}/bank_detail`;
 
-
-
 //STRIPE PAYMENT
-
 export const create_payment_intent=`${baseUrl}/shipping/stripe`;
 
 //paypal payment
-
-
 export const paypalCheckoutSession = `${baseUrl}/paypal/create_checkout_session`;
 

@@ -320,6 +320,7 @@ const AssistedShopNshipScreen = ({ navigation }) => {
                             <Text style={styles.noDataText}>No Orders Available</Text>
                         </View>
                     )}
+                        <View style={{flexDirection:'row', justifyContent:'center', alignItems:'center',marginTop:5}}>
                     {
                         hasMore && !isFetchingMore && (
                             <TouchableOpacity
@@ -339,6 +340,7 @@ const AssistedShopNshipScreen = ({ navigation }) => {
                             </TouchableOpacity>
                         )
                     }
+                    </View>
 
                     {
                         isFetchingMore && (

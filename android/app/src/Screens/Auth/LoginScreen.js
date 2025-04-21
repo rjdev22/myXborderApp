@@ -1,42 +1,42 @@
-import React, { useState, useCallback, useRef } from "react";
+import React, { useState, useCallback, useRef,useEffect } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Button } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import AuthLayout from "../../Components/Common/AuthLayout";
-import { loginApi } from "../../services/apiServices";
+import { loginApi} from "../../services/apiServices";
 import { CommonActions } from "@react-navigation/native";
 import Loader from "../../Components/Modals/Loader";
 import { Toast } from 'react-native-toast-notifications';
 import { useToast } from "react-native-toast-notifications";
-
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useContext } from 'react';
 import { AuthContext } from '../../Context/MainContext';
 import ReCaptcha from 'react-native-recaptcha-that-works';
+import { set } from "react-native-reanimated";
 
-const ReCaptchaKey=process.env.RECHAPCHA__SITE_KEY;
-const app_url=process.env.APP_DOMAIN;
+
+const ReCaptchaKey = process.env.RECHAPCHA__SITE_KEY;
+const app_url = process.env.APP_DOMAIN;
 const LoginScreen = ({ navigation }) => {
     const recaptchaRef = useRef(null);
-    const { setToken } = useContext(AuthContext);
+    const { setToken,setCountryListData } = useContext(AuthContext);
 
     const toast = useToast();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [isChecked, setIsChecked] = useState(false);
-    const [isSubmitted, setIsSubmitted] = useState(false);
     const [visibleModal, setVisibleModal] = useState(false);
     const [emailError, setEmailError] = useState("");
     const [passwordError, setPasswordError] = useState("");
     const [securePasswordEntry, setSecurePasswordEntry] = useState(true);
     const [chapchaToken, setChapchaToken] = useState('');
     const [checkBoxError, setCheckBoxError] = useState(false);
-
+   
     const [checked, setChecked] = useState(false);
 
     const size = 'invisible';
 
-
+    
 
 
 
@@ -62,7 +62,7 @@ const LoginScreen = ({ navigation }) => {
 
         if (!validateEmail(email)) {
             setEmailError("Please enter a valid email address");
-            // return;
+
         }
 
         else {
@@ -174,15 +174,15 @@ const LoginScreen = ({ navigation }) => {
 
                         }}
                     >
-                        {chapchaToken && <View style={styles.checked} />}
+                        {chapchaToken && <Image source={require('../../assets/check.png')} style={styles.checkboxImage} />}
                     </TouchableOpacity>
                     <Text style={styles.text}>I'm not a robot</Text>
 
-                    {/* <Image
+                    <Image
                         source={{ uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/RecaptchaLogo.svg/1280px-RecaptchaLogo.svg.png' }}
                         style={styles.logo}
                         resizeMode="contain"
-                        /> */}
+                    />
                 </View>
                 {
                     checkBoxError &&
@@ -259,15 +259,7 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         fontSize: 16,
     },
-    checkboxContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        marginBottom: 20,
-    },
-    checkboxText: {
-        marginLeft: 10,
-        fontSize: 16,
-    },
+
     button: {
         width: "100%",
         padding: 15,
@@ -318,7 +310,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#f9f9f9',
         borderWidth: 1,
-        borderColor: '#ccc',
+        borderColor: '',
         padding: 15,
         borderRadius: 4,
         width: 300,
@@ -327,7 +319,7 @@ const styles = StyleSheet.create({
     checkbox: {
         width: 24,
         height: 24,
-        borderWidth: 2,
+        borderWidth: 1,
         borderColor: '#555',
         marginRight: 10,
         justifyContent: 'center',
@@ -337,6 +329,10 @@ const styles = StyleSheet.create({
         width: 12,
         height: 12,
         backgroundColor: '#555',
+    },
+    checkboxImage: {
+        width: 24,
+        height: 24,
     },
     text: {
         fontSize: 14,
